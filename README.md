@@ -1,3 +1,4 @@
 # Animal-Dating-App
-
-## Steven Bertolucci's First Push to README.md
+## Team Members (First Push to README.md)
+Steven Bertolucci 
+Teresita Nader
