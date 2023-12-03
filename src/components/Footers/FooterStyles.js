@@ -4,7 +4,6 @@ export const Box = styled.div`
     padding: 5% 2.5%;
     background: #ddedea;
     bottom: 0;
-    width: 95%;
 `;
  
 export const FooterContainer = styled.div`

@@ -17,14 +17,16 @@ function App() {
         <Router>
             <div className="App">
                 <Navbar />
+                <div className="container-fluid text-center mt-5">
+                    <h1>Dating App for Animal Adoption</h1>
+                    <p>Coming Soon!</p>
+                </div>
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/pets" element={<Pets />} />
                     <Route path="/events" element={<Events />} />
                     <Route path="/sign-up" element={<SignUp />} />
                 </Routes>
-                <h1>Dating App for Animal Adoption</h1>
-                <p>Coming Soon!</p>
                 <Footer />
             </div>
         </Router>
