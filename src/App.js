@@ -11,7 +11,6 @@ import Home from "./pages";
 import Pets from "./pages/pets.js";
 import Events from "./pages/events";
 import SignUp from "./pages/signup";
-import Search from "./pages/search";
 import SignIn from "./pages/signin.js";
 
 function App() {
@@ -28,7 +27,6 @@ function App() {
                     <Route path="/pets" element={<Pets />} />
                     <Route path="/events" element={<Events />} />
                     <Route path="/sign-up" element={<SignUp />} />
-                    <Route path="/search" element={<Search />} />
                     <Route path="/sign-in" element={<SignIn />} />
                 </Routes>
                 <Footer />
