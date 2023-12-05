@@ -11,6 +11,7 @@ import Home from "./pages";
 import Pets from "./pages/pets.js";
 import Events from "./pages/events";
 import SignUp from "./pages/signup";
+import Search from "./pages/search";
 
 function App() {
     return (
@@ -26,6 +27,7 @@ function App() {
                     <Route path="/pets" element={<Pets />} />
                     <Route path="/events" element={<Events />} />
                     <Route path="/sign-up" element={<SignUp />} />
+                    <Route path="/search" element={<Search />} />
                 </Routes>
                 <Footer />
             </div>
