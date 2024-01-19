@@ -91,7 +91,20 @@ const Pets = () => {
 
     };
 
+    // Function to get unique values for a filter category
+    function getUniqueValuesForCategory(animals, category) {
+        const values = new Set();
+        animals.forEach(animal => {
+            values.add(animal[category]);
+        });
+
+        // Sort the age category
+        const sortedValues = Array.from(values).sort((a, b) => a - b);
+        return sortedValues;
+    }
+
     return (
+        <>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <form onSubmit={handleSearch} style={{ marginBottom: '20px' }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -164,18 +177,8 @@ const Pets = () => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
-
-// Helper function to get unique values for a filter category
-function getUniqueValuesForCategory(animals, category) {
-    const values = new Set();
-    animals.forEach(animal => {
-        values.add(animal[category]);
-    });
-
-    const sortedValues = Array.from(values).sort((a, b) => a - b);
-    return sortedValues;
-}
 
 export default Pets;
