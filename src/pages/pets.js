@@ -7,7 +7,15 @@ const Pets = () => {
     const [animals, setAnimals] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [results, setResults] = useState([]);
-    const [loading, setLoading] = useState(false);
+    //const [loading, setLoading] = useState(false);
+    const [showFilters, setShowFilters] = useState(false);
+    const [selectedFilters, setSelectedFilters] = useState({
+        type: [],
+        breed: [],
+        age: [],
+        gender: [],
+        availability: [],
+    });
 
     useEffect(() => {
         const getAnimals = async () => {
@@ -24,7 +32,7 @@ const Pets = () => {
 
     const handleSearch = async (e) => {
         e.preventDefault();
-        setLoading(true);
+        //setLoading(true);
     
         const animalRef = collection(db, 'animals');
         const querySnapshot = await getDocs(animalRef);
@@ -36,18 +44,57 @@ const Pets = () => {
         }))
         .filter(animal => animal.type.toLowerCase() === searchTerm.toLowerCase());
 
-        if (searchResults.length === 0) {
-           alert("Sorry we do not have " + searchTerm + " in our database just yet. Please stay tuned!");
-        }
+        if (searchResults.length === 0 && searchTerm !== '') {
+            alert("Sorry we do not have " + searchTerm + " in our database just yet. Please stay tuned!");
+         }
     
         setResults(searchResults);
-        setLoading(false);
-        
+        //setLoading(false);
+    };
+
+    const handleFilterChange = (filterCategory, filterValue) => {
+        setSelectedFilters(prevFilters => {
+            const updatedFilters = { ...prevFilters };
+
+            if (updatedFilters[filterCategory].includes(filterValue)) {
+
+                updatedFilters[filterCategory] = updatedFilters[filterCategory].filter(item => item !== filterValue);
+
+            } else {
+
+                updatedFilters[filterCategory] = [...updatedFilters[filterCategory], filterValue];
+            }
+
+            return updatedFilters;
+        });
+    };
+
+    const applyFilters = (animal) => {
+
+        // Check if animal matches all selected filter categories
+        for (const category in selectedFilters) {
+
+            if (selectedFilters[category].length > 0 && !selectedFilters[category].includes(animal[category])) {
+
+                return false;
+            }
+        }
+        return true;
+    };
+
+    const filteredAnimals = animals.filter(animal => applyFilters(animal));
+
+    // Function to toggle the visibility of the entire filter section
+    const toggleFilters = () => {
+
+        setShowFilters(prevShowFilters => !prevShowFilters);
+
     };
 
     return (
-        <>
-            <form onSubmit={handleSearch}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <form onSubmit={handleSearch} style={{ marginBottom: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
                     <input
                         type="text"
                         value={searchTerm}
@@ -55,21 +102,60 @@ const Pets = () => {
                         placeholder="Search for an animal type"
                     />
                     <button type="submit">Search</button>
+                    <button
+                        style={{ marginLeft: '10px', background: 'none', border: 'none', cursor: 'pointer' }}
+                        onClick={toggleFilters}
+                    >
+                        {showFilters ? "Hide Filters" : "Show Filters"}
+                    </button>
+                </div>
             </form>
-        
-                {loading && <p>Loading...</p>}
+
+            {showFilters && (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                    {Object.keys(selectedFilters).map(category => (
+                        <div key={category}>
+                            <br />
+                            <h3>Filter by {category}:</h3>
+                            {getUniqueValuesForCategory(animals, category).map(value => (
+                                <div key={value} style={{marginBottom: '10px'}}>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedFilters[category].includes(value)}
+                                            onChange={() => handleFilterChange(category, value)}
+                                        />
+                                        {value}
+                                    </label>
+                                </div>
+                            ))}
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            
             <div className="container">
                 <div className="row pb-4">
                     {searchTerm === '' ? (
                         // If the search bar is empty, display the entire animal database
-                        animals.map(animal => (
-                            <div className="col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
-                                <AnimalGalleryCard animal={animal} />
-                            </div>
-                        ))
+                        results.length === 0 ? (
+                            animals.map(animal => (
+                                <div className="col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
+                                    <AnimalGalleryCard animal={animal} />
+                                </div>
+                            ))
+                        ) : (
+                            // If search bar is not empty, display only the searched animal type
+                            results.map(animal => (
+                                <div className="col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
+                                    <AnimalGalleryCard animal={animal} />
+                                </div>
+                            ))
+                        )
                     ) : (
                         // If search bar is not empty, display only the searched animal type
-                        results.map(animal => (
+                        filteredAnimals.map(animal => (
                             <div className="col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
                                 <AnimalGalleryCard animal={animal} />
                             </div>
@@ -77,8 +163,19 @@ const Pets = () => {
                     )}
                 </div>
             </div>
-        </>
+        </div>
     );
 };
+
+// Helper function to get unique values for a filter category
+function getUniqueValuesForCategory(animals, category) {
+    const values = new Set();
+    animals.forEach(animal => {
+        values.add(animal[category]);
+    });
+
+    const sortedValues = Array.from(values).sort((a, b) => a - b);
+    return sortedValues;
+}
 
 export default Pets;
