@@ -1,20 +1,14 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { auth, db } from "../../firebaseConfig";
-import { addDoc, collection } from "firebase/firestore";
+import { updateDoc, doc } from "firebase/firestore";
 import { AnimalForm } from ".";
 
-const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
-    const [newAnimal, setNewAnimal] = useState({
-        name: "",
-        age: "",
-        breed: "",
-        description: "",
-        type: "",
-        gender: "",
-        pictureUri: "",
-        available: true,
-        pendingAdoption: false
-    });
+const EditAnimalModal = ({ showModal, setShowModal, loadAnimals, animal }) => {
+    const [currentAnimal, setCurrentAnimal] = useState(animal);
+
+    useEffect(() => {
+        setCurrentAnimal(animal);
+    }, [animal]);
 
     const formRef = useRef(null);
 
@@ -22,37 +16,32 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
         setShowModal(false);
     };
 
-    const handleNewAnimalChange = (e) => {
+    const handleAnimalChange = (e) => {
         if (e.target.name === 'availability') {
             const isAvailable = e.target.value === 'true';
             const isPending = e.target.value === 'pending';
-            setNewAnimal({ 
-                ...newAnimal, 
+            setCurrentAnimal({ 
+                ...currentAnimal, 
                 available: isAvailable, 
                 pendingAdoption: isPending 
             });
         } else {
-            setNewAnimal({ ...newAnimal, [e.target.name]: e.target.value });
+            setCurrentAnimal({ ...currentAnimal, [e.target.name]: e.target.value });
         }
     };
 
-    const handleAddNewAnimal = async () => {
+    const handleUpdateAnimal = async () => {
         if (formRef.current && formRef.current.checkValidity()) {
-            await addDoc(collection(db, "animals"), {
-                ...newAnimal,
+
+            let curAnimalBody = {
+                ...currentAnimal,
                 shelterId: auth.currentUser.uid
-            });
+            }
+
+            delete curAnimalBody.id;
+
+            await updateDoc(doc(db, "animals", currentAnimal.id), curAnimalBody);
         setShowModal(false);
-        setNewAnimal({
-            name: "",
-            age: "",
-            breed: "",
-            description: "",
-            type: "",
-            gender: "",
-            pictureUri: "",
-            available: true
-        });
         loadAnimals(); // Refresh the list of animals
         } else {
             formRef.current && formRef.current.reportValidity();
@@ -77,15 +66,15 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
                 <div className="modal-dialog modal-xl">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">Add New Animal</h5>
+                            <h5 className="modal-title">Edit Animal</h5>
                             <button type="button" className="btn-close" onClick={handleModalClose}></button>
                         </div>
                         <div className="modal-body">
-                            <AnimalForm formRef={formRef} handleAnimalChange={handleNewAnimalChange} animal={newAnimal} />
+                            <AnimalForm formRef={formRef} handleAnimalChange={handleAnimalChange} animal={currentAnimal} />
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" onClick={handleModalClose}>Close</button>
-                            <button type="button" className="btn btn-primary" onClick={handleAddNewAnimal}>Add Animal</button>
+                            <button type="button" className="btn btn-primary" onClick={handleUpdateAnimal}>Update Animal</button>
                         </div>
                     </div>
                 </div>
@@ -94,4 +83,4 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
     );
 };
 
-export default AddAnimalModal;
+export default EditAnimalModal;

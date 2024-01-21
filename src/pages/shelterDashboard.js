@@ -4,6 +4,7 @@ import { collection, getDocs, query, where, deleteDoc, doc, updateDoc } from "fi
 
 import { AnimalGalleryCard } from "../components/Cards";
 import AddAnimalModal from "../components/Cards/AddAnimalModal";
+import EditAnimalModal from "../components/Cards/EditAnimalModal";
 
 const Dashboard = () => {
     // if user is not logged in, redirect to sign in page
@@ -12,10 +13,12 @@ const Dashboard = () => {
     const [animals, setAnimals] = useState([]);
     const [selectedAnimals, setSelectedAnimals] = useState([]);
     const [selectedAction, setSelectedAction] = useState("");
-    const [showModal, setShowModal] = useState(false);
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [currentAnimal, setCurrentAnimal] = useState({});
 
     const handleAddNewAnimalClick = () => {
-        setShowModal(true);
+        setShowAddModal(true);
     };
 
     const loadAnimals = async () => {
@@ -69,6 +72,11 @@ const Dashboard = () => {
         });
     };
 
+    const clickAnimal = (animal) => {
+        setCurrentAnimal(animal);
+        setShowEditModal(true);
+    }
+
     return (
         <>
         <div className="container mb-4">
@@ -99,13 +107,14 @@ const Dashboard = () => {
                     {
                         animals.map(animal => (
                             <div className="col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
-                                <AnimalGalleryCard animal={animal} selectable={true} selected={selectedAnimals.includes(animal.id)} onSelectAnimal={handleSelectAnimal} />
+                                <AnimalGalleryCard animal={animal} selectable={true} selected={selectedAnimals.includes(animal.id)} onSelectAnimal={handleSelectAnimal} onClickAnimal={clickAnimal} />
                             </div>
                         ))
                     }
                 </div>
             </div>
-            <AddAnimalModal showModal={showModal} setShowModal={setShowModal} loadAnimals={loadAnimals} />
+            <AddAnimalModal showModal={showAddModal} setShowModal={setShowAddModal} loadAnimals={loadAnimals} />
+            <EditAnimalModal showModal={showEditModal} setShowModal={setShowEditModal} loadAnimals={loadAnimals} animal={currentAnimal} />
         </>
     );
 };

@@ -10,7 +10,7 @@ import lizard from "../../assets/images/lizard.png";
 import fish from "../../assets/images/fish.png";
 import other from "../../assets/images/other.png";
 
-const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, selected }) => {
+const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, onClickAnimal, selected }) => {
     const [isSelected, setIsSelected] = useState(selected);
     const [animalImage, setAnimalImage] = useState("");
 
@@ -23,12 +23,20 @@ const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, selected }) => 
         onSelectAnimal(animal.id);
     };
 
+    const handleCardClick = (e) => {
+        // Check if the click came from a checkbox. If so, ignore it for the card click event.
+        if (e.target.type === 'checkbox') {
+            return;
+        }
+
+        if (onClickAnimal) {
+            onClickAnimal(animal);
+        }
+    };
+
+
     useEffect(() => {
         setAnimalImage(animal.pictureUri ? animal.pictureUri : getPlaceholderImage(animal.type));
-
-        console.log(getPlaceholderImage(animal.type))
-
-        console.log(animalImage)
     }, [animal.type, animal.pictureUri, animalImage]);
 
     const cardClass = isSelected ? "card border border-3 rounded-3 border-primary w-100" : "card w-100";
@@ -75,7 +83,7 @@ const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, selected }) => 
 
 
     return (
-        <div className={cardClass}>
+        <div className={cardClass} onClick={handleCardClick} style={ onClickAnimal ? { cursor: 'pointer' } : {}}>
             
             <div className="card-img-overlay d-flex" style={{ alignItems: 'flex-start', paddingTop: '0.5rem', paddingLeft: '0.5rem' }}>
                 <div className={`${textColor} ${statusColor}`} style={{ padding: '0.25rem 0.5rem', borderRadius: '0.25rem', fontSize: '0.8rem' }}>
@@ -95,7 +103,6 @@ const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, selected }) => 
             <img src={animalImage} className="card-img-top" alt={animal.name} />
             <div className="card-body text-start">
                 {animal.name && <h5 className="card-title">{animal.name}</h5> }
-                {animal.type && <p className="card-text"><strong>Type:</strong> {animal.type}</p> }
                 {animal.breed && <p className="card-text"><strong>Breed:</strong> {animal.breed}</p> }
                 {animal.age && <p className="card-text"><strong>Age:</strong> {animal.age}</p> }
                 {animal.gender && <p className="card-text"><strong>Gender:</strong> {animal.gender}</p> }
