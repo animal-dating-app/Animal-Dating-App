@@ -33,11 +33,11 @@ const Navbar = () => {
 
     // Check for user to update sign in /sign out button
     if (user) {
-        //console.log("User logged in")
+        console.log("User logged in")
         button = <NavBtnLink onClick={ handleLogout }>Sign Out</NavBtnLink>
     }   
     else {
-        //console.log("No user")
+        console.log("No user")
         button = <NavBtnLink to="/sign-in">Sign In</NavBtnLink>
     }
 
