@@ -52,9 +52,11 @@ const Dashboard = () => {
             if (e.target.value === "Delete") {
                 operations.push(deleteDoc(doc(db, "animals", animalId)));
             } else if (e.target.value === "Set Unavailable") {
-                operations.push(updateDoc(doc(db, "animals", animalId), { available: false }));
+                operations.push(updateDoc(doc(db, "animals", animalId), { available: false, pendingAdoption: false }));
             } else if (e.target.value === "Set Available") {
-                operations.push(updateDoc(doc(db, "animals", animalId), { available: true }));
+                operations.push(updateDoc(doc(db, "animals", animalId), { available: true, pendingAdoption: false }));
+            } else if (e.target.value === "Set Pending") {
+                operations.push(updateDoc(doc(db, "animals", animalId), { available: false, pendingAdoption: true }));
             }
         });
     
@@ -80,8 +82,9 @@ const Dashboard = () => {
                             value={selectedAction}
                         >
                             <option disabled value="">Select Action</option>
-                            <option value="Set Unavailable">Set Unavailable</option>
                             <option value="Set Available">Set Available</option>
+                            <option value="Set Pending">Set Pending</option>
+                            <option value="Set Unavailable">Set Unavailable</option>
                             <option value="Delete">Delete</option>
                         </select>
                     </div>

@@ -12,7 +12,8 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
         type: "",
         gender: "",
         pictureUri: "",
-        available: true
+        available: true,
+        pendingAdoption: false
     });
 
     const formRef = useRef(null);
@@ -22,7 +23,19 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
     };
 
     const handleNewAnimalChange = (e) => {
-        setNewAnimal({ ...newAnimal, [e.target.name]: e.target.value });
+        if (e.target.name === 'availability') {
+            const isAvailable = e.target.value === 'true';
+            const isPending = e.target.value === 'pending';
+            setNewAnimal({ 
+                ...newAnimal, 
+                available: isAvailable, 
+                pendingAdoption: isPending 
+            });
+
+            console.log(newAnimal)
+        } else {
+            setNewAnimal({ ...newAnimal, [e.target.name]: e.target.value });
+        }
     };
 
     const handleAddNewAnimal = async () => {
@@ -76,9 +89,21 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
                                         <label htmlFor="name" className="form-label">Name</label>
                                         <input type="text" className="form-control mb-2" id="name" placeholder="Name" name="name" value={newAnimal.name} onChange={handleNewAnimalChange} required />
                                         
-                                        <label htmlFor="type" className="form-label">Type</label>
-                                        <input type="text" className="form-control mb-2" id="type" placeholder="Type" name="type" value={newAnimal.type} onChange={handleNewAnimalChange} required />
-
+                                        <label htmlFor="type" className="form-label text-start">Type</label>
+                                        <select className="form-select mb-2" id="type" name="type" value={newAnimal.type} onChange={handleNewAnimalChange} required>
+                                            <option value="">Select Type</option>
+                                            <option value="Dog">Dog</option>
+                                            <option value="Cat">Cat</option>
+                                            <option value="Rabbit">Rabbit</option>
+                                            <option value="Hamster">Hamster</option>
+                                            <option value="Bird">Bird</option>
+                                            <option value="Fish">Fish</option>
+                                            <option value="Turtle">Turtle</option>
+                                            <option value="Snake">Snake</option>
+                                            <option value="Lizard">Lizard</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                        
                                         <label htmlFor="breed" className="form-label">Breed</label>
                                         <input type="text" className="form-control mb-2" id="breed" placeholder="Breed" name="breed" value={newAnimal.breed} onChange={handleNewAnimalChange} required />
 
@@ -98,10 +123,11 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
                                         <label htmlFor="pictureUri" className="form-label text-start">Image URL</label>
                                         <input type="url" className="form-control mb-2" id="pictureUri" placeholder="Image URL" name="pictureUri" value={newAnimal.pictureUri} onChange={handleNewAnimalChange} pattern="https?://.+" />
 
-                                        <label htmlFor="available" className="form-label">Available</label>
-                                        <select className="form-select mb-2" id="available" name="available" value={newAnimal.available} onChange={(e) => setNewAnimal({ ...newAnimal, available: e.target.value === 'true' })} required>
-                                            <option value="true">Yes</option>
-                                            <option value="false">No</option>
+                                        <label htmlFor="availability" className="form-label">Status</label>
+                                        <select className="form-select mb-2" id="availability" name="availability" value={newAnimal.pendingAdoption === true ? "pending" : newAnimal.available} onChange={handleNewAnimalChange} required>
+                                            <option value="true">Available</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="false">Not Available</option>
                                         </select>
                                     </form>
                                 </div>
