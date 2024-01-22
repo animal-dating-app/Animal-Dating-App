@@ -13,7 +13,7 @@ import other from "../../assets/images/other.png";
 const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, onClickAnimal, selected }) => {
     const [isSelected, setIsSelected] = useState(selected);
     const [animalImage, setAnimalImage] = useState("");
-
+ 
     useEffect(() => {
         setIsSelected(selected);
     }, [selected]);
@@ -82,7 +82,7 @@ const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, onClickAnimal, 
     }
 
 
-    return (
+    return (  
         <div className={cardClass} onClick={handleCardClick} style={ onClickAnimal ? { cursor: 'pointer' } : {}}>
             
             <div className="card-img-overlay d-flex" style={{ alignItems: 'flex-start', paddingTop: '0.5rem', paddingLeft: '0.5rem' }}>
@@ -107,6 +107,7 @@ const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, onClickAnimal, 
                 {animal.age && <p className="card-text"><strong>Age:</strong> {animal.age}</p> }
                 {animal.gender && <p className="card-text"><strong>Gender:</strong> {animal.gender}</p> }
                 {animal.description && <p className="card-text">{animal.description}</p> }
+                <br></br><strong>Click to learn more!</strong>
             </div>
         </div>
     );

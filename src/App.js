@@ -13,6 +13,7 @@ import Pets from "./pages/pets.js";
 import SignUp from "./pages/signup";
 import SignIn from "./pages/signin.js";
 import Dashboard from "./pages/shelterDashboard.js";
+import Pet from "./pages/pet.js";
 
 function App() {
     return (
@@ -29,6 +30,7 @@ function App() {
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/sign-up" element={<SignUp />} />
                     <Route path="/sign-in" element={<SignIn />} />
+                    <Route path="/pet" element={<Pet />} />
                 </Routes>
                 <Footer />
             </div>

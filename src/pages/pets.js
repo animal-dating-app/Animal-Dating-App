@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import { db } from "../firebaseConfig";
 import { collection, getDocs, where, query, or } from "firebase/firestore";
 import { AnimalGalleryCard } from "../components/Cards";
+import { useNavigate } from 'react-router-dom';
 
 const Pets = () => {
     const [animals, setAnimals] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const getAnimals = async () => {
@@ -66,14 +69,14 @@ const Pets = () => {
                         // If the search bar is empty, display the entire animal database
                         animals.map(animal => (
                             <div className="col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
-                                <AnimalGalleryCard animal={animal} />
+                                <AnimalGalleryCard animal={animal} onClickAnimal={() => navigate('/pet', {state:{pet:animal}})}/>
                             </div>
                         ))
                     ) : (
                         // If search bar is not empty, display only the searched animal type
                         results.map(animal => (
                             <div className="col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
-                                <AnimalGalleryCard animal={animal} />
+                                <AnimalGalleryCard animal={animal} onClickAnimal={() => navigate('/pet', {state:{pet:animal}})}/>
                             </div>
                         ))
                     )}
