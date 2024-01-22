@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Nav,
     NavLink,
@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
  
  
 const Navbar = () => {
-
+    const [isActive, setIsActive] = useState(false); 
     let button;
     const navigate = useNavigate();
 
@@ -44,27 +44,25 @@ const Navbar = () => {
     return (
         <>
             <Nav>
-                <Bars />
- 
-                <NavMenu>
-                    <NavLink to="/" >
+                <Bars onClick={() => setIsActive(!isActive)} /> 
+
+                <NavMenu active={isActive}> 
+                    <NavLink to="/" onClick={() => setIsActive(false)}>
                         Home
                     </NavLink>
-                    <NavLink to="/pets" >
+                    <NavLink to="/pets" onClick={() => setIsActive(false)}>
                         Pets
                     </NavLink>
-                    { user && 
-                    <NavLink to="/dashboard" >
-                        Dashboard
-                    </NavLink>
-                    }
-                    { !user && 
-                    <NavLink to="/sign-up" activeStyle>
-                        Sign Up
-                    </NavLink>
-                    }
-                    {/* Second Nav */}
-                    {/* <NavBtnLink to='/sign-in'>Sign In</NavBtnLink> */}
+                    {user && (
+                        <NavLink to="/dashboard" onClick={() => setIsActive(false)}>
+                            Dashboard
+                        </NavLink>
+                    )}
+                    {!user && (
+                        <NavLink to="/sign-up" onClick={() => setIsActive(false)} activeStyle>
+                            Sign Up
+                        </NavLink>
+                    )}
                 </NavMenu>
                 <NavBtn>
                     {button}
@@ -73,5 +71,5 @@ const Navbar = () => {
         </>
     );
 };
- 
+
 export default Navbar;
