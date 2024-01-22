@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
 import dog from "../../assets/images/dog.png";
 import cat from "../../assets/images/cat.png";
 import rabbit from "../../assets/images/rabbit.png";
@@ -14,8 +13,6 @@ import other from "../../assets/images/other.png";
 const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, onClickAnimal, selected }) => {
     const [isSelected, setIsSelected] = useState(selected);
     const [animalImage, setAnimalImage] = useState("");
-
-    const navigate = useNavigate();
  
     useEffect(() => {
         setIsSelected(selected);
@@ -35,9 +32,6 @@ const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, onClickAnimal, 
         if (onClickAnimal) {
             onClickAnimal(animal);
         }
-
-        // Navigate to Pet Profile
-        navigate('/pet', {state:{pet:animal}});
     };
 
 
