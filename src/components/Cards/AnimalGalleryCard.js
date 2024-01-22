@@ -1,17 +1,112 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import dog from "../../assets/images/dog.png";
+import cat from "../../assets/images/cat.png";
+import rabbit from "../../assets/images/rabbit.png";
+import bird from "../../assets/images/bird.png";
+import hamster from "../../assets/images/hamster.png";
+import turtle from "../../assets/images/turtle.png";
+import snake from "../../assets/images/snake.png";
+import lizard from "../../assets/images/lizard.png";
+import fish from "../../assets/images/fish.png";
+import other from "../../assets/images/other.png";
 
-const AnimalGalleryCard = ({ animal }) => {
+const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, onClickAnimal, selected }) => {
+    const [isSelected, setIsSelected] = useState(selected);
+    const [animalImage, setAnimalImage] = useState("");
+
+    useEffect(() => {
+        setIsSelected(selected);
+    }, [selected]);
+
+    const handleSelect = (e) => {
+        setIsSelected(e.target.checked);
+        onSelectAnimal(animal.id);
+    };
+
+    const handleCardClick = (e) => {
+        // Check if the click came from a checkbox. If so, ignore it for the card click event.
+        if (e.target.type === 'checkbox') {
+            return;
+        }
+
+        if (onClickAnimal) {
+            onClickAnimal(animal);
+        }
+    };
+
+
+    useEffect(() => {
+        setAnimalImage(animal.pictureUri ? animal.pictureUri : getPlaceholderImage(animal.type));
+    }, [animal.type, animal.pictureUri, animalImage]);
+
+    const cardClass = isSelected ? "card border border-3 rounded-3 border-primary w-100" : "card w-100";
+
+    function getPlaceholderImage(type) {
+        switch (type) {
+            case "Dog":
+                return dog;
+            case "Cat":
+                return cat;
+            case "Rabbit":
+                return rabbit;
+            case "Bird":
+                return bird;
+            case "Hamster":
+                return hamster;
+            case "Turtle":
+                return turtle;
+            case "Snake":
+                return snake;
+            case "Lizard":
+                return lizard;
+            case "Fish":
+                return fish;
+            default:
+                return other;
+        }
+    }
+
+    let statusColor, statusText, textColor;
+    if (animal.pendingAdoption) {
+        statusColor = 'bg-warning';
+        statusText = 'Pending';
+        textColor = 'text-dark';
+    } else if (animal.available) {
+        statusColor = 'bg-success';
+        statusText = 'Available';
+        textColor = 'text-white';
+    } else {
+        statusColor = 'bg-secondary';
+        statusText = 'Not Available';
+        textColor = 'text-white';
+    }
+
+
     return (
-        <div className="card">
-            <img src={animal.pictureUri} className="card-img-top" alt={animal.name} />
+        <div className={cardClass} onClick={handleCardClick} style={ onClickAnimal ? { cursor: 'pointer' } : {}}>
+            
+            <div className="card-img-overlay d-flex" style={{ alignItems: 'flex-start', paddingTop: '0.5rem', paddingLeft: '0.5rem' }}>
+                <div className={`${textColor} ${statusColor}`} style={{ padding: '0.25rem 0.5rem', borderRadius: '0.25rem', fontSize: '0.8rem' }}>
+                    {statusText}
+                </div>
+            </div>
+            {selectable && (
+                <div className="card-img-overlay d-flex justify-content-end">
+                    <input 
+                        type="checkbox" 
+                        className="form-check-input mt-2 me-2" 
+                        checked={isSelected}
+                        onChange={handleSelect} 
+                    />
+                </div>
+            )}
+            <img src={animalImage} className="card-img-top" alt={animal.name} />
             <div className="card-body text-start">
-                <h5 className="card-title">{animal.name}</h5>
-                <p className="card-text"><strong>Type:</strong> {animal.type}</p>
-                <p className="card-text"><strong>Breed:</strong> {animal.breed}</p>
-                <p className="card-text"><strong>Age:</strong> {animal.age}</p>
-                <p className="card-text"><strong>Gender:</strong> {animal.gender}</p>
-                <p className="card-text">{animal.description}</p>
-                <p className="card-text"><strong>Available:</strong> {animal.available ? "Yes" : "No"}</p>
+                {animal.name && <h5 className="card-title">{animal.name}</h5> }
+                {animal.breed && <p className="card-text"><strong>Breed:</strong> {animal.breed}</p> }
+                {animal.age && <p className="card-text"><strong>Age:</strong> {animal.age}</p> }
+                {animal.gender && <p className="card-text"><strong>Gender:</strong> {animal.gender}</p> }
+                {animal.description && <p className="card-text">{animal.description}</p> }
             </div>
         </div>
     );

@@ -53,9 +53,16 @@ const Navbar = () => {
                     <NavLink to="/pets" >
                         Pets
                     </NavLink>
+                    { user && 
+                    <NavLink to="/dashboard" >
+                        Dashboard
+                    </NavLink>
+                    }
+                    { !user && 
                     <NavLink to="/sign-up" activeStyle>
                         Sign Up
                     </NavLink>
+                    }
                     {/* Second Nav */}
                     {/* <NavBtnLink to='/sign-in'>Sign In</NavBtnLink> */}
                 </NavMenu>
