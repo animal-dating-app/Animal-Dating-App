@@ -222,14 +222,14 @@ const Pets = () => {
                         results.length === 0 ? (
                             animals.map(animal => (
                                 <div className="col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
-                                    <AnimalGalleryCard animal={animal} />
+                                    <AnimalGalleryCard animal={animal} onClickAnimal={() => navigate('/pet', {state:{pet:animal}})}/>
                                 </div>
                             ))
                         ) : (
                             // If search bar is not empty, display only the searched animal type
                             results.map(animal => (
                                 <div className="col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
-                                    <AnimalGalleryCard animal={animal} />
+                                    <AnimalGalleryCard animal={animal} onClickAnimal={() => navigate('/pet', {state:{pet:animal}})}/>
                                 </div>
                             ))
                         )
