@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { db } from "../firebaseConfig";
 import { collection, getDocs, where, query, or } from "firebase/firestore";
 import { AnimalGalleryCard } from "../components/Cards";
+import { useNavigate } from 'react-router-dom';
 
 const Pets = () => {
     const [animals, setAnimals] = useState([]);
@@ -208,7 +209,7 @@ const Pets = () => {
                         // If search bar is not empty, display only the searched animal type
                         filteredAnimals.map(animal => (
                             <div className="col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
-                                <AnimalGalleryCard animal={animal} />
+                                <AnimalGalleryCard animal={animal} onClickAnimal={() => navigate('/pet', {state:{pet:animal}})}/>
                             </div>
                         ))
                     )}

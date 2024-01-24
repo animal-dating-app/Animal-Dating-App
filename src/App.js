@@ -7,11 +7,13 @@ import {
     Routes,
     Route,
 } from "react-router-dom";
-import Home from "./pages";
+import Homes from "./pages/availablepet";
 import Pets from "./pages/pets.js";
+//import availablepet from "./pages/availablepet";
 import SignUp from "./pages/signup";
 import SignIn from "./pages/signin.js";
 import Dashboard from "./pages/shelterDashboard.js";
+import Pet from "./pages/pet.js";
 
 function App() {
     return (
@@ -23,11 +25,12 @@ function App() {
                     <p>Coming Soon!</p>
                 </div>
                 <Routes>
-                    <Route path="/" element={<Home />} />
+                    <Route path="/" element={<Homes />} />
                     <Route path="/pets" element={<Pets />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/sign-up" element={<SignUp />} />
                     <Route path="/sign-in" element={<SignIn />} />
+                    <Route path="/pet" element={<Pet />} />
                 </Routes>
                 <Footer />
             </div>
