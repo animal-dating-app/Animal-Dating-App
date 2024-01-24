@@ -14,7 +14,7 @@ const Pets = () => {
         breed: [],
         age: [],
         gender: [],
-        availability: [],
+        availability: [true, false],   // For animals that are either available or not available
     });
 
     useEffect(() => {
@@ -36,8 +36,8 @@ const Pets = () => {
         //setLoading(true);
     
         const animalRef = collection(db, 'animals');
-            const q = query(animalRef, or(where("available", "==", true), where("pendingAdoption", "==", true)));
-            const querySnapshot = await getDocs(q);
+        const q = query(animalRef, or(where("available", "==", true), where("pendingAdoption", "==", true)));
+        const querySnapshot = await getDocs(q);
     
         const searchResults = querySnapshot.docs
         .map(doc => ({
@@ -73,17 +73,25 @@ const Pets = () => {
 
     const applyFilters = (animal) => {
 
-        if (searchTerm.trim() === "")
-        {
+        if (searchTerm.trim() === "") {
+
             return true;
         }
+
         // Check if animal matches all selected filter categories
         for (const category in selectedFilters) {
 
-            if (selectedFilters[category].length > 0 && !selectedFilters[category].includes(animal[category])) {
+            if (category === "availability") {
+                const availabilityValue = animal.available;
 
+                if (selectedFilters[category].length > 0 && !selectedFilters[category].includes(availabilityValue)) {
+
+                    return false;
+                }
+
+            } else if (selectedFilters[category].length > 0 && !selectedFilters[category].includes(animal[category])) {
                 return false;
-            }
+            }     
         }
 
         return animal.type.toLowerCase() === searchTerm.toLowerCase();
@@ -134,22 +142,46 @@ const Pets = () => {
             {showFilters && (
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                     {Object.keys(selectedFilters).map(category => (
-                        <div key={category}>
-                            <br />
-                            <h3>Filter by {category}:</h3>
-                            {getUniqueValuesForCategory(animals, category).map(value => (
-                                <div key={value} style={{marginBottom: '10px'}}>
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedFilters[category].includes(value)}
-                                            onChange={() => handleFilterChange(category, value)}
-                                        />
-                                        {value}
-                                    </label>
-                                </div>
-                            ))}
-                        </div>
+                        category !== 'type' && (
+                            <div key={category}>
+                                <br />
+                                <h3>Filter by {category}:</h3>
+                                {category === 'availability' ? (
+                                    // Use "Yes" and "No" labels but set values to true and false
+                                    <div>
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedFilters[category].includes(true)}
+                                                onChange={() => handleFilterChange(category, true)}
+                                            />
+                                            Yes
+                                        </label>
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedFilters[category].includes(false)}
+                                                onChange={() => handleFilterChange(category, false)}
+                                            />
+                                            No
+                                        </label>
+                                    </div>
+                                ) : (
+                                getUniqueValuesForCategory(animals, category).map(value => (
+                                    <div key={value} style={{marginBottom: '10px'}}>
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedFilters[category].includes(value)}
+                                                onChange={() => handleFilterChange(category, value)}
+                                            />
+                                            {value}
+                                        </label>
+                                    </div>
+                                ))
+                                )}
+                            </div>
+                        )
                     ))}
                 </div>
             )}
