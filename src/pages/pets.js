@@ -14,7 +14,7 @@ const Pets = () => {
         breed: [],
         age: [],
         gender: [],
-        availability: [true, false],   // For animals that are either available or not available
+        availability: [],
     });
 
     useEffect(() => {
@@ -147,7 +147,6 @@ const Pets = () => {
                                 <br />
                                 <h3>Filter by {category}:</h3>
                                 {category === 'availability' ? (
-                                    // Use "Yes" and "No" labels but set values to true and false
                                     <div>
                                         <label>
                                             <input
@@ -167,18 +166,18 @@ const Pets = () => {
                                         </label>
                                     </div>
                                 ) : (
-                                getUniqueValuesForCategory(animals, category).map(value => (
-                                    <div key={value} style={{marginBottom: '10px'}}>
-                                        <label>
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedFilters[category].includes(value)}
-                                                onChange={() => handleFilterChange(category, value)}
-                                            />
-                                            {value}
-                                        </label>
-                                    </div>
-                                ))
+                                    getUniqueValuesForCategory(animals, category).map(value => (
+                                        <div key={value} style={{marginBottom: '10px'}}>
+                                            <label>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedFilters[category].includes(value)}
+                                                    onChange={() => handleFilterChange(category, value)}
+                                                />
+                                                {value}
+                                            </label>
+                                        </div>
+                                    ))
                                 )}
                             </div>
                         )
