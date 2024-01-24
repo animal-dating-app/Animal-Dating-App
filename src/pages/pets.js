@@ -71,6 +71,10 @@ const Pets = () => {
 
     const applyFilters = (animal) => {
 
+        if (searchTerm.trim() === "")
+        {
+            return true;
+        }
         // Check if animal matches all selected filter categories
         for (const category in selectedFilters) {
 
@@ -79,7 +83,8 @@ const Pets = () => {
                 return false;
             }
         }
-        return true;
+
+        return animal.type.toLowerCase() === searchTerm.toLowerCase();
     };
 
     const filteredAnimals = animals.filter(animal => applyFilters(animal));
