@@ -32,13 +32,43 @@ const Pets = () => {
         getAnimals();
     }, []);
 
+    useEffect(() => {
+        // Add an event listener to the search input field
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('input', handleInputChange);
+
+        return () => {
+
+            searchInput.removeEventListener('input', handleInputChange);
+
+        };
+    }, []);
+
+    const handleInputChange = (e) => {
+        const inputValue = e.target.value;
+        setSearchTerm(inputValue);
+
+        if (inputValue.trim() === "") {
+            // Reset the results when the input field is empty
+            setResults([]); 
+            // Reset filter checkboxes by setting all filter categories to empty arrays
+            setSelectedFilters({
+                type: [],
+                breed: [],
+                age: [],
+                gender: [],
+                availability: [],
+            });
+        }
+    };
+
     const handleSearch = async (e) => {
         e.preventDefault();
     
         const animalRef = collection(db, 'animals');
         const q = query(animalRef, or(where("available", "==", true), where("pendingAdoption", "==", true)));
         const querySnapshot = await getDocs(q);
-    
+
         const searchResults = querySnapshot.docs
         .map(doc => ({
             searchTerm: doc.searchTerm,
@@ -48,7 +78,7 @@ const Pets = () => {
 
         if (searchResults.length === 0 && searchTerm !== '') {
             alert("Sorry we do not have " + searchTerm + " in our database just yet. Please stay tuned!");
-         }
+        }
     
         setResults(searchResults);
     };
