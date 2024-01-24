@@ -11,6 +11,7 @@ import Home from "./pages";
 import Pets from "./pages/pets.js";
 import SignUp from "./pages/signup";
 import SignIn from "./pages/signin.js";
+import Dashboard from "./pages/shelterDashboard.js";
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/pets" element={<Pets />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/sign-up" element={<SignUp />} />
                     <Route path="/sign-in" element={<SignIn />} />
                 </Routes>

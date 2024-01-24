@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../firebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, where, query, or } from "firebase/firestore";
 import { AnimalGalleryCard } from "../components/Cards";
 
 const Pets = () => {
@@ -20,7 +20,8 @@ const Pets = () => {
     useEffect(() => {
         const getAnimals = async () => {
             const animalRef = collection(db, "animals");
-            const animalSnapshot = await getDocs(animalRef);
+            const q = query(animalRef, or(where("available", "==", true), where("pendingAdoption", "==", true)));
+            const animalSnapshot = await getDocs(q);
             const animalList = animalSnapshot.docs.map(doc => {
                 return { id: doc.id, ...doc.data() };
             });
@@ -35,7 +36,8 @@ const Pets = () => {
         //setLoading(true);
     
         const animalRef = collection(db, 'animals');
-        const querySnapshot = await getDocs(animalRef);
+            const q = query(animalRef, or(where("available", "==", true), where("pendingAdoption", "==", true)));
+            const querySnapshot = await getDocs(q);
     
         const searchResults = querySnapshot.docs
         .map(doc => ({
