@@ -8,7 +8,6 @@ const Pets = () => {
     const [animals, setAnimals] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [results, setResults] = useState([]);
-    //const [loading, setLoading] = useState(false);
     const [showFilters, setShowFilters] = useState(false);
     const [selectedFilters, setSelectedFilters] = useState({
         type: [],
@@ -17,6 +16,7 @@ const Pets = () => {
         gender: [],
         availability: [],
     });
+    const navigate = useNavigate();
 
     useEffect(() => {
         const getAnimals = async () => {
@@ -34,7 +34,6 @@ const Pets = () => {
 
     const handleSearch = async (e) => {
         e.preventDefault();
-        //setLoading(true);
     
         const animalRef = collection(db, 'animals');
         const q = query(animalRef, or(where("available", "==", true), where("pendingAdoption", "==", true)));
@@ -52,7 +51,6 @@ const Pets = () => {
          }
     
         setResults(searchResults);
-        //setLoading(false);
     };
 
     const handleFilterChange = (filterCategory, filterValue) => {
