@@ -191,7 +191,7 @@ const Pets = () => {
                                                 checked={selectedFilters[category].includes(false)}
                                                 onChange={() => handleFilterChange(category, false)}
                                             />
-                                            No
+                                            Pending
                                         </label>
                                     </div>
                                 ) : (
