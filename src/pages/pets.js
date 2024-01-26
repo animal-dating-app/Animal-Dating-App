@@ -58,8 +58,54 @@ const Pets = () => {
                     />
                     <button type="submit">Search</button>
             </form>
-        
-                {loading && <p>Loading...</p>}
+
+            {showFilters && (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                    {Object.keys(selectedFilters).map(category => (
+                        category !== 'type' && (
+                            <div key={category}>
+                                <br />
+                                <h3>Filter by {category}:</h3>
+                                {category === 'availability' ? (
+                                    <div>
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedFilters[category].includes(true)}
+                                                onChange={() => handleFilterChange(category, true)}
+                                            />
+                                            Yes
+                                        </label>
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedFilters[category].includes(false)}
+                                                onChange={() => handleFilterChange(category, false)}
+                                            />
+                                            Pending
+                                        </label>
+                                    </div>
+                                ) : (
+                                    getUniqueValuesForCategory(animals, category).map(value => (
+                                        <div key={value} style={{marginBottom: '10px'}}>
+                                            <label>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedFilters[category].includes(value)}
+                                                    onChange={() => handleFilterChange(category, value)}
+                                                />
+                                                {value}
+                                            </label>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        )
+                    ))}
+                </div>
+            )}
+
+            
             <div className="container">
                 <div className="row pb-4">
                     {searchTerm === '' ? (
