@@ -183,7 +183,7 @@ const Pets = () => {
                                                 checked={selectedFilters[category].includes(true)}
                                                 onChange={() => handleFilterChange(category, true)}
                                             />
-                                            Yes
+                                            Available
                                         </label>
                                         <label>
                                             <input

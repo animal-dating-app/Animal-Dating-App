@@ -22,7 +22,6 @@ function App() {
                 <Navbar />
                 <div className="container-fluid text-center mt-5">
                     <h1>Dating App for Animal Adoption</h1>
-                    <p>Coming Soon!</p>
                 </div>
                 <Routes>
                     <Route path="/" element={<Homes />} />
