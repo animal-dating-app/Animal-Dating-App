@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { dog, cat, rabbit, bird, hamster, turtle, snake, lizard, fish, other } from "../../assets/images";
 
-const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, onClickAnimal, selected }) => {
+const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, onClickAnimal, selected, callToAction }) => {
     const [isSelected, setIsSelected] = useState(selected);
     const [animalImage, setAnimalImage] = useState("");
 
@@ -52,6 +52,8 @@ const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, onClickAnimal, 
         statusText = 'Unavailable';
     }
 
+    if (callToAction === undefined) callToAction = "Click to learn more!";
+
     return (
         <div className={cardClass} onClick={handleCardClick} style={ onClickAnimal ? { cursor: 'pointer' } : {}}>
             <div className="card-img-overlay d-flex" style={{ alignItems: 'flex-start', paddingTop: '0.5rem', paddingLeft: '0.5rem' }}>
@@ -76,7 +78,7 @@ const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, onClickAnimal, 
                 {animal.age && <p className="card-text"><strong>Age:</strong> {animal.age}</p> }
                 {animal.gender && <p className="card-text"><strong>Gender:</strong> {animal.gender}</p> }
                 {animal.description && <p className="card-text">{animal.description}</p> }
-                <br></br><strong>Click to learn more!</strong>
+                {callToAction && <><br></br><strong>{callToAction}</strong></> }
             </div>
         </div>
     );

@@ -103,7 +103,7 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal}) => {
             </div>
             <div className="col-lg-6 mt-lg-0 mt-4">
                 <div>
-                    <AnimalGalleryCard animal={animal} selectable={false} />
+                    <AnimalGalleryCard animal={animal} selectable={false} callToAction="" />
                 </div>
             </div>
         </div>
