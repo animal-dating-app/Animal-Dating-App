@@ -20,7 +20,7 @@ const AnimalHomecard = ({ animal }) => {
       </div>
 
       {/* Add your own styling or classNames as needed */}
-      <style jsx>{`
+      <style>{`
         .card {
           background-color: #f8f9fa;
           border: 1px solid rgba(0, 0, 0, 0.125);
