@@ -74,7 +74,6 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal}) => {
                     <input type="text" className="form-control mb-2" placeholder="Name" name="name" value={animal.name} onChange={handleAnimalChange} required />
                     
                     <label htmlFor="type" className="form-label text-start">Type</label>
-                    {/* Make this look like a bootstrap input */}
                     <Select className="mb-2" name="type" value={animalTypes.filter(type => type.value === animal.type)} styles={selectStyles}
                         onChange={(e) => handleSelectChange('type', e.value)} required options={animalTypes} placeholder="Select Type" />  
                     

@@ -1,9 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { auth, db } from "../../firebaseConfig";
 import { addDoc, collection } from "firebase/firestore";
 import { AnimalForm } from ".";
 
 const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
+    const [unsavedChanges, setUnsavedChanges] = useState(false);
     const [newAnimal, setNewAnimal] = useState({
         name: "",
         age: "",
@@ -18,11 +19,25 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
 
     const formRef = useRef(null);
 
+    useEffect(() => {
+        if (!showModal) {
+            setUnsavedChanges(false);
+        }
+    }, [showModal]);
+
     const handleModalClose = () => {
-        setShowModal(false);
+        if (unsavedChanges) {
+            const confirmLeave = window.confirm("You have unsaved changes. Are you sure you want to close?");
+            if (confirmLeave) {
+                setShowModal(false);
+            }
+        } else {
+            setShowModal(false);
+        }
     };
 
     const handleNewAnimalChange = (e) => {
+        setUnsavedChanges(true);
         if (e.target.name === 'availability') {
             const isAvailable = e.target.value === 'true';
             const isPending = e.target.value === 'pending';
@@ -53,6 +68,7 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
             pictureUri: "",
             available: true
         });
+        setUnsavedChanges(false);
         loadAnimals(); // Refresh the list of animals
         } else {
             formRef.current && formRef.current.reportValidity();
