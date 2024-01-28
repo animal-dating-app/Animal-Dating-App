@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { auth } from "../firebaseConfig";
 import { NavLink, useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
  
-const SignIn = () => {
-
+const SignIn = ({ user }) => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    if (user) navigate("/");
 
     const onLogin = (e) => {
         e.preventDefault();
@@ -24,11 +25,6 @@ const SignIn = () => {
             console.log(errorCode, errorMessage)
         });
     }
-
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((user) => user && navigate("/"));
-        return () => unsubscribe();
-    }, [navigate]);
 
     return (
         <div>                                            
