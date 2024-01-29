@@ -16,8 +16,8 @@ const SignUp = () => {
       await createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             // Signed in
-            const user = userCredential.user;
-            console.log(user);
+            //const user = userCredential.user;
+            //console.log(user);
             navigate("/")
             // ...
         })

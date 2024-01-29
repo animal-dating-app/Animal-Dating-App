@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import { db } from "../firebaseConfig";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import {AnimalHomecard} from "../components/Cards";
+import { useNavigate } from 'react-router-dom';
 
 const Homes = () => {
     const [animals, setAnimals] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const getAvailableAnimals = () => {
@@ -38,7 +41,7 @@ const Homes = () => {
                 <div className="row pb-4">
                     {animals.map((animal) => (
                         <div className="col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
-                            <AnimalHomecard animal={animal} />
+                            <AnimalHomecard animal={animal} onClickAnimal={() => navigate('/pet', {state:{pet:animal}})} />
                         </div>
                     ))}
                 </div>

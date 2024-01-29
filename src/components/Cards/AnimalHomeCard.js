@@ -1,8 +1,13 @@
 import React from "react";
 
-const AnimalHomecard = ({ animal }) => {
+const AnimalHomecard = ({ animal , onClickAnimal}) => {
+  
+  const hancleCardClick = () => {
+    onClickAnimal(animal);
+  }
+
   return (
-    <div className="card">
+    <div className="card" onClick={hancleCardClick}>
       <div id={`carousel-${animal.id}`} className="carousel slide" data-bs-ride="carousel">
         <div className="carousel-inner">
           <div className="carousel-item active">
