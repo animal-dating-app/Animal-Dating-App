@@ -5,6 +5,8 @@ const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, onClickAnimal, 
     const [isSelected, setIsSelected] = useState(selected);
     const [animalImage, setAnimalImage] = useState("");
 
+    const petsPath = (window.location.pathname === "/pets") ? true : false;
+ 
     useEffect(() => {
         setIsSelected(selected);
     }, [selected]);
@@ -78,8 +80,18 @@ const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, onClickAnimal, 
                 {animal.age && <p className="card-text"><strong>Age:</strong> {animal.age}</p> }
                 {animal.gender && <p className="card-text"><strong>Gender:</strong> {animal.gender}</p> }
                 {animal.description && <p className="card-text">{animal.description}</p> }
+                 
                 {callToAction && <><br></br><strong>{callToAction}</strong></> }
+
             </div>
+           {petsPath && (
+                <style jsx>{`        
+                .card:hover {
+                    transform: scale(1.05);
+                }
+                `}</style>
+           )}
+
         </div>
     );
 }
