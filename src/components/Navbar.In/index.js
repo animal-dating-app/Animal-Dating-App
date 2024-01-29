@@ -10,9 +10,8 @@ import {
 import { auth } from "../../firebaseConfig";
 import {  signOut } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
- 
- 
-const Navbar = () => {
+
+const Navbar = ({ user }) => {
     const [isActive, setIsActive] = useState(false); 
     let button;
     const navigate = useNavigate();
@@ -22,22 +21,17 @@ const Navbar = () => {
         signOut(auth).then(() => {
             // Sign-out successful.
             navigate("/");
-            console.log("Signed out successfully")
+
         }).catch((error) => {
             // An error happened.
         });
     }
 
-    // Get user from auth 
-    const user = auth.currentUser;
-
     // Check for user to update sign in /sign out button
     if (user) {
-        console.log("User logged in")
         button = <NavBtnLink onClick={ handleLogout }>Sign Out</NavBtnLink>
     }   
     else {
-        console.log("No user")
         button = <NavBtnLink to="/sign-in">Sign In</NavBtnLink>
     }
 
@@ -59,7 +53,7 @@ const Navbar = () => {
                         </NavLink>
                     )}
                     {!user && (
-                        <NavLink to="/sign-up" onClick={() => setIsActive(false)} activeStyle>
+                        <NavLink to="/sign-up" onClick={() => setIsActive(false)}>
                             Sign Up
                         </NavLink>
                     )}
