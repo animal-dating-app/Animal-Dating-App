@@ -14,7 +14,11 @@ const Pet = () => {
     // Get user from auth 
     const user = auth.currentUser;
     // Check if user is owner of animal 
-    const owner = (user.uid === animal.shelterId) ? true : false;
+    let owner = false;
+    if (user) {
+         owner = (user.uid === animal.shelterId) ? true : false;
+    }
+
 
     const [animals, setAnimal] = useState();
     const [showEditModal, setShowEditModal] = useState(false);
