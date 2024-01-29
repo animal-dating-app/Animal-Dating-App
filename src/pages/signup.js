@@ -3,12 +3,14 @@ import { auth } from "../firebaseConfig";
 import {  createUserWithEmailAndPassword  } from 'firebase/auth';
 import { NavLink, useNavigate } from 'react-router-dom';
  
-const SignUp = () => {
+const SignUp = ({ user }) => {
 
     const navigate = useNavigate();
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('');
+
+    if (user) navigate("/");
  
     const onSubmit = async (e) => {
       e.preventDefault()

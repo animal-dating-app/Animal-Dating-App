@@ -4,6 +4,7 @@ import { updateDoc, doc } from "firebase/firestore";
 import { AnimalForm } from ".";
 
 const EditAnimalModal = ({ showModal, setShowModal, loadAnimals, animal }) => {
+    const [unsavedChanges, setUnsavedChanges] = useState(false);
     const [currentAnimal, setCurrentAnimal] = useState(animal);
 
     useEffect(() => {
@@ -12,11 +13,25 @@ const EditAnimalModal = ({ showModal, setShowModal, loadAnimals, animal }) => {
 
     const formRef = useRef(null);
 
+    useEffect(() => {
+        if (!showModal) {
+            setUnsavedChanges(false);
+        }
+    }, [showModal]);
+
     const handleModalClose = () => {
-        setShowModal(false);
+        if (unsavedChanges) {
+            const confirmLeave = window.confirm("You have unsaved changes. Are you sure you want to close?");
+            if (confirmLeave) {
+                setShowModal(false);
+            }
+        } else {
+            setShowModal(false);
+        }
     };
 
     const handleAnimalChange = (e) => {
+        setUnsavedChanges(true);
         if (e.target.name === 'availability') {
             const isAvailable = e.target.value === 'true';
             const isPending = e.target.value === 'pending';
@@ -42,6 +57,7 @@ const EditAnimalModal = ({ showModal, setShowModal, loadAnimals, animal }) => {
 
             await updateDoc(doc(db, "animals", currentAnimal.id), curAnimalBody);
         setShowModal(false);
+        setUnsavedChanges(false);
         loadAnimals(); // Refresh the list of animals
         } else {
             formRef.current && formRef.current.reportValidity();
