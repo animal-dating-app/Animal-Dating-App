@@ -29,6 +29,23 @@ export const HeaderTitle = styled.h1`
   text-align: center; 
 `;
 
+export const HeaderButton = styled.h1`
+  padding: 20px 20px;
+  background-color: #4CAF50; 
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  outline: none;
+  border-radius: 5px; 
+  font-size: 20px; 
+  margin: 10px;
+
+  &:hover {
+    background-color: #45a049; 
+  }
+`;
+
 export const HeaderSubtitle = styled.p`
   margin: 20px auto; 
   padding: 20px;
