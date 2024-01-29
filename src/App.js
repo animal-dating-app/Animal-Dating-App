@@ -14,15 +14,14 @@ import SignUp from "./pages/signup";
 import SignIn from "./pages/signin.js";
 import Dashboard from "./pages/shelterDashboard.js";
 import Pet from "./pages/pet.js";
+import Header from "./components/Header/Header.js";
 
 function App() {
     return (
         <Router>
             <div className="App">
+                <Header />
                 <Navbar />
-                <div className="container-fluid text-center mt-5">
-                    <h1>Dating App for Animal Adoption</h1>
-                </div>
                 <Routes>
                     <Route path="/" element={<Homes />} />
                     <Route path="/pets" element={<Pets />} />
