@@ -16,14 +16,16 @@ const Homes = () => {
       const animalQuery = query(
         animalRef,
         where("available", "==", true),
-        // where("pendingAdoption", "==", true)
       );
 
       const unsubscribe = onSnapshot(animalQuery, (querySnapshot) => {
         const availableAnimals = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
-        }));
+        }))
+        .filter((animal) => !animal.pendingAdoption); // Exclude animals with pendingAdoption
+        ;
+        
         setAnimals(availableAnimals);
         setLoading(false);
       });
@@ -39,7 +41,7 @@ const Homes = () => {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 3, // You can adjust the number of slides to show
+    slidesToShow: 3, // adjust the number of slides to show
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000, // Set the speed of the carousel
