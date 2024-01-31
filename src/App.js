@@ -16,6 +16,7 @@ import SignIn from "./pages/signin.js";
 import Dashboard from "./pages/shelterDashboard.js";
 import Pet from "./pages/pet.js";
 import FullScreenLoader from './components/FullScreenLoader';
+import Header from './components/Header/Header.js'
 
 
 function App() {
@@ -41,11 +42,9 @@ function App() {
     return (
         <Router>
             <div className="App">
-                {loading && <FullScreenLoader fadingOut={isFadingOut} />} 
+                {loading && <FullScreenLoader fadingOut={isFadingOut} />}
+                <Header /> 
                 <Navbar user={user} />
-                <div className="container-fluid text-center mt-5">
-                    <h1>Dating App for Animal Adoption</h1>
-                </div>
                 <Routes>
                     <Route path="/" element={<Homes />} />
                     <Route path="/pets" element={<Pets />} />
