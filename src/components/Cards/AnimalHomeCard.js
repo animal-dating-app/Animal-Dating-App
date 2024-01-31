@@ -1,85 +1,146 @@
 import React from "react";
+import { useNavigate } from 'react-router-dom';
 
-const AnimalHomecard = ({ animal , onClickAnimal}) => {
-  
-  const hancleCardClick = () => {
-    onClickAnimal(animal);
-  }
+const AnimalHomecard = ({ animal, onClickAnimal }) => {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    if (onClickAnimal) {
+      onClickAnimal(animal);
+    } else {
+      navigate('/pet', { state: { pet: animal } });
+    }
+  };
 
   return (
-    <div className="card" onClick={hancleCardClick}>
-      <div id={`carousel-${animal.id}`} className="carousel slide" data-bs-ride="carousel">
-        <div className="carousel-inner">
-          <div className="carousel-item active">
-            <img src={animal.pictureUri} className="d-block w-100" alt={animal.name} />
-          </div>
-          {/* Additional carousel items can be added for multiple images */}
+    <div className="box" onClick={handleCardClick}>
+      <div className="card">
+        <img
+          src={animal.pictureUri}
+          className="card-img-top"
+          alt={animal.name}
+        />
+        <div className="card-body">
+          <h5 className="card-title">{animal.name}</h5>
+          <p className="card-type">
+            <strong>Type:</strong> {animal.type}
+          </p>
+          <p
+            className={`card-availability ${
+              animal.available ? "available" : "not-available"
+            }`}
+          >
+            <strong>Availability:</strong>{" "}
+            {animal.available ? "Yes" : "No"}
+          </p>
         </div>
       </div>
-      <div className="card-body">
-        <h5 className="card-title">{animal.name}</h5>
-        <p className="card-type"><strong>Type:</strong> {animal.type}</p>
-        <p className={`card-availability ${animal.available ? "available" : "not-available"}`}>
-          <strong>Availability:</strong> {animal.available ? "Yes" : "No"}
-        </p>
-      </div>
 
-      {/* Add your own styling or classNames as needed */}
-      <style>{`
+      <style jsx>{`
+        card-body {
+          background-color: white;
+        }
+        .box {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 32px;
+        }
         .card {
-          background-color: #f8f9fa;
-          border: 1px solid rgba(0, 0, 0, 0.125);
-          border-radius: 10px;
-          overflow: hidden;
-          transition: transform 0.3s ease-in-out;
-          width: 80%;
-          margin: auto;
+          position: relative;
+          width: 250px;
+          height: 350px;
+          background: white;
+          color: black;
+          border-radius: 3px;
+          margin:  40px auto;
+          box-shadow: 0 3px 10px #00000033;
         }
 
-        .card:hover {
-          transform: scale(1.05);
+        @media only screen and (max-width: 768px) {
+          .box {
+            flex-direction: column;
+          }
+
+          .card {
+            width: 100%;
+            max-width: none;
+          }
         }
 
-        .carousel {
-          border-top-left-radius: 10px;
-          border-top-right-radius: 10px;
+        .card::before,
+        .card::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: white;
+          border-radius: 3px;
+          box-shadow: 0 3px 10px #00000033;
+          transition: 0.5s;
+          z-index: -1;
+          transform-origin: center; /* Add this line */
+        }
+
+        .card:hover::after {
+          transform: rotate(10deg);
+        }
+
+        .card:hover::before {
+          transform: rotate(20deg);
+        }
+
+        .card-img-top {
+          position: absolute;
+          z-index: 1;
+          background: white;
+          transition: transform 0.5s ease;
+          width: 100%;
+          height: 100%;
+          object-fit: fill;
+          object-position: 80% 100%;
+        }
+
+        .card:hover .card-img-top {
+          transform : translateY(-20%);
+        }
+
+        img {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
         }
 
         .card-body {
-          padding: 20px;
+
+          position: absolute;
+          left: 10px;
+          right: 10px;
+          bottom: 10px;
+          height: 100px;
         }
 
-        .card-title {
-          font-size: 1.5em;
-          margin-bottom: 10px;
-        }
-
-        .card-type,
-        .card-breed,
-        .card-age,
-        .card-gender {
-          margin: 5px 0;
-        }
-
-        .card-description {
-          margin-bottom: 15px;
+        h5 {
+          margin-top: 1px;
+          padding: 0;
+          font-weight: 900;
+          font-size: 20px;
+          text-align: center;
+          line-height: 1.15em;
         }
 
         .card-availability {
-          font-weight: bold;
-          color: #007bff;
-        }
-
-        .available {
-          color: #28a745;
-        }
-
-        .not-available {
-          color: #dc3545;
+          font-weight: 400;
+          font-size: 15px;
+          color: green;
         }
       `}</style>
     </div>
   );
-}
+};
 
 export default AnimalHomecard;
