@@ -37,7 +37,7 @@ const AnimalHomecard = ({ animal, onClickAnimal }) => {
       </div>
 
       <style jsx>{`
-        body {
+        card-body {
           background-color: white;
         }
         .box {
