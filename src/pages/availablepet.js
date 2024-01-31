@@ -23,7 +23,7 @@ const Homes = () => {
           id: doc.id,
           ...doc.data(),
         }))
-        .filter((animal) => !animal.pendingAdoption); // Exclude animals with pendingAdoption
+        .filter((animal) => !animal.pendingAdoption); // Exclude animals with pendingAdoption set to true
         ;
         
         setAnimals(availableAnimals);

@@ -1,7 +1,19 @@
 import React from "react";
-const AnimalHomecard = ({ animal }) => {
+import { useNavigate } from 'react-router-dom';
+
+const AnimalHomecard = ({ animal, onClickAnimal }) => {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    if (onClickAnimal) {
+      onClickAnimal(animal);
+    } else {
+      navigate('/pet', { state: { pet: animal } });
+    }
+  };
+
   return (
-    <div className="box">
+    <div className="box" onClick={handleCardClick}>
       <div className="card">
         <img
           src={animal.pictureUri}
@@ -12,16 +24,16 @@ const AnimalHomecard = ({ animal }) => {
           <h5 className="card-title">{animal.name}</h5>
           <p className="card-type">
             <strong>Type:</strong> {animal.type}
-          </p>x
+          </p>
           <p
             className={`card-availability ${
               animal.available ? "available" : "not-available"
             }`}
           >
-            <strong>Availability:</strong> {animal.available ? "Yes" : "No"}
+            <strong>Availability:</strong>{" "}
+            {animal.available ? "Yes" : "No"}
           </p>
         </div>
-        
       </div>
 
       <style jsx>{`
