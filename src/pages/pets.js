@@ -3,6 +3,8 @@ import { db } from "../firebaseConfig";
 import { collection, getDocs, where, query, or } from "firebase/firestore";
 import { AnimalGalleryCard } from "../components/Cards";
 import { useNavigate } from 'react-router-dom';
+import SearchBar from "../components/Search/SearchBar";
+import FilterMenu from "../components/Filter/FilterMenu";
 
 const Pets = () => {
     const [animals, setAnimals] = useState([]);
@@ -135,83 +137,23 @@ const Pets = () => {
 
     };
 
-    // Function to get unique values for a filter category
-    function getUniqueValuesForCategory(animals, category) {
-        const values = new Set();
-        animals.forEach(animal => {
-            values.add(animal[category]);
-        });
-
-        // Sort the age category
-        const sortedValues = Array.from(values).sort((a, b) => a - b);
-        return sortedValues;
-    }
-
     return (
         <>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <form onSubmit={handleSearch} style={{ marginBottom: '20px' }}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="Search for an animal type"
-                    />
-                    <button type="submit">Search</button>
-                    <button
-                        style={{ marginLeft: '10px', background: 'none', border: 'none', cursor: 'pointer' }}
-                        onClick={toggleFilters}
-                    >
-                        {showFilters ? "Hide Filters" : "Show Filters"}
-                    </button>
-                </div>
-            </form>
+            <SearchBar
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                handleSearch={handleSearch}
+                toggleFilters={toggleFilters}
+                showFilters={showFilters}
+            />
 
             {showFilters && (
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                    {Object.keys(selectedFilters).map(category => (
-                        category !== 'type' && (
-                            <div key={category}>
-                                <br />
-                                <h3>Filter by {category}:</h3>
-                                {category === 'availability' ? (
-                                    <div>
-                                        <label>
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedFilters[category].includes(true)}
-                                                onChange={() => handleFilterChange(category, true)}
-                                            />
-                                            Available
-                                        </label>
-                                        <label>
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedFilters[category].includes(false)}
-                                                onChange={() => handleFilterChange(category, false)}
-                                            />
-                                            Pending
-                                        </label>
-                                    </div>
-                                ) : (
-                                    getUniqueValuesForCategory(animals, category).map(value => (
-                                        <div key={value} style={{marginBottom: '10px'}}>
-                                            <label>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectedFilters[category].includes(value)}
-                                                    onChange={() => handleFilterChange(category, value)}
-                                                />
-                                                {value}
-                                            </label>
-                                        </div>
-                                    ))
-                                )}
-                            </div>
-                        )
-                    ))}
-                </div>
+                <FilterMenu
+                    selectedFilters={selectedFilters}
+                    handleFilterChange={handleFilterChange}
+                    animals={animals}
+                />
             )}
 
             
@@ -248,4 +190,4 @@ const Pets = () => {
     );
 };
 
-export default Pets;
+export default Pets; 
