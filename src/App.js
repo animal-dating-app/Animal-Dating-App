@@ -8,9 +8,8 @@ import {
     Routes,
     Route,
 } from "react-router-dom";
-import Homes from "./pages/availablepet";
+import Home from "./pages/home.js";
 import Pets from "./pages/pets.js";
-//import availablepet from "./pages/availablepet";
 import SignUp from "./pages/signup";
 import SignIn from "./pages/signin.js";
 import Dashboard from "./pages/shelterDashboard.js";
@@ -46,7 +45,7 @@ function App() {
                 <Header /> 
                 <Navbar user={user} />
                 <Routes>
-                    <Route path="/" element={<Homes />} />
+                    <Route path="/" element={<Home />} />
                     <Route path="/pets" element={<Pets />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/sign-up" element={<SignUp user={user} />} />

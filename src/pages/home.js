@@ -6,7 +6,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const Homes = () => {
+const Home = () => {
   const [animals, setAnimals] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -63,4 +63,4 @@ const Homes = () => {
   );
 };
 
-export default Homes;
+export default Home;
