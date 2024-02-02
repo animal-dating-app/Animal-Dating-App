@@ -16,6 +16,9 @@ import Dashboard from "./pages/shelterDashboard.js";
 import Pet from "./pages/pet.js";
 import FullScreenLoader from './components/FullScreenLoader';
 import Header from './components/Header/Header.js'
+import Cats from "./pages/pets/cats.js";
+import Dogs from "./pages/pets/dogs.js";
+import Others from "./pages/pets/others.js";
 
 
 function App() {
@@ -46,7 +49,11 @@ function App() {
                 <Navbar user={user} />
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/pets" element={<Pets />} />
+                    <Route path="/pets" element={<Pets />}>
+                        <Route path="cats" element={<Cats />} />
+                        <Route path="dogs" element={<Dogs />} />
+                        <Route path="others" element={<Others />} />
+                    </Route>
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/sign-up" element={<SignUp user={user} />} />
                     <Route path="/sign-in" element={<SignIn user={user} />} />
