@@ -46,7 +46,7 @@ const Navbar = ({ user }) => {
                     <NavLink to="/" onClick={() => setIsActive(false)}>
                         Home
                     </NavLink>
-                <DropdownContainer> {/* Wrap the trigger and the content */}
+                <DropdownContainer> 
                         <NavLink to="/pets" onClick={() => setIsActive(false)}>
                             Pets
                         </NavLink>

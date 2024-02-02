@@ -19,6 +19,7 @@ import Header from './components/Header/Header.js'
 import Cats from "./pages/pets/cats.js";
 import Dogs from "./pages/pets/dogs.js";
 import Others from "./pages/pets/others.js";
+import PageNotFound from "./404Page";
 
 
 function App() {
@@ -58,6 +59,10 @@ function App() {
                     <Route path="/sign-up" element={<SignUp user={user} />} />
                     <Route path="/sign-in" element={<SignIn user={user} />} />
                     <Route path="/pet" element={<Pet />} />
+                    <Route
+                    path="*"
+                    element={<PageNotFound />}
+                    />
                 </Routes>
                 <Footer />
             </div>

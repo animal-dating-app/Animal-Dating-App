@@ -23,9 +23,6 @@ export const NavLink = styled(Link)`
     &.active {
         color: #000000;
     }
-    &:hover {
-        color: #505050; // Change as desired for hover effect
-    }
 `;
  
 export const Bars = styled(FaBars)`
@@ -94,7 +91,7 @@ export const PetsDropdownMenu = styled.div`
     background-color: #fff;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 10;
-    width: 160px; // Set a width for the dropdown
+    width: 160px; 
     left: 0;
     top: 100%;
 `;
@@ -109,6 +106,6 @@ export const DropdownContainer = styled.div`
     &:hover ${PetsDropdownMenu} {
         display: flex;
         flex-direction: column;
-        align-items: flex-start; // Adjust as needed
+        align-items: flex-start; 
     }
 `;
