@@ -55,11 +55,13 @@ const Dashboard = () => {
             if (e.value === "Delete") {
                 operations.push(deleteDoc(doc(db, "animals", animalId)));
             } else if (e.value === "Set Unavailable") {
-                operations.push(updateDoc(doc(db, "animals", animalId), { available: false, pendingAdoption: false }));
+                operations.push(updateDoc(doc(db, "animals", animalId), { status: "Unavailable" }));
             } else if (e.value === "Set Available") {
-                operations.push(updateDoc(doc(db, "animals", animalId), { available: true, pendingAdoption: false }));
+                operations.push(updateDoc(doc(db, "animals", animalId), { status: "Available" }));
             } else if (e.value === "Set Pending") {
-                operations.push(updateDoc(doc(db, "animals", animalId), { available: false, pendingAdoption: true }));
+                operations.push(updateDoc(doc(db, "animals", animalId), { status: "Pending" }));
+            } else if (e.value === "Set Adopted") {
+                operations.push(updateDoc(doc(db, "animals", animalId), { status: "Adopted" }));
             }
         });
     
@@ -81,6 +83,7 @@ const Dashboard = () => {
         { value: "Set Available", label: "Set Available" },
         { value: "Set Pending", label: "Set Pending" },
         { value: "Set Unavailable", label: "Set Unavailable" },
+        { value: "Set Adopted", label: "Set Adopted" },
         { value: "Delete", label: "Delete" }
     ];
 

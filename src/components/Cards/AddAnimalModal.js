@@ -13,8 +13,8 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
         type: "",
         gender: "",
         pictureUri: "",
-        available: true,
-        pendingAdoption: false
+        status: "Available", 
+        disposition: [],
     });
 
     const formRef = useRef(null);
@@ -38,17 +38,7 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
 
     const handleNewAnimalChange = (e) => {
         setUnsavedChanges(true);
-        if (e.target.name === 'availability') {
-            const isAvailable = e.target.value === 'true';
-            const isPending = e.target.value === 'pending';
-            setNewAnimal({ 
-                ...newAnimal, 
-                available: isAvailable, 
-                pendingAdoption: isPending 
-            });
-        } else {
-            setNewAnimal({ ...newAnimal, [e.target.name]: e.target.value });
-        }
+        setNewAnimal({ ...newAnimal, [e.target.name]: e.target.value });
     };
 
     const handleAddNewAnimal = async () => {

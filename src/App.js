@@ -44,14 +44,16 @@ function App() {
                 {loading && <FullScreenLoader fadingOut={isFadingOut} />}
                 <Header /> 
                 <Navbar user={user} />
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/pets" element={<Pets />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/sign-up" element={<SignUp user={user} />} />
-                    <Route path="/sign-in" element={<SignIn user={user} />} />
-                    <Route path="/pet" element={<Pet />} />
-                </Routes>
+                <div className="pageWrapper">
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/pets" element={<Pets />} />
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/sign-up" element={<SignUp user={user} />} />
+                        <Route path="/sign-in" element={<SignIn user={user} />} />
+                        <Route path="/pet" element={<Pet />} />
+                    </Routes>
+                </div>
                 <Footer />
             </div>
         </Router>

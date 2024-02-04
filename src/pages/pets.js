@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../firebaseConfig";
-import { collection, getDocs, where, query, or } from "firebase/firestore";
+import { collection, getDocs, where, query } from "firebase/firestore";
 import { AnimalGalleryCard } from "../components/Cards";
 import { useNavigate } from 'react-router-dom';
 import SearchBar from "../components/Search/SearchBar";
@@ -16,14 +16,14 @@ const Pets = () => {
         breed: [],
         age: [],
         gender: [],
-        availability: [],
+        status: [],
     });
     const navigate = useNavigate();
 
     useEffect(() => {
         const getAnimals = async () => {
             const animalRef = collection(db, "animals");
-            const q = query(animalRef, or(where("available", "==", true), where("pendingAdoption", "==", true)));
+            const q = query(animalRef, where("status", "in", ["Available", "Pending", "Adopted"]));
             const animalSnapshot = await getDocs(q);
             const animalList = animalSnapshot.docs.map(doc => {
                 return { id: doc.id, ...doc.data() };
@@ -59,7 +59,7 @@ const Pets = () => {
                 breed: [],
                 age: [],
                 gender: [],
-                availability: [],
+                status: [],
             });
         }
     };
@@ -68,7 +68,7 @@ const Pets = () => {
         e.preventDefault();
     
         const animalRef = collection(db, 'animals');
-        const q = query(animalRef, or(where("available", "==", true), where("pendingAdoption", "==", true)));
+        const q = query(animalRef,  where("status", "in", ["Available", "Pending", "Adopted"]));
         const querySnapshot = await getDocs(q);
 
         const searchResults = querySnapshot.docs
@@ -112,10 +112,10 @@ const Pets = () => {
         // Check if animal matches all selected filter categories
         for (const category in selectedFilters) {
 
-            if (category === "availability") {
-                const availabilityValue = animal.available;
+            if (category === "status") {
+                const statusValue = animal.status;
 
-                if (selectedFilters[category].length > 0 && !selectedFilters[category].includes(availabilityValue)) {
+                if (selectedFilters[category].length > 0 && !selectedFilters[category].includes(statusValue)) {
 
                     return false;
                 }
