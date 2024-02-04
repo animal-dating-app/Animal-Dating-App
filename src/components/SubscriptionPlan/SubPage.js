@@ -1,5 +1,3 @@
-// SubscriptionPlansPage.jsx
-
 import React from 'react';
 import SubscriptionPlanCard from './SubCard';
 
@@ -8,10 +6,10 @@ const SubscriptionPlansPage = () => {
     <div className="container">
       <h2>Subscription Plans</h2>
       <div className="subscription-plan">
-        <SubscriptionPlanCard title="Basic (Free)" features={['Profile Creation', 'Matching Algorithm', 'Event Calendar', 'Limited Messaging']} />
+        <SubscriptionPlanCard title="Basic (Free)" features={['Profile Creation', 'Event Calendar', 'Limited Messaging']} />
       </div>
       <div className="subscription-plan">
-        <SubscriptionPlanCard title="Premium (Monthly - $9.99)" features={['Everything in Basic, plus:', 'Enhanced Matching Algorithm', 'Unlimited Messaging', 'Video Calls', 'Ad-Free Browsing', 'Advanced Profile Features']} />
+        <SubscriptionPlanCard title="Premium (Monthly - $9.99)" features={['Everything in Basic, plus:', 'Enhanced Matching Algorithm', 'Unlimited Messaging',  'Ad-Free Browsing', 'Advanced Profile Features']} />
       </div>
       <div className="subscription-plan">
         <SubscriptionPlanCard title="VIP (Yearly - $99.99)" features={['Everything in Premium, plus:', 'Priority Customer Support', 'Exclusive Events', 'Featured Profiles', 'Extended Match History']} />
