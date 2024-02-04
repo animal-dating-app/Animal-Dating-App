@@ -15,12 +15,12 @@ export const HeaderContainer = styled.div`
   color: #DFC8B3;
 `;
 
-export const LogoSloganWrapper = styled.div`
-  align-self: flex-start; 
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-`;
+// export const LogoSloganWrapper = styled.div`
+//   align-self: flex-start; 
+//   text-align: left;
+//   display: flex;
+//   flex-direction: column;
+// `;
 
 export const HeaderTitle = styled.h1`
   color: #FFFFFF; 
@@ -63,18 +63,18 @@ export const HeaderSubtitle = styled.p`
 `;
 
 
-export const Logo = styled.img`
-  height: auto;       
-  width: auto;        
-  max-width: 50%;    
-  max-height: 100px;  
-  margin-bottom: 10px;
-`;
+// export const Logo = styled.img`
+//   height: auto;       
+//   width: auto;        
+//   max-width: 50%;    
+//   max-height: 100px;  
+//   margin-bottom: 10px;
+// `;
 
 
-export const Slogan = styled.p`
-  margin: 0;
-  font-size: 0.5em;
-  font-weight: bold;
-  color: #FFFFFF;
-`;
+// export const Slogan = styled.p`
+//   margin: 0;
+//   font-size: 0.5em;
+//   font-weight: bold;
+//   color: #FFFFFF;
+// `;
