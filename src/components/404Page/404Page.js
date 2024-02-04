@@ -4,8 +4,12 @@ import { ErrorPageContainer, ErrorCode, ErrorMessage, HomeButton } from "./404Pa
 const PageNotFound = () => {
     return (
         <ErrorPageContainer>
-            <ErrorCode>404</ErrorCode>
-            <ErrorMessage>Page Not Found</ErrorMessage>
+            <div style={{ display: "flex", alignItems: "center" }}>
+                <div>
+                    <ErrorCode>404</ErrorCode>
+                    <ErrorMessage>Page Not Found</ErrorMessage>
+                </div>
+            </div>
             <HomeButton onClick={() => window.location.href = '/'}>Go Home</HomeButton>
         </ErrorPageContainer>
     );

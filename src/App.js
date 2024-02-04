@@ -19,7 +19,7 @@ import Header from './components/Header/Header.js'
 import Cats from "./pages/pets/cats.js";
 import Dogs from "./pages/pets/dogs.js";
 import Others from "./pages/pets/others.js";
-import PageNotFound from "./404Page";
+import PageNotFound from "./components/404Page/404Page.js";
 
 
 function App() {

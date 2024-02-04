@@ -5,7 +5,7 @@ export const ErrorPageContainer = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: 50vh;
     background: #f2f2f2;
 `;
 
