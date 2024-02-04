@@ -57,6 +57,11 @@ const Navbar = ({ user }) => {
                             Sign Up
                         </NavLink>
                     )}
+                    {!user && (
+                        <NavLink to="/subscription-plans" onClick={() => setIsActive(false)}>
+                            Subscription
+                        </NavLink>
+                    )}
                 </NavMenu>
                 <NavBtn>
                     {button}

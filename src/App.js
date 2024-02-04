@@ -16,6 +16,9 @@ import Dashboard from "./pages/shelterDashboard.js";
 import Pet from "./pages/pet.js";
 import FullScreenLoader from './components/FullScreenLoader';
 import Header from './components/Header/Header.js'
+import SubscriptionPlansPage from './components/SubscriptionPlan/SubPage.js'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
@@ -51,7 +54,9 @@ function App() {
                     <Route path="/sign-up" element={<SignUp user={user} />} />
                     <Route path="/sign-in" element={<SignIn user={user} />} />
                     <Route path="/pet" element={<Pet />} />
+                    <Route path="/subscription-plans" element={<SubscriptionPlansPage />} />
                 </Routes>
+                <ToastContainer />
                 <Footer />
             </div>
         </Router>
