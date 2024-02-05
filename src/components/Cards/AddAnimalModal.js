@@ -47,6 +47,7 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
                 ...newAnimal,
                 shelterId: auth.currentUser.uid
             });
+        
         setShowModal(false);
         setNewAnimal({
             name: "",

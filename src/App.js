@@ -15,7 +15,10 @@ import SignIn from "./pages/signin.js";
 import Dashboard from "./pages/shelterDashboard.js";
 import Pet from "./pages/pet.js";
 import FullScreenLoader from './components/FullScreenLoader';
-import Header from './components/Header/Header.js'
+import Header from './components/Header/Header.js';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import SubscriptionPlansPage from './components/SubscriptionPlan/SubPage.js';
 import Cats from "./pages/pets/cats.js";
 import Dogs from "./pages/pets/dogs.js";
 import Others from "./pages/pets/others.js";
@@ -43,6 +46,7 @@ function AuthenticatedApp() {
             { showUserLoader && <FullScreenLoader fadingOut={startFading} /> }
             <Header />
             <Navbar user={user} />
+            <ToastContainer />
             <div className="pageWrapper">
                 <Routes>
                     <Route path="/" element={<Home />} />
@@ -55,9 +59,10 @@ function AuthenticatedApp() {
                     <Route path="/sign-up" element={<SignUp user={user} />} />
                     <Route path="/sign-in" element={<SignIn user={user} />} />
                     <Route path="/pet" element={<Pet />} />
+                    <Route path="/subscription-plans" element={<SubscriptionPlansPage />} />
                     <Route
-                    path="*"
-                    element={<PageNotFound />}
+                        path="*"
+                        element={<PageNotFound />}
                     />
                 </Routes>
             </div>
