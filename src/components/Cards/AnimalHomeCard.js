@@ -27,11 +27,11 @@ const AnimalHomecard = ({ animal, onClickAnimal }) => {
           </p>
           <p
             className={`card-availability ${
-              animal.available ? "available" : "not-available"
+              animal.status === "Available" ? "available" : "not-available"
             }`}
           >
             <strong>Availability:</strong>{" "}
-            {animal.available ? "Yes" : "No"}
+            {animal.status === "Available" ? "Yes" : "No"}
           </p>
         </div>
       </div>

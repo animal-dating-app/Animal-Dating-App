@@ -13,6 +13,10 @@ html, body {
   margin: auto;
 }
 
+.pageWrapper {
+  padding: 20px 0;
+}
+
 .fullScreenLoadingWrapper {
   position: fixed;
   top: 0;
@@ -63,7 +67,11 @@ html, body {
 }
 
 .fullScreenLoader .paw:nth-child(odd) {
-  transform: rotate(-10deg) translateY(-0.8em);
+  transform: rotate(-10deg) translateY(-0.6em);
+}
+
+.fullScreenLoader .paw:nth-child(even) {
+  transform: rotate(10deg) translateY(0.6em);
 }
 
 .no-cssanimations .fullScreenLoader .paw {
@@ -88,6 +96,15 @@ html, body {
   }
   50% {
     opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
   }
   100% {
     opacity: 0;

@@ -32,17 +32,7 @@ const EditAnimalModal = ({ showModal, setShowModal, loadAnimals, animal }) => {
 
     const handleAnimalChange = (e) => {
         setUnsavedChanges(true);
-        if (e.target.name === 'availability') {
-            const isAvailable = e.target.value === 'true';
-            const isPending = e.target.value === 'pending';
-            setCurrentAnimal({ 
-                ...currentAnimal, 
-                available: isAvailable, 
-                pendingAdoption: isPending 
-            });
-        } else {
-            setCurrentAnimal({ ...currentAnimal, [e.target.name]: e.target.value });
-        }
+        setCurrentAnimal({ ...currentAnimal, [e.target.name]: e.target.value });
     };
 
     const handleUpdateAnimal = async () => {

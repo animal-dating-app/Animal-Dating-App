@@ -21,23 +21,31 @@ const FilterMenu = ({ selectedFilters, handleFilterChange, animals }) => {
           <div key={category}>
             <br />
             <h3>Filter by {category}:</h3>
-            {category === 'availability' ? (
+            {category === 'status' ? (
               <div>
                 <label>
                   <input
                     type="checkbox"
-                    checked={selectedFilters[category].includes(true)}
-                    onChange={() => handleFilterChange(category, true)}
+                    checked={selectedFilters[category].includes("Available")}
+                    onChange={() => handleFilterChange(category, "Available")}
                   />
                   Available
                 </label>
                 <label>
                   <input
                     type="checkbox"
-                    checked={selectedFilters[category].includes(false)}
-                    onChange={() => handleFilterChange(category, false)}
+                    checked={selectedFilters[category].includes("Pending")}
+                    onChange={() => handleFilterChange(category, "Pending")}
                   />
                   Pending
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={selectedFilters[category].includes("Adopted")}
+                    onChange={() => handleFilterChange(category, "Adopted")}
+                  />
+                  Adopted
                 </label>
               </div>
             ) : (
