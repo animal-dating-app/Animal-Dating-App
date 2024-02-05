@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useState} from "react";
 
 const FilterMenu = ({ selectedFilters, handleFilterChange, animals }) => {
+  const [whatsThisVisible, setWhatsThisVisible] = useState(false);
 
   // Function to get unique values for a filter category
   function getUniqueValuesForCategory(animals, category) {
@@ -19,6 +20,63 @@ const FilterMenu = ({ selectedFilters, handleFilterChange, animals }) => {
       {Object.keys(selectedFilters).map(category => (
         category !== 'type' && (
           <div key={category}>
+            {category === 'age' ? (
+              <div>
+                <h3 style={{ display: 'flex', alignItems: 'center' }}> Filter by {category}:
+                  <span
+                    style={{cursor: 'pointer',
+                            marginLeft: '5px',
+                            marginBottom: '18px',
+                            position: 'relative',
+                          }} 
+                          
+                    onClick={() => setWhatsThisVisible(!whatsThisVisible)}
+                  >
+                    <div
+                      style={{
+                        position: 'absolute',
+                        width: '20px',
+                        height: '20px',
+                        borderRadius: '50%',
+                        background: 'blue',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        color: 'white',
+                        fontSize: '14px',
+                      }}
+                    >
+
+                    &#63;
+
+                    </div>
+                  </span>
+                </h3>
+                {whatsThisVisible && (
+                  <div style={{ border: '1px solid #ccc', padding: '10px', background: '#87CEEB', position: 'absolute', zIndex: 1, marginLeft: '-108px' }}>
+                    Age range explanation:
+                    <p>Adult: Animals that are between 3-7 years old. </p>
+                    <p>Senior: Animals that are 8 years old and older. </p>
+                    <p>Young: Animals that are between 1-3 years old. </p>
+                    <p>Puppy: Dogs that are younger than 1 year old. </p>
+                    <p>Kitten: Cats that are younger than 1 year old. </p>
+                </div>
+                )}
+                {getUniqueValuesForCategory(animals, category).map(value => (
+                  <div key={value} style={{ marginBottom: '10px' }}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={selectedFilters[category].includes(value)}
+                      onChange={() => handleFilterChange(category, value)}
+                    />
+                    {value}
+                  </label>
+                </div>
+                ))}
+              </div>
+            ) : (
+              <div>
             <br />
             <h3>Filter by {category}:</h3>
             {category === 'status' ? (
@@ -63,6 +121,8 @@ const FilterMenu = ({ selectedFilters, handleFilterChange, animals }) => {
               ))
             )}
           </div>
+        )}
+        </div>
         )
       ))}
     </div>
