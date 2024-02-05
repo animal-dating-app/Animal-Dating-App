@@ -1,15 +1,10 @@
 import React from 'react';
-import { HeaderContainer, LogoSloganWrapper, Slogan, HeaderTitle, HeaderSubtitle, Logo, HeaderButton } from './HeaderElements';
-import logoImage from '../../assets/images/logo.jpg';
+import { HeaderContainer, HeaderTitle, HeaderSubtitle, HeaderButton } from './HeaderElements';
 import { Link } from 'react-router-dom'; 
 
 const Header = () => {
     return (
         <HeaderContainer>
-            <LogoSloganWrapper>
-            <Slogan>Dating App for Animal Adoption</Slogan>
-            <Logo src={logoImage} alt="Logo" />
-            </LogoSloganWrapper>
                 <HeaderTitle>Discover a Friend, Change a Life. </HeaderTitle>
             <Link to="/pets" style={{ textDecoration: 'none' }}> 
                 <HeaderButton>Adopt Now!</HeaderButton>
