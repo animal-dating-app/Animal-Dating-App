@@ -32,9 +32,18 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal}) => {
     ];
 
     const animalStatus = [
-        { value: "true", label: "Available" },
-        { value: "pending", label: "Pending" },
-        { value: "false", label: "Not Available" }
+        { value: "Available", label: "Available" },
+        { value: "Pending", label: "Pending" },
+        { value: "Unavailable", label: "Not Available" },
+        { value: "Adopted", label: "Adopted" }
+    ];
+
+    const animalDisposition = [
+        { value: "Good with other animals", label: "Good with other animals" },
+        { value: "Good with children", label: "Good with children" },
+        { value: "Animal must be leashed at all times", label: "Animal must be leashed at all times" },
+        { value: "House trained", label: "House trained" },
+        { value: "Special needs", label: "Special needs" }
     ];
 
     const handleSelectChange = (name, value) => {
@@ -88,15 +97,20 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal}) => {
                     <Select className="mb-2" name="gender" value={animalGenders.filter(gender => gender.value === animal.gender)} styles={selectStyles}
                         onChange={(e) => handleSelectChange('gender', e.value)} required options={animalGenders}  placeholder="Select Gender" />
 
+                    <label htmlFor="disposition" className="form-label text-start">Disposition</label>
+                    <Select className="mb-2" name="disposition" onChange={(vals) => handleSelectChange('disposition', vals.map(val => val.value))}
+                        required options={animalDisposition} styles={selectStyles} isMulti placeholder="Select Disposition"
+                        value={animal.disposition ? [...animalDisposition.filter(disposition => animal.disposition.includes(disposition.value))] : []} />
+                    
                     <label htmlFor="description" className="form-label">Description</label>
                     <textarea className="form-control mb-2" placeholder="Description" name="description" value={animal.description} onChange={handleAnimalChange}></textarea>
 
                     <label htmlFor="pictureUri" className="form-label text-start">Image URL</label>
                     <input type="url" className="form-control mb-2" placeholder="Image URL" name="pictureUri" value={animal.pictureUri} onChange={handleAnimalChange} pattern="https?://.+" />
 
-                    <label htmlFor="availability" className="form-label">Status</label>
-                    <Select className="mb-2" name="availability" onChange={(e) => handleSelectChange('availability', e.value)} required options={animalStatus} styles={selectStyles}
-                        value={animalStatus.filter(status => status.value === (animal.pendingAdoption === true ? "pending" : animal.available === true ? "true" : "false"))} />
+                    <label htmlFor="status" className="form-label">Status</label>
+                    <Select className="mb-2" name="status" onChange={(e) => handleSelectChange('status', e.value)} required options={animalStatus} styles={selectStyles}
+                        value={animalStatus.filter(status => status.value === animal.status)} />
 
                 </form>
             </div>

@@ -21,8 +21,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import SubscriptionPlansPage from './components/SubscriptionPlan/SubPage.js'
 
 
-
-
 function App() {
     return (
         <UserProvider>

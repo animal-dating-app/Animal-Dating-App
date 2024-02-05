@@ -2,8 +2,8 @@ import React from "react";
 
 // Loading animation adapted from https://codepen.io/motionimaging/pen/MKrQXa
 const FullScreenLoader = ({ fadingOut }) => {
-  const numberOfPaws = 6;
-  const animationDuration = ((numberOfPaws * 0.25) + 0.55) * 1000;
+  const numberOfPaws = 5;
+  const animationDuration = ((numberOfPaws * 250) + 550);
   
   return (
     <>

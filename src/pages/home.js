@@ -13,7 +13,7 @@ const Home = () => {
   useEffect(() => {
     const getAvailableAnimals = () => {
       const animalRef = collection(db, "animals");
-      const animalQuery = query(animalRef, where("available", "==", true));
+      const animalQuery = query(animalRef, where("status", "==", "Available"));
 
       const unsubscribe = onSnapshot(animalQuery, (querySnapshot) => {
         const availableAnimals = querySnapshot.docs
