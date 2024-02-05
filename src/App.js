@@ -57,8 +57,8 @@ function App() {
                     <Route path="/subscription-plans" element={<SubscriptionPlansPage />} />
                 </Routes>
                 <ToastContainer />
-                <Footer />
-            </div>
+                </div>
+                 <Footer />
         </Router>
     );
 }
