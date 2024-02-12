@@ -48,6 +48,7 @@ function AuthenticatedApp() {
             <Header />
             <Navbar user={user} />
             <ToastContainer />
+            <ImageUploader />
             <div className="pageWrapper">
                 <Routes>
                     <Route path="/" element={<Home />} />
