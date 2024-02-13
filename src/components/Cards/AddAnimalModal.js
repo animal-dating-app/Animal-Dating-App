@@ -9,6 +9,7 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
         name: "",
         age: "",
         breed: "",
+        dateCreated: "",
         description: "",
         type: "",
         gender: "",
@@ -43,9 +44,12 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
 
     const handleAddNewAnimal = async () => {
         if (formRef.current && formRef.current.checkValidity()) {
+            const currentDate = new Date();
+            const date = `${currentDate.getMonth() + 1}-${currentDate.getDate()}-${currentDate.getFullYear()}`;
             await addDoc(collection(db, "animals"), {
                 ...newAnimal,
-                shelterId: auth.currentUser.uid
+                shelterId: auth.currentUser.uid,
+                dateCreated: date
             });
         
         setShowModal(false);
@@ -53,6 +57,7 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
             name: "",
             age: "",
             breed: "",
+            dateCreated: "",
             description: "",
             type: "",
             gender: "",

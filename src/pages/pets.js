@@ -17,6 +17,7 @@ const Pets = () => {
         age: [],
         gender: [],
         status: [],
+        dateCreated: [],
     });
     const navigate = useNavigate();
 
@@ -60,6 +61,7 @@ const Pets = () => {
                 age: [],
                 gender: [],
                 status: [],
+                dateCreated: [],
             });
         }
     };
