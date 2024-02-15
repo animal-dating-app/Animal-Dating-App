@@ -17,6 +17,7 @@ const Pets = () => {
         age: [],
         gender: [],
         status: [],
+        dateCreated: [],
     });
     const navigate = useNavigate();
 
@@ -60,6 +61,7 @@ const Pets = () => {
                 age: [],
                 gender: [],
                 status: [],
+                dateCreated: [],
             });
         }
     };
@@ -92,34 +94,34 @@ const Pets = () => {
             if (updatedFilters[filterCategory].includes(filterValue)) {
 
                 updatedFilters[filterCategory] = updatedFilters[filterCategory].filter(item => item !== filterValue);
-
+            
             } else {
-
+                
                 updatedFilters[filterCategory] = [...updatedFilters[filterCategory], filterValue];
             }
 
-            return updatedFilters;
+            return { ...updatedFilters };
         });
     };
 
     const applyFilters = (animal) => {
-
+        
         if (searchTerm.trim() === "") {
-
+            
             return true;
         }
 
         // Check if animal matches all selected filter categories
         for (const category in selectedFilters) {
-
+            
             if (category === "status") {
                 const statusValue = animal.status;
-
+                
                 if (selectedFilters[category].length > 0 && !selectedFilters[category].includes(statusValue)) {
-
+                 
                     return false;
                 }
-
+            
             } else if (selectedFilters[category].length > 0 && !selectedFilters[category].includes(animal[category])) {
                 return false;
             }     
@@ -130,11 +132,31 @@ const Pets = () => {
 
     const filteredAnimals = animals.filter(animal => applyFilters(animal));
 
+    const handleSortNewestFirst = () => {
+        setAnimals([...animals].sort((a, b) => new Date(b.dateCreated) - new Date(a.dateCreated)));
+    };
+
+    const handleSortOldestFirst = () => {
+        setAnimals([...animals].sort((a, b) => new Date(a.dateCreated) - new Date(b.dateCreated)));
+    };
+
+    const handleResetSorting = () => {
+        // Reset the animals state to its original order
+        const animalRef = collection(db, "animals");
+        const q = query(animalRef, where("status", "in", ["Available", "Pending", "Adopted"]));
+        getDocs(q).then((animalSnapshot) => {
+            const animalList = animalSnapshot.docs.map((doc) => {
+                return { id: doc.id, ...doc.data() };
+            });
+            setAnimals(animalList);
+        });
+    };
+
     // Function to toggle the visibility of the entire filter section
     const toggleFilters = () => {
-
+       
         setShowFilters(prevShowFilters => !prevShowFilters);
-
+    
     };
 
     return (
@@ -146,6 +168,10 @@ const Pets = () => {
                 handleSearch={handleSearch}
                 toggleFilters={toggleFilters}
                 showFilters={showFilters}
+                showSortButtons={true}
+                handleSortNewestFirst={handleSortNewestFirst}
+                handleSortOldestFirst={handleSortOldestFirst}
+                handleResetSorting={handleResetSorting}
             />
 
             {showFilters && (
@@ -155,8 +181,8 @@ const Pets = () => {
                     animals={animals}
                 />
             )}
-
             
+
             <div className="container">
                 <div className="row pb-4">
                     {searchTerm === '' ? (
@@ -190,4 +216,4 @@ const Pets = () => {
     );
 };
 
-export default Pets; 
+export default Pets;

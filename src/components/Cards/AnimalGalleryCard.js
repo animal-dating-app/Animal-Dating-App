@@ -86,6 +86,7 @@ const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, onClickAnimal, 
                 {animal.breed && <p className="card-text"><strong>Breed:</strong> {animal.breed}</p> }
                 {animal.age && <p className="card-text"><strong>Age:</strong> {animal.age}</p> }
                 {animal.gender && <p className="card-text"><strong>Gender:</strong> {animal.gender}</p> }
+                {animal.dateCreated && <p className="card-text"><strong>Date Created:</strong> {animal.dateCreated}</p> }
                 <p className="card-text">{animal.description}</p>
 
                 {animal.disposition &&
