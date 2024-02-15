@@ -141,9 +141,15 @@ const Pets = () => {
     };
 
     const handleResetSorting = () => {
-        
-        // Reset the sorting order
-        setAnimals([...animals]); // Reset to original order
+        // Reset the animals state to its original order
+        const animalRef = collection(db, "animals");
+        const q = query(animalRef, where("status", "in", ["Available", "Pending", "Adopted"]));
+        getDocs(q).then((animalSnapshot) => {
+            const animalList = animalSnapshot.docs.map((doc) => {
+                return { id: doc.id, ...doc.data() };
+            });
+            setAnimals(animalList);
+        });
     };
 
     // Function to toggle the visibility of the entire filter section

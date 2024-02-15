@@ -16,7 +16,7 @@ const FilterMenu = ({ selectedFilters, handleFilterChange, animals, showSortButt
     }
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
             {Object.keys(selectedFilters).map(category => (
                 category !== 'type' && category !== 'dateCreated' && ( // Exclude 'dateCreated' category
                     <div key={category}>
