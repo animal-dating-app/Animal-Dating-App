@@ -75,7 +75,8 @@ const SearchBar = ({ searchTerm, setSearchTerm, handleSearch, toggleFilters,
                         color: '#007bff', 
                         cursor: 'pointer'  
                       }} 
-                onClick={() => setShowSortOptions(!showSortOptions)}>
+                onClick={() => setShowSortOptions(!showSortOptions)}
+                onTouchStart={() => setShowSortOptions(!showSortOptions)}>
           {showSortOptions ? "Hide Sort Options" : "Show Sort Options"}
         </button>
       </div>
@@ -98,6 +99,10 @@ const SearchBar = ({ searchTerm, setSearchTerm, handleSearch, toggleFilters,
               // Sort animals by newest first
               handleSortNewestFirst(); 
             }}
+            onTouchStart={() => {
+              handleSortOptionClick("newest");
+              handleSortNewestFirst();
+            }}
           >
             Newest First
           </button>
@@ -116,6 +121,10 @@ const SearchBar = ({ searchTerm, setSearchTerm, handleSearch, toggleFilters,
               // Sort animals by oldest first
               handleSortOldestFirst(); 
             }}
+            onTouchStart={() => {
+              handleSortOptionClick("oldest");
+              handleSortOldestFirst();
+            }}
           >
             Oldest First
           </button>
@@ -133,6 +142,10 @@ const SearchBar = ({ searchTerm, setSearchTerm, handleSearch, toggleFilters,
               handleSortOptionClick("");
               // Reset sorting order to default
               handleResetSorting(); 
+            }}
+            onTouchStart={() => {
+              handleSortOptionClick("");
+              handleResetSorting();
             }}
           >
             Default
