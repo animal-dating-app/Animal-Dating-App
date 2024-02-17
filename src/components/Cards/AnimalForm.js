@@ -60,8 +60,6 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal}) => {
         handleAnimalChange({target: { name, value }});
     }
 
-    
-
     // Styles copied from bootstrap form-control class to make react-select look like a bootstrap input
     const selectStyles = {
         control: (provided, state) => ({
@@ -107,8 +105,8 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal}) => {
                     <label htmlFor="description" className="form-label">Description</label>
                     <textarea className="form-control mb-2" placeholder="Description" name="description" value={animal.description} onChange={handleAnimalChange}></textarea>
 
-                        <label htmlFor="pictureUri" className="form-label text-start">Image URL</label>
-                        <input type="file" className="form-control mb-2" placeholder="Image URL" name="pictureUri" value={animal.pictureUri} onChange={handleAnimalChange}  />
+                    <label htmlFor="pictureUri" className="form-label text-start">Image URL</label>
+                    <input type="url" className="form-control mb-2" placeholder="Image URL" name="pictureUri" value={animal.pictureUri} onChange={handleAnimalChange} pattern="https?://.+" />
 
                     <label htmlFor="status" className="form-label">Status</label>
                     <Select className="mb-2" name="status" onChange={(e) => handleSelectChange('status', e.value)} required options={animalStatus} styles={selectStyles}
