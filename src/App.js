@@ -22,8 +22,6 @@ import Cats from "./pages/pets/cats.js";
 import Dogs from "./pages/pets/dogs.js";
 import Others from "./pages/pets/others.js";
 import PageNotFound from "./components/404Page/404Page.js";
-import ImageUploader from "./components/ImageUploader/ImageUp";
-
 function App() {
     return (
         <UserProvider>
@@ -47,7 +45,6 @@ function AuthenticatedApp() {
             <Header />
             <Navbar user={user} />
             <ToastContainer />
-            <ImageUploader />
             <div className="pageWrapper">
                 <Routes>
                     <Route path="/" element={<Home />} />
