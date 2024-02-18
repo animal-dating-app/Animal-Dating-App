@@ -40,7 +40,7 @@ const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, onClickAnimal, 
         setAnimalImage(animal.pictureUri ? animal.pictureUri : placeholder);
     }, [animal.type, animal.pictureUri, animalImage]);
 
-    const cardClass = isSelected ? "card border border-3 rounded-3 border-primary w-100" : "card w-100";
+    const cardClass = isSelected ? "card border border-3 rounded-3 border-primary" : "card";
 
     let statusColor = (function () {
         switch (animal.status) {
@@ -83,11 +83,11 @@ const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, onClickAnimal, 
             <img src={animalImage} className="card-img-top" alt={animal.name} />
             <div className="card-body text-start">
                 {animal.name && <h5 className="card-title">{animal.name}</h5> }
-                {animal.breed && <p className="card-text"><strong>Breed:</strong> {animal.breed}</p> }
-                {animal.age && <p className="card-text"><strong>Age:</strong> {animal.age}</p> }
-                {animal.gender && <p className="card-text"><strong>Gender:</strong> {animal.gender}</p> }
+                {animal.breed && <p className="card-text mb-0"><strong>Breed:</strong> {animal.breed}</p> }
+                {animal.age && <p className="card-text mb-0"><strong>Age:</strong> {animal.age}</p> }
+                {animal.gender && <p className="card-text mb-0"><strong>Gender:</strong> {animal.gender}</p> }
                 {animal.dateCreated && <p className="card-text"><strong>Date Created:</strong> {animal.dateCreated}</p> }
-                <p className="card-text">{animal.description}</p>
+                <p className="card-text mb-1">{animal.description}</p>
 
                 {animal.disposition &&
                     <div>

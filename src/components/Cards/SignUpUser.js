@@ -46,6 +46,9 @@ const SignUpUser = () => {
             .then(async (userCredential) => {
                 user = userCredential.user.uid;
                 
+                delete newUserData.email;
+                delete newUserData.password;
+                
                 // Add shelter info to database
                 await addDoc(collection(db, "users"), {
                     ...newUserData,
