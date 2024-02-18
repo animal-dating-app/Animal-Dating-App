@@ -6,8 +6,6 @@ import {
     NavMenu,
     NavBtn,
     NavBtnLink,
-    PetsDropdownMenu,
-    DropdownContainer
 } from "./NavbarElements";
 import { auth } from "../../firebaseConfig";
 import {  signOut } from "firebase/auth";
@@ -46,21 +44,9 @@ const Navbar = ({ user }) => {
                     <NavLink to="/" onClick={() => setIsActive(false)}>
                         Home
                     </NavLink>
-                <DropdownContainer> 
                         <NavLink to="/pets" onClick={() => setIsActive(false)}>
                             Pets
                         </NavLink>
-                        <PetsDropdownMenu>
-                            <NavLink to="/pets/cats" onClick={() => setIsActive(false)}>Cats</NavLink>
-                            <NavLink to="/pets/dogs" onClick={() => setIsActive(false)}>Dogs</NavLink>
-                            <NavLink to="/pets/others" onClick={() => setIsActive(false)}>Others</NavLink>
-                        </PetsDropdownMenu>
-                    </DropdownContainer>
-                        <PetsDropdownMenu>
-                            <NavLink to="/pets/cats" onClick={() => setIsActive(false)}>Cats</NavLink>
-                            <NavLink to="/pets/dogs" onClick={() => setIsActive(false)}>Dogs</NavLink>
-                            <NavLink to="/pets/others" onClick={() => setIsActive(false)}>Others</NavLink>
-                        </PetsDropdownMenu>
                     {user && (
                         <NavLink to="/dashboard" onClick={() => setIsActive(false)}>
                             Dashboard
