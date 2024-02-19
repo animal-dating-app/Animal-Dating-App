@@ -14,6 +14,7 @@ import SignUp from "./pages/signup";
 import SignIn from "./pages/signin.js";
 import Dashboard from "./pages/shelterDashboard.js";
 import Pet from "./pages/pet.js";
+import Shelter from "./pages/shelter.js";
 import FullScreenLoader from './components/FullScreenLoader';
 import Header from './components/Header/Header.js';
 import { ToastContainer } from 'react-toastify';
@@ -50,6 +51,12 @@ function AuthenticatedApp() {
                     <Route path="/sign-up" element={<SignUp user={user} />} />
                     <Route path="/sign-in" element={<SignIn user={user} />} />
                     <Route path="/pet" element={<Pet />} />
+                    <Route path="/shelter">
+                        <Route
+                            path=":id"
+                            element={<Shelter />}
+                        />
+                    </Route>
                     <Route
                         path="*"
                         element={<PageNotFound />}
