@@ -28,6 +28,9 @@ const SignUpShelter = () => {
           .then(async (userCredential) => {
                 const user = userCredential.user.uid;
 
+                delete newShelter.email;
+                delete newShelter.password;
+
                 // Add shelter info to database
                 await addDoc(collection(db, "shelters"), {
                     ...newShelter,

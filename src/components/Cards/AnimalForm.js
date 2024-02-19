@@ -99,7 +99,7 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal}) => {
 
                     <label htmlFor="disposition" className="form-label text-start">Disposition</label>
                     <Select className="mb-2" name="disposition" onChange={(vals) => handleSelectChange('disposition', vals.map(val => val.value))}
-                        required options={animalDisposition} styles={selectStyles} isMulti placeholder="Select Disposition"
+                        options={animalDisposition} styles={selectStyles} isMulti placeholder="Select Disposition"
                         value={animal.disposition ? [...animalDisposition.filter(disposition => animal.disposition.includes(disposition.value))] : []} />
                     
                     <label htmlFor="description" className="form-label">Description</label>
