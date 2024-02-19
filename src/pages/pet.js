@@ -34,8 +34,14 @@ const Pet = () => {
     };
 
     useEffect(() => {
-        loadAnimals();
-    });
+        const getAnimals = async () => {
+            const item = doc(db, "animals", animal.id);
+            const itemSnap = await getDoc(item);
+            setAnimal(itemSnap.data());
+        };
+
+        getAnimals();
+    }, [animal.id]);
 
     const editAnimal = () => {
         setShowEditModal(true);
