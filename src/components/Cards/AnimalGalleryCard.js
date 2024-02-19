@@ -40,7 +40,7 @@ const AnimalGalleryCard = ({ animal, selectable, onSelectAnimal, onClickAnimal, 
         setAnimalImage(animal.pictureUri ? animal.pictureUri : placeholder);
     }, [animal.type, animal.pictureUri, animalImage]);
 
-    const cardClass = isSelected ? "card border border-3 rounded-3 border-primary" : "card";
+    const cardClass = isSelected ? "card border border-3 rounded-3 border-primary w-100" : "card w-100";
 
     let statusColor = (function () {
         switch (animal.status) {
