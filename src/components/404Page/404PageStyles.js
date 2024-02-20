@@ -25,13 +25,13 @@ export const HomeButton = styled.button`
     padding: 10px 20px;
     border-radius: 5px;
     border: none;
-    background-color: #809bce;
-    color: white;
+    background-color: #DDEDEA;
+    color: black;
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
 
     &:hover {
-        background-color: #667ba9;
+        background-color: #BCC9C7;
     }
 `;

@@ -6,21 +6,34 @@ import Select from 'react-select';
 import { AnimalGalleryCard } from "../components/Cards";
 import AddAnimalModal from "../components/Cards/AddAnimalModal";
 import EditAnimalModal from "../components/Cards/EditAnimalModal";
+import FullScreenLoader from "../components/FullScreenLoader";
 
 const Dashboard = () => {
-    // if user is not logged in, redirect to sign in page
-    if (!auth.currentUser) window.location.href = "/sign-in";
-
     const [animals, setAnimals] = useState([]);
     const [selectedAnimals, setSelectedAnimals] = useState([]);
     const [selectedAction, setSelectedAction] = useState(null);
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [currentAnimal, setCurrentAnimal] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [fadingOut, setFadingOut] = useState(false);
+
+    // if user is not logged in, redirect to sign in page
+    if (!auth.currentUser) window.location.href = "/sign-in";
+
+    // Check if current user is a shelter (document in shelters collection with shelterId = currentUser.uid)
+    const loadShelter = async () => {
+        const q = query(collection(db, "shelters"), where("shelterId", "==", auth.currentUser.uid));
+        const shelterSnapshot = await getDocs(q);
+        if (shelterSnapshot.empty) {
+            window.location.href = "/pets";
+        }
+    };
 
     const handleAddNewAnimalClick = () => {
         setShowAddModal(true);
     };
+    
 
     const loadAnimals = async () => {
         const getAnimals = async () => {
@@ -30,13 +43,19 @@ const Dashboard = () => {
                 return { id: doc.id, ...doc.data() };
             });
             setAnimals(animalList);
+            setFadingOut(true);
+            setTimeout(() => {
+                setLoading(false);
+            }, 1000); // Delay + duration of the fade out animation
         };
 
         getAnimals();
     };
 
     useEffect(() => {
-        loadAnimals();
+        loadShelter().then(() => {
+            loadAnimals()
+        });
     }, []);
 
     const handleSelectAnimal = (animalId) => {
@@ -102,8 +121,31 @@ const Dashboard = () => {
         }),
     }
 
+    const shelterSection = (sectionName, sectionId) => {
+        if (animals.filter(animal => animal.status === sectionId).length === 0) return null;
+
+        return (
+            <div className="container">
+                <h3 className="w-100 text-start pb-2"
+                >{sectionName}</h3>
+                <div className="row pb-4">
+                {
+                    animals.filter(animal => animal.status === sectionId).map(animal => (
+                        <div className="col-6 col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
+                            <AnimalGalleryCard animal={animal} selectable={true} 
+                                selected={selectedAnimals.includes(animal.id)} onSelectAnimal={handleSelectAnimal} 
+                                onClickAnimal={clickAnimal} callToAction="" />
+                        </div>
+                    ))
+                }
+                </div>
+            </div>
+        );
+    }
+
     return (
         <>
+        { loading && <FullScreenLoader fadingOut={fadingOut} /> }
         <div className="container mb-4">
                 <div className="row">
                     <div className="col-md-6 text-md-start">
@@ -116,20 +158,10 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
-            <div className="container">
-                {animals.length === 0 && <p>You have no animals in your shelter.</p>}
-                <div className="row pb-4">
-                    {
-                        animals.map(animal => (
-                            <div className="col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
-                                <AnimalGalleryCard animal={animal} selectable={true} 
-                                    selected={selectedAnimals.includes(animal.id)} onSelectAnimal={handleSelectAnimal} 
-                                    onClickAnimal={clickAnimal} callToAction="" />
-                            </div>
-                        ))
-                    }
-                </div>
-            </div>
+            {shelterSection("Pending Adoption", "Pending")}
+            {shelterSection("Available for Adoption", "Available")}
+            {shelterSection("Adopted", "Adopted")}
+            {shelterSection("Unpublished", "Unavailable")}
             <AddAnimalModal showModal={showAddModal} setShowModal={setShowAddModal} loadAnimals={loadAnimals} />
             <EditAnimalModal showModal={showEditModal} setShowModal={setShowEditModal} loadAnimals={loadAnimals} animal={currentAnimal} />
         </>

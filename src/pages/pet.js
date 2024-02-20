@@ -34,8 +34,14 @@ const Pet = () => {
     };
 
     useEffect(() => {
-        loadAnimals();
-    });
+        const getAnimals = async () => {
+            const item = doc(db, "animals", animal.id);
+            const itemSnap = await getDoc(item);
+            setAnimal(itemSnap.data());
+        };
+
+        getAnimals();
+    }, [animal.id]);
 
     const editAnimal = () => {
         setShowEditModal(true);
@@ -60,6 +66,10 @@ const Pet = () => {
                         <button type="button" className="btn btn-primary btn-lg btn-block" 
                         style={{margin: "0.25rem", width: "95%"}} data-bs-toggle="modal" data-bs-target="#contactModal">
                             Contact Shelter
+                        </button>
+                        <button type="button" className="btn btn-primary btn-lg btn-block" 
+                        style={{margin: "0.25rem", width: "95%"}} onClick={() => window.location.href = "/shelter/" + animal.shelterId}>
+                            View Shelter
                         </button>
 
                         <div className="modal fade" id="contactModal" tabIndex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
