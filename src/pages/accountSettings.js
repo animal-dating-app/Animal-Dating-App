@@ -56,7 +56,7 @@ const Settings = () => {
             {!shelter && ( 
                 <div class="container mt-4">
                     <p>Adopt User</p>
-                    <p><strong>Email:</strong> {user.email}</p>
+                    <p><strong>Email:</strong> {auth.currentUser.email}</p>
                     <p><strong>First Name:</strong> {user.firstName}</p>
                     <p><strong>Last Name:</strong> {user.lastName}</p>
                     <p><strong>Preferences</strong></p>
@@ -67,7 +67,7 @@ const Settings = () => {
             )}
             {shelter && ( 
                 <div class="container mt-4">
-                    <p><strong>Email:</strong> {user.email}</p>
+                    <p><strong>Email:</strong> {auth.currentUser.email}</p>
                     <p><strong>Shelter Name:</strong> {user.name}</p>
                     <p><strong>Address:</strong> {user.address}</p>
                     <p><strong>Phone:</strong> {user.phone}</p>
