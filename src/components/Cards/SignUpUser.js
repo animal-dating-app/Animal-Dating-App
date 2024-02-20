@@ -11,10 +11,10 @@ const SignUpUser = () => {
     const [newUser, setNewUser] = useState({
         firstName: "",
         lastName: "",
-        email: "",
-        password: ""
+        email: ""
     });
     const [preferences, setPreferences] = useState([]);
+    const [password, setPassword] = useState();
 
     const handleNewUserChange = (e) => {
         setNewUser({...newUser, [e.target.name]: e.target.value });
@@ -42,7 +42,7 @@ const SignUpUser = () => {
         let user = null;
        
         // Create Firebase Auth account 
-        await createUserWithEmailAndPassword(auth, newUser.email, newUser.password)
+        await createUserWithEmailAndPassword(auth, newUser.email, password)
             .then(async (userCredential) => {
                 user = userCredential.user.uid;
                 
@@ -65,36 +65,35 @@ const SignUpUser = () => {
     return (
         <div>
             <div>
-                <label htmlFor="email-address">Email address</label>
+                <label htmlFor="email-address"><strong>Email address</strong></label>
                 <br></br>
                 <input id="email-address" name="email" type="email" required placeholder="Email address"
                     onChange={handleNewUserChange}/>
             </div>
             <div>
-                <label htmlFor="password">Password</label>
+                <label htmlFor="password"><strong>Password</strong></label>
                 <br></br>
                 <input id="password" name="password" type="password" required placeholder="Password"
-                    onChange={handleNewUserChange}/>
+                    onChange={(e) => setPassword(e.target.value)}/>
             </div>
             <div>
-                <label htmlFor="firstName">First Name</label>
+                <label htmlFor="firstName"><strong>First Name</strong></label>
                 <br></br>
                 <input id="firstName" name="firstName" type="firstName" required placeholder="First Name"
                     onChange={handleNewUserChange}/>
             </div>
             <div>
-                <label htmlFor="lastName">Last Name</label>
+                <label htmlFor="lastName"><strong>Last Name</strong></label>
                 <br></br>
                 <input id="lastName" name="lastName" type="lastName" required placeholder="Last Name"
                     onChange={handleNewUserChange}/>
             </div>
             <div>
-                <br></br>
-                <p>Preferences</p>
+                <p><strong>Preferences</strong></p>
                 <div className="row">
                     <div className="col">
                         <p className="d-inline-flex gap-1">
-                        <button type="button" className="btn" data-bs-toggle="button" value="Dogs" onClick={handlePreferenceClick}>Dogs</button>
+                        <button type="button" className="btn mb-0" data-bs-toggle="button" value="Dogs" onClick={handlePreferenceClick}>Dogs</button>
                         <button type="button" className="btn" data-bs-toggle="button" value="Cats" onClick={handlePreferenceClick}>Cats</button>
                         <button type="button" className="btn" data-bs-toggle="button" value="Rabbits" onClick={handlePreferenceClick}>Rabbits</button>
                         </p>
@@ -126,7 +125,7 @@ const SignUpUser = () => {
                     </div>
                 </div>
             </div>
-            <button type="submit" onClick={onSubmit}>Create Account</button>
+            <button type="submit" className="btn btn-primary btn-block" onClick={onSubmit}>Create Account</button>
             <br></br>
         </div>
     );
