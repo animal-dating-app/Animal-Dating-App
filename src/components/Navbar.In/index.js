@@ -52,6 +52,11 @@ const Navbar = ({ user }) => {
                             Dashboard
                         </NavLink>
                     )}
+                    { user && (
+                        <NavLink to="/settings" onClick={() => setIsActive(false)}>
+                            Settings
+                        </NavLink>
+                    )}
                     {!user && (
                         <NavLink to="/sign-up" onClick={() => setIsActive(false)}>
                             Sign Up

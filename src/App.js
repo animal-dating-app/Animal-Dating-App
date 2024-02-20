@@ -13,6 +13,7 @@ import Pets from "./pages/pets.js";
 import SignUp from "./pages/signup";
 import SignIn from "./pages/signin.js";
 import Dashboard from "./pages/shelterDashboard.js";
+import Settings from "./pages/accountSettings.js";
 import Pet from "./pages/pet.js";
 import Shelter from "./pages/shelter.js";
 import FullScreenLoader from './components/FullScreenLoader';
@@ -48,6 +49,7 @@ function AuthenticatedApp() {
                     <Route path="/" element={<Home />} />
                     <Route path="/pets" element={<Pets />} />
                     <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/settings" element={<Settings />} />
                     <Route path="/sign-up" element={<SignUp user={user} />} />
                     <Route path="/sign-in" element={<SignIn user={user} />} />
                     <Route path="/pet" element={<Pet />} />
