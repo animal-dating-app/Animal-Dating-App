@@ -1,8 +1,18 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Select from 'react-select';
 import { AnimalGalleryCard } from ".";
+import ImageUploader from './Imageupload';
 
 const AnimalForm = ({ formRef, handleAnimalChange, animal}) => {
+    const [imageURL, setImageURL] = useState('');
+
+
+const handleImageUpload = (url) => {
+    setImageURL(url);
+    // This callback will update the 'pictureUri' property in the 'animal' state
+    handleAnimalChange({ target: { name: 'pictureUri', value: url } });
+  };
+
     const animalTypes = [
         { value: 'Dog', label: 'Dog' },
         { value: 'Cat', label: 'Cat' },
@@ -59,6 +69,7 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal}) => {
 
         handleAnimalChange({target: { name, value }});
     }
+    
 
     // Styles copied from bootstrap form-control class to make react-select look like a bootstrap input
     const selectStyles = {
@@ -105,9 +116,18 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal}) => {
                     <label htmlFor="description" className="form-label">Description</label>
                     <textarea className="form-control mb-2" placeholder="Description" name="description" value={animal.description} onChange={handleAnimalChange}></textarea>
 
-                    <label htmlFor="pictureUri" className="form-label text-start">Image URL</label>
-                    <input type="url" className="form-control mb-2" placeholder="Image URL" name="pictureUri" value={animal.pictureUri} onChange={handleAnimalChange} pattern="https?://.+" />
+                    {/* <label htmlFor="pictureUri" className="form-label text-start">Image URL</label>
+      <input type="url" className="form-control mb-2" placeholder="Image URL" name="pictureUri" value={imageURL} onChange={(e) => handleAnimalChange(e)} /> */}
 
+      {/* The image currently have bug. The  ImageUploader will save the image URL from firebase database and then paste into the animal.pictureUri, 
+      the problem it currently facing is, only when user click on upload, it will then get the URL from frirebase database then paste into Image URL above. 
+      The image HUGE BUG is it only show preview of the actual image when user click on the IMAGE URL and then type something 
+      Note: - Need to be able to load image right away when upload
+            - Need to delete previous input so the next "add animal" does not show previous image field*/}
+
+      {/* Include the ImageUploader component and pass the callback */}
+      <ImageUploader onImageUpload={handleImageUpload} name="pictureUri" value={imageURL} onChange={(e) => handleAnimalChange(e)}/>
+      
                     <label htmlFor="status" className="form-label">Status</label>
                     <Select className="mb-2" name="status" onChange={(e) => handleSelectChange('status', e.value)} required options={animalStatus} styles={selectStyles}
                         value={animalStatus.filter(status => status.value === animal.status)} />
