@@ -12,9 +12,9 @@ const SignUpShelter = () => {
         name: "",
         address: "",
         phone: "",
-        email: "",
-        password: ""
+        email: ""
     });
+    const [password, setPassword] = useState();
 
     const handleNewUserChange = (e) => {
         setNewShelter({...newShelter, [e.target.name]: e.target.value });
@@ -24,9 +24,12 @@ const SignUpShelter = () => {
         e.preventDefault()
        
         // Create Firebase Auth account 
-        await createUserWithEmailAndPassword(auth, newShelter.email, newShelter.password)
+        await createUserWithEmailAndPassword(auth, newShelter.email, password)
           .then(async (userCredential) => {
                 const user = userCredential.user.uid;
+
+                delete newShelter.email;
+                delete newShelter.password;
 
                 // Add shelter info to database
                 await addDoc(collection(db, "shelters"), {
@@ -48,37 +51,37 @@ const SignUpShelter = () => {
         <div>
             <div className="col">
                 <div>
-                    <label htmlFor="email-address">Email address</label>
+                    <label htmlFor="email-address"><strong>Email address</strong></label>
                     <br></br>
                     <input id="email-address" name="email" type="email" required placeholder="Email address"
                         onChange={handleNewUserChange}/>
                 </div>
                 <div>
-                    <label htmlFor="password">Password</label>
+                    <label htmlFor="password"><strong>Password</strong></label>
                     <br></br>
                     <input id="password" name="password" type="password" required placeholder="Password"
-                        onChange={handleNewUserChange}/>
+                        onChange={(e) => setPassword(e.target.value)}/>
                 </div>
                 <div>
-                    <label htmlFor="name">Shelter Name</label>
+                    <label htmlFor="name"><strong>Shelter Name</strong></label>
                     <br></br>
                     <input id="name" name="name" type="name" required placeholder="Shelter Name"
                         onChange={handleNewUserChange}/>
                 </div>
                 <div>
-                    <label htmlFor="address">Address</label>
+                    <label htmlFor="address"><strong>Address</strong></label>
                     <br></br>
                     <input id="address" name="address" type="address" required placeholder="Address"
                         onChange={handleNewUserChange}/>
                 </div>
                 <div>
-                    <label htmlFor="phone">Phone Number</label>
+                    <label htmlFor="phone"><strong>Phone Number</strong></label>
                     <br></br>
                     <input id="phone" name="phone" type="phone" required placeholder="Phone Number"
                         onChange={handleNewUserChange}/>
                 </div>
                 <br></br>
-                <button type="submit" onClick={onSubmit}>Create Account</button>
+                <button type="submit" className="btn btn-primary btn-block" onClick={onSubmit}>Create Account</button>
                 <br></br>
             </div>
         </div>

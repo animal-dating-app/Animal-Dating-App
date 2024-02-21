@@ -3,8 +3,6 @@ import { db } from "../firebaseConfig";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { toast } from 'react-toastify';
 import Carousel from "../components/Carousel/Carousel";
-// import axios from 'axios';
-
 const Home = () => {
   const [animals, setAnimals] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -36,7 +34,6 @@ const Home = () => {
             }));
 
           if (newAnimals.length > 0) {
-            // sendEmailNotification(newAnimals);
             toast.success(`${newAnimals.length} new ${newAnimals.length === 1 ? 'pet' : 'pets'} added!`);
           }
 
@@ -49,15 +46,6 @@ const Home = () => {
 
     getAvailableAnimals();
   }, [initialFetchComplete]);
-
-  // const sendEmailNotification = async (newAnimals) => {
-  //   try {
-  //     // Call the Firebase Cloud Function
-  //     await axios.post('////', { petDetails: newAnimals });
-  //   } catch (error) {
-  //     console.error('Eror:', error);
-  //   }
-  // };
 
   return (
     <>

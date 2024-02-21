@@ -5,6 +5,7 @@ import { AnimalGalleryCard } from "../components/Cards";
 import { useNavigate } from 'react-router-dom';
 import SearchBar from "../components/Search/SearchBar";
 import FilterMenu from "../components/Filter/FilterMenu";
+import FullScreenLoader from "../components/FullScreenLoader";
 
 const Pets = () => {
     const [animals, setAnimals] = useState([]);
@@ -19,6 +20,8 @@ const Pets = () => {
         status: [],
         dateCreated: [],
     });
+    const [loading, setLoading] = useState(true);
+    const [fadingOut, setFadingOut] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -30,6 +33,10 @@ const Pets = () => {
                 return { id: doc.id, ...doc.data() };
             });
             setAnimals(animalList);
+            setFadingOut(true);
+            setTimeout(() => {
+                setLoading(false);
+            }, 1000); // Delay + duration of the fade out animation
         };
 
         getAnimals();
@@ -161,6 +168,7 @@ const Pets = () => {
 
     return (
         <>
+        {loading && <FullScreenLoader fadingOut={fadingOut} />}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <SearchBar
                 searchTerm={searchTerm}
@@ -189,14 +197,14 @@ const Pets = () => {
                         // If the search bar is empty, display the entire animal database
                         results.length === 0 ? (
                             animals.map(animal => (
-                                <div className="col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
+                                <div className="col-6 col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
                                     <AnimalGalleryCard animal={animal} onClickAnimal={() => navigate('/pet', {state:{pet:animal}})}/>
                                 </div>
                             ))
                         ) : (
                             // If search bar is not empty, display only the searched animal type
                             results.map(animal => (
-                                <div className="col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
+                                <div className="col-6 col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
                                     <AnimalGalleryCard animal={animal} onClickAnimal={() => navigate('/pet', {state:{pet:animal}})}/>
                                 </div>
                             ))
@@ -204,7 +212,7 @@ const Pets = () => {
                     ) : (
                         // If search bar is not empty, display only the searched animal type
                         filteredAnimals.map(animal => (
-                            <div className="col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
+                            <div className="col-6 col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
                                 <AnimalGalleryCard animal={animal} onClickAnimal={() => navigate('/pet', {state:{pet:animal}})}/>
                             </div>
                         ))
