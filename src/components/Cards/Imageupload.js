@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getDatabase, ref as dbRef, push } from 'firebase/database';
-import { storage as firebaseStorage, auth as firebaseAuth } from '../../firebaseConfig';
+import { storage as firebaseStorage  } from '../../firebaseConfig';
 
 
 
