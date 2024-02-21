@@ -58,9 +58,6 @@ const ImageUploader = ({onImageUpload}) => {
   return (
     <div>
       <input type="file" onChange={handleFileChange} accept="image/*" />
-      <br />
-      {imageUrl && <img src={imageUrl} alt="Preview" style={{ maxWidth: '100%', maxHeight: '300px' }} />}
-      <br />
       <button type='button' onClick={uploadImage}>Upload Image</button>
     </div>
   );
