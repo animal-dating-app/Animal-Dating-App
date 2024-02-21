@@ -49,8 +49,8 @@ const SearchBar = ({ searchTerm, setSearchTerm, handleSearch, toggleFilters,
                         padding: '10px', 
                         borderRadius: '5px', 
                         border: 'none', 
-                        background: '#007bff', 
-                        color: '#fff', 
+                        background: 'rgb(221, 237, 234)', 
+                        color: 'rgb(128, 128, 128)', 
                         cursor: 'pointer' 
                       }}>Search</button>
       </div>
@@ -89,8 +89,8 @@ const SearchBar = ({ searchTerm, setSearchTerm, handleSearch, toggleFilters,
                     padding: '10px', 
                     borderRadius: '5px', 
                     border: 'none', 
-                    background: sortBy === "newest" ? '#007bff' : '#fff', 
-                    color: sortBy === "newest" ? '#fff' : '#007bff', 
+                    background: sortBy === "newest" ? 'rgb(221, 237, 234)' : '#fff', 
+                    color: sortBy === "newest" ? 'rgb(128, 128, 128)' : 'rgb(128, 128, 128)', 
                     cursor: 'pointer' 
             }}
             onClick={() => {
@@ -107,8 +107,8 @@ const SearchBar = ({ searchTerm, setSearchTerm, handleSearch, toggleFilters,
                     padding: '10px', 
                     borderRadius: '5px', 
                     border: 'none', 
-                    background: sortBy === "oldest" ? '#007bff' : '#fff', 
-                    color: sortBy === "oldest" ? '#fff' : '#007bff', 
+                    background: sortBy === "oldest" ? 'rgb(221, 237, 234)' : '#fff', 
+                    color: sortBy === "oldest" ? 'rgb(128, 128, 128)' : 'rgb(128, 128, 128)', 
                     cursor: 'pointer' 
                   }}
             onClick={() => {
@@ -125,8 +125,8 @@ const SearchBar = ({ searchTerm, setSearchTerm, handleSearch, toggleFilters,
                     padding: '10px', 
                     borderRadius: '5px', 
                     border: 'none', 
-                    background: sortBy === "" ? '#007bff' : '#fff', 
-                    color: sortBy === "" ? '#fff' : '#007bff', 
+                    background: sortBy === "" ? 'rgb(221, 237, 234)' : '#fff', 
+                    color: sortBy === "" ? 'rgb(128, 128, 128)' : 'rgb(128, 128, 128)', 
                     cursor: 'pointer' 
                   }}
             onClick={() => {
