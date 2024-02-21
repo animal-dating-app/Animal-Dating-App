@@ -16,7 +16,6 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
         pictureUri: "",
         status: "Available", 
         disposition: [],
-        ImageFile: "",
     });
 
     const formRef = useRef(null);
@@ -65,7 +64,6 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
             gender: "",
             pictureUri: "",
             available: true,
-            ImageFile : "",
         });
         setUnsavedChanges(false);
         loadAnimals(); // Refresh the list of animals
