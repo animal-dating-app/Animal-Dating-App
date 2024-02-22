@@ -116,14 +116,8 @@ const handleImageUpload = (url) => {
                     <label htmlFor="description" className="form-label">Description</label>
                     <textarea className="form-control mb-2" placeholder="Description" name="description" value={animal.description} onChange={handleAnimalChange}></textarea>
 
-                    {/* <label htmlFor="pictureUri" className="form-label text-start">Image URL</label>
-      <input type="url" className="form-control mb-2" placeholder="Image URL" name="pictureUri" value={imageURL} onChange={(e) => handleAnimalChange(e)} /> */}
-
-      {/* The image currently have bug. The  ImageUploader will save the image URL from firebase database and then paste into the animal.pictureUri, 
-      the problem it currently facing is, only when user click on upload, it will then get the URL from frirebase database then paste into Image URL above. 
-      The image HUGE BUG is it only show preview of the actual image when user click on the IMAGE URL and then type something 
-      Note: - Need to be able to load image right away when upload
-            - Need to delete previous input so the next "add animal" does not show previous image field*/}
+                
+            {/* - Need to delete previous input so the next "add animal" does not show previous image field*/}
 
       {/* Include the ImageUploader component and pass the callback */}
       <ImageUploader onImageUpload={handleImageUpload} name="pictureUri" value={imageURL} onChange={(e) => handleAnimalChange(e)}/>

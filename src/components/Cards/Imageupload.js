@@ -12,7 +12,6 @@ import { storage as firebaseStorage  } from '../../firebaseConfig';
 //  - The download URL is then stored in the Firebase Realtime Database along with the other animal details
 //  - The ImageUploader component is used in the AnimalForm component to allow users to upload an image of an animal
 // Need add a function that willl delete previous input so the next "add animal" does not show previous image field
-// When click on upload, if there is some input in the form, it will auto refresh the page, need to FIX THIS
 const ImageUploader = ({onImageUpload}) => {
   const [file, setFile] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
@@ -43,7 +42,7 @@ const ImageUploader = ({onImageUpload}) => {
         push(imagesRef, { url: downloadURL });
         onImageUpload(downloadURL);
 
-
+        console.log('Image uploaded to Firebase Storage:', imageUrl);
         console.log('URL stored in the database:', downloadURL);
       } catch (error) {
         console.error('Error uploading image:', error);
