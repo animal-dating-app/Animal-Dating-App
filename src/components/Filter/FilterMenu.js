@@ -39,11 +39,11 @@ const FilterMenu = ({ selectedFilters, handleFilterChange, animals, showSortButt
                                                 width: '20px',
                                                 height: '20px',
                                                 borderRadius: '50%',
-                                                background: 'blue',
+                                                background: 'rgb(221, 237, 234)',
                                                 display: 'flex',
                                                 justifyContent: 'center',
                                                 alignItems: 'center',
-                                                color: 'white',
+                                                color: 'rgb(128, 128, 128)',
                                                 fontSize: '14px',
                                             }}
                                         >
@@ -52,7 +52,16 @@ const FilterMenu = ({ selectedFilters, handleFilterChange, animals, showSortButt
                                     </span>
                                 </h3>
                                 {whatsThisVisible && (
-                                    <div style={{ border: '1px solid #ccc', padding: '10px', background: '#87CEEB', position: 'absolute', zIndex: 1, marginLeft: '-108px' }}>
+                                    <div style={{ 
+                                                    border: '1px solid #ccc', 
+                                                    padding: '10px', 
+                                                    background: 'rgb(221, 237, 234)', 
+                                                    color: 'rgb(128, 128, 128)',
+                                                    position: 'absolute', 
+                                                    zIndex: 1, 
+                                                    marginLeft: '-108px' 
+                                                }}>
+
                                         Age range explanation:
                                         <p>Adult: Animals that are between 3-7 years old. </p>
                                         <p>Senior: Animals that are 8 years old and older. </p>
