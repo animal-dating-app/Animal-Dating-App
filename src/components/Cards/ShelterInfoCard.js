@@ -1,39 +1,16 @@
-
-import { useState, useEffect } from "react";
-import { db } from "../../firebaseConfig";
-import { collection, getDocs, query, where, limit } from "firebase/firestore";
-
-function ShelterInfoCard({ shelterId }) {
-    const [shelter, setShelter] = useState({});
-
-    useEffect(() => {
-		const loadShelter = async () => {
-			const q = query(
-				collection(db, "shelters"),
-				where("shelterId", "==", shelterId),
-				limit(1)
-			);
-			const shelterSnapshot = await getDocs(q);
-			if (!shelterSnapshot.empty) {
-				setShelter(shelterSnapshot.docs[0].data());
-			}
-		};
-
-		loadShelter();
-	}, [shelterId]);
-
+function ShelterInfoCard({ shelter }) {
     return (
         <div className="card mb-3">
             <div className="row g-0">
                 <div className={shelter.address ? "col-md-8" : "col-md-12"}>
                     <div className="card-body text-start" style={{padding: "2rem", paddingBottom: "3rem"}}>
-                        <h4 className="card-title">About {shelter.name}</h4>
-                        <p className="card-text">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec
-                            purus feugiat, molestie ipsum et, consequat nibh. Etiam non elit dui.
-                            Nulla nec purus feugiat, molestie ipsum et, consequat nibh. Etiam non
-                            elit dui.
-                        </p>
+                        
+                        { shelter.description && <>
+                            <h4 className="card-title">About {shelter.name}</h4>
+                            <p className="card-text">
+                                {shelter.description}
+                            </p>
+                        </>}
                         <h4 className="card-title">Contact Information</h4>
                         <p className="card-text">
                             {shelter.address && <>

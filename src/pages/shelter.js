@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { db } from "../firebaseConfig";
+import { db, auth } from "../firebaseConfig";
 import { collection, getDocs, query, where, limit } from "firebase/firestore";
 import { AnimalGalleryCard } from "../components/Cards";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import ShelterInfoCard from "../components/Cards/ShelterInfoCard";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
+import EditShelterProfileModal from "../components/Cards/EditShelterProfileModal";
 
 const Shelter = () => {
 	const [animals, setAnimals] = useState([]);
 	const [shelter, setShelter] = useState({});
+	const [shelterDocId, setShelterDocId] = useState("");
+	const [showShelterProfileModal, setShowShelterProfileModal] = useState(false);
 	const navigate = useNavigate();
 
 	// If id not in the URL, redirect to 404
@@ -27,6 +32,7 @@ const Shelter = () => {
 				navigate("/404");
 			} else {
 				setShelter(shelterSnapshot.docs[0].data());
+				setShelterDocId(shelterSnapshot.docs[0].id);
 			}
 		};
 
@@ -50,11 +56,26 @@ const Shelter = () => {
 		getAnimals();
 	}, [id]);
 
+	const onShelterUpdate = (shelter) => {
+		setShelter(shelter);
+	}
+
 	return (
 		<div className="container mb-4">
 			<div className="container pt-2">
-				<h2 className="text-start pb-3">{shelter.name}</h2>
-				<ShelterInfoCard shelterId={id} />
+				<h2 className="text-start pb-3 d-flex">{shelter.name}
+				{ auth.currentUser && auth.currentUser.uid === id && (
+					<button
+						type="button"
+						className="btn btn-secondary btn ms-3"
+						onClick={() => setShowShelterProfileModal(true)}
+					>
+						<FontAwesomeIcon icon={faPencilAlt} className="me-2" />
+						Edit
+					</button>
+				)}
+				</h2>
+				<ShelterInfoCard shelter={shelter} />
 				{ animals.filter(animal => animal.featured && (animal.status === "Available" || animal.status === "Pending")).length > 0 && (
 					<>
 						<h3 className="text-start pb-2">Featured Animals</h3>
@@ -126,6 +147,10 @@ const Shelter = () => {
 					</>
 				)}
 			</div>
+
+			{ auth.currentUser && auth.currentUser.uid === id && (
+				<EditShelterProfileModal showModal={showShelterProfileModal} setShowModal={setShowShelterProfileModal} shelterDocId={shelterDocId} shelter={shelter} onShelterUpdate={onShelterUpdate} />
+			)}
 		</div>
 	);
 };

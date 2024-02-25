@@ -6,6 +6,7 @@ import Select from 'react-select';
 import { AnimalGalleryCard } from "../components/Cards";
 import AddAnimalModal from "../components/Cards/AddAnimalModal";
 import EditAnimalModal from "../components/Cards/EditAnimalModal";
+import EditShelterProfileModal from "../components/Cards/EditShelterProfileModal";
 import FullScreenLoader from "../components/FullScreenLoader";
 import { useNavigate } from "react-router-dom";
 
@@ -15,9 +16,12 @@ const Dashboard = () => {
     const [selectedAction, setSelectedAction] = useState(null);
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [showShelterProfileModal, setShowShelterProfileModal] = useState(false);
     const [currentAnimal, setCurrentAnimal] = useState({});
     const [loading, setLoading] = useState(true);
     const [fadingOut, setFadingOut] = useState(false);
+    const [shelterDocId, setShelterDocId] = useState("");
+    const [shelter, setShelter] = useState({});
 
     const navigate = useNavigate();
 
@@ -31,6 +35,9 @@ const Dashboard = () => {
         if (shelterSnapshot.empty) {
             window.location.href = "/pets";
         }
+
+        setShelterDocId(shelterSnapshot.docs[0].id);
+        setShelter(shelterSnapshot.docs[0].data());
     };
 
     const handleAddNewAnimalClick = () => {
@@ -176,7 +183,7 @@ const Dashboard = () => {
                     <div className="col-md-6 text-md-end d-flex flex-row-reverse" style={{ gap: "0.5rem" }}>
                         <button className="btn btn-secondary" onClick={handleAddNewAnimalClick}>Add New Animal</button>
                         <button className="btn btn-secondary" onClick={() => navigate(`/shelter/${auth.currentUser.uid}`)}>Public View</button>
-                        <button className="btn btn-secondary">Manage Shelter</button>
+                        <button className="btn btn-secondary" onClick={() => setShowShelterProfileModal(true)}>Edit Profile</button>
                     </div>
                 </div>
             </div>
@@ -186,6 +193,7 @@ const Dashboard = () => {
             {shelterSection("Unpublished", "Unavailable")}
             <AddAnimalModal showModal={showAddModal} setShowModal={setShowAddModal} loadAnimals={loadAnimals} />
             <EditAnimalModal showModal={showEditModal} setShowModal={setShowEditModal} loadAnimals={loadAnimals} animal={currentAnimal} />
+            <EditShelterProfileModal showModal={showShelterProfileModal} setShowModal={setShowShelterProfileModal} shelterDocId={shelterDocId} shelter={shelter} />
         </>
     );
 };
