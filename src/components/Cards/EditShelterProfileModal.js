@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { auth, db } from "../../firebaseConfig";
+import { db } from "../../firebaseConfig";
 import { updateDoc, doc } from "firebase/firestore";
 
 const EditShelterProfileModal = ({ showModal, setShowModal, shelter, shelterDocId, onShelterUpdate }) => {
