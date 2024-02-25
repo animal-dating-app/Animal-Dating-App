@@ -42,6 +42,7 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
         setNewAnimal({ ...newAnimal, [e.target.name]: e.target.value });
     };
 
+    
     const handleAddNewAnimal = async () => {
         if (formRef.current && formRef.current.checkValidity()) {
             const currentDate = new Date();
@@ -62,7 +63,7 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
             type: "",
             gender: "",
             pictureUri: "",
-            available: true
+            available: true,
         });
         setUnsavedChanges(false);
         loadAnimals(); // Refresh the list of animals
