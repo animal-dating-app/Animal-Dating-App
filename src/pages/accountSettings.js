@@ -61,7 +61,7 @@ const Settings = () => {
         loadUser();
 
         // Temp fix
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line
     }, []);
 
     const clickEdit = (user) => {
