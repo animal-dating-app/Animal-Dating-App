@@ -6,7 +6,9 @@ import Select from 'react-select';
 import { AnimalGalleryCard } from "../components/Cards";
 import AddAnimalModal from "../components/Cards/AddAnimalModal";
 import EditAnimalModal from "../components/Cards/EditAnimalModal";
+import EditShelterProfileModal from "../components/Cards/EditShelterProfileModal";
 import FullScreenLoader from "../components/FullScreenLoader";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
     const [animals, setAnimals] = useState([]);
@@ -14,9 +16,14 @@ const Dashboard = () => {
     const [selectedAction, setSelectedAction] = useState(null);
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [showShelterProfileModal, setShowShelterProfileModal] = useState(false);
     const [currentAnimal, setCurrentAnimal] = useState({});
     const [loading, setLoading] = useState(true);
     const [fadingOut, setFadingOut] = useState(false);
+    const [shelterDocId, setShelterDocId] = useState("");
+    const [shelter, setShelter] = useState({});
+
+    const navigate = useNavigate();
 
     // if user is not logged in, redirect to sign in page
     if (!auth.currentUser) window.location.href = "/sign-in";
@@ -28,6 +35,9 @@ const Dashboard = () => {
         if (shelterSnapshot.empty) {
             window.location.href = "/pets";
         }
+
+        setShelterDocId(shelterSnapshot.docs[0].id);
+        setShelter(shelterSnapshot.docs[0].data());
     };
 
     const handleAddNewAnimalClick = () => {
@@ -66,6 +76,15 @@ const Dashboard = () => {
         }
     };
 
+    const handleFeaturedClick = (animalId) => {
+        const animal = animals.find(animal => animal.id === animalId);
+        updateDoc(doc(db, "animals", animalId), { featured: !animal.featured }).then(() => {
+            loadAnimals();
+        }).catch(error => {
+            console.error("Error in updating animal status: ", error);
+        });
+    };
+
     const handleDropdownChange = (e) => {
         if (e.value === "") return;
     
@@ -81,6 +100,10 @@ const Dashboard = () => {
                 operations.push(updateDoc(doc(db, "animals", animalId), { status: "Pending" }));
             } else if (e.value === "Set Adopted") {
                 operations.push(updateDoc(doc(db, "animals", animalId), { status: "Adopted" }));
+            } else if (e.value === "Set Featured") {
+                operations.push(updateDoc(doc(db, "animals", animalId), { featured: true }));
+            } else if (e.value === "Set Not Featured") {
+                operations.push(updateDoc(doc(db, "animals", animalId), { featured: false }));
             }
         });
     
@@ -103,6 +126,8 @@ const Dashboard = () => {
         { value: "Set Pending", label: "Set Pending" },
         { value: "Set Unavailable", label: "Set Unavailable" },
         { value: "Set Adopted", label: "Set Adopted" },
+        { value: "Set Featured", label: "Set Featured" },
+        { value: "Set Not Featured", label: "Set Not Featured" },
         { value: "Delete", label: "Delete" }
     ];
 
@@ -134,7 +159,9 @@ const Dashboard = () => {
                         <div className="col-6 col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
                             <AnimalGalleryCard animal={animal} selectable={true} 
                                 selected={selectedAnimals.includes(animal.id)} onSelectAnimal={handleSelectAnimal} 
-                                onClickAnimal={clickAnimal} callToAction="" />
+                                onClickAnimal={clickAnimal} callToAction="" 
+                                onFeaturedClick={handleFeaturedClick}
+                                />
                         </div>
                     ))
                 }
@@ -153,8 +180,10 @@ const Dashboard = () => {
                         <Select className="d-inline-block w-auto" styles={selectStyles} onChange={handleDropdownChange} value={dropdownOptions.filter(option => option.value === selectedAction)}
                         options={dropdownOptions} isDisabled={selectedAnimals.length === 0} placeholder="Select Action" />  
                     </div>
-                    <div className="col-md-6 text-md-end">
+                    <div className="col-md-6 text-md-end d-flex flex-row-reverse" style={{ gap: "0.5rem" }}>
                         <button className="btn btn-secondary" onClick={handleAddNewAnimalClick}>Add New Animal</button>
+                        <button className="btn btn-secondary" onClick={() => navigate(`/shelter/${auth.currentUser.uid}`)}>Public View</button>
+                        <button className="btn btn-secondary" onClick={() => setShowShelterProfileModal(true)}>Edit Profile</button>
                     </div>
                 </div>
             </div>
@@ -164,6 +193,7 @@ const Dashboard = () => {
             {shelterSection("Unpublished", "Unavailable")}
             <AddAnimalModal showModal={showAddModal} setShowModal={setShowAddModal} loadAnimals={loadAnimals} />
             <EditAnimalModal showModal={showEditModal} setShowModal={setShowEditModal} loadAnimals={loadAnimals} animal={currentAnimal} />
+            <EditShelterProfileModal showModal={showShelterProfileModal} setShowModal={setShowShelterProfileModal} shelterDocId={shelterDocId} shelter={shelter} />
         </>
     );
 };
