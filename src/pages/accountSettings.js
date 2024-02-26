@@ -1,6 +1,7 @@
 import { auth, db } from "../firebaseConfig";
 import { collection, getDocs, query, where} from "firebase/firestore";
 import React, { useState, useEffect } from "react";
+import EditAccountModal from "../components/Cards/EditAccountModal";
 
 const Settings = () => {
 
@@ -8,11 +9,12 @@ const Settings = () => {
     if (!auth.currentUser) window.location.href = "/sign-in";
 
     const [user, setUser] = useState({});
-    const [shelter, setShelter] = useState(false);
+    const [isShelter, setShelter] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
 
-    // ToDo - Get user info from database
+    // Get user info from shelter or user database
     const loadUser = async () => {
-
+         
         // Check shelter docs for auth user ID
         const getShelterUser = async () => {
             const q = query(collection(db, "shelters"), where("shelterId", "==", auth.currentUser.uid));
@@ -40,40 +42,61 @@ const Settings = () => {
             }
         };
 
+        // Search for shelter user 
         getShelterUser();
-        getAdoptUser();
 
+        // Search for adopt user if not found in shelter
+        if (!isShelter) {
+            getAdoptUser();
+        }
+
+        // Check if user has email in database add if not
+        // ToDo - update database so all entities have the same attributes
+        if (!user.hasOwnProperty('email')) {
+            user['email'] = auth.currentUser.email;
+        }
     };
 
     useEffect(() => {
         loadUser();
+
+        // Temp fix
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const clickEdit = (user) => {
+        setShowEditModal(true);
+    };
 
     return (
         <div>
-            <h1>Account Settings Page</h1>
+            <h1>Account Settings</h1>
+            <div className="container mt-4">
+                {/* Adopter */}
+                {!isShelter && ( 
+                    <div className="container mt-4">
+                        <p><strong>Email:</strong> {auth.currentUser.email}</p>
+                        <p><strong>First Name:</strong> {user.firstName}</p>
+                        <p><strong>Last Name:</strong> {user.lastName}</p>
+                        <p><strong>Preferences</strong></p>
+                        {user.preferences && (user.preferences.map((preference, index) => (
+                            <p key={index}>{preference}</p>
+                        )))}
+                    </div>
+                )}
+                {/* Shelter */}
+                {isShelter && ( 
+                    <div className="container mt-4">
+                        <p><strong>Email:</strong> {auth.currentUser.email}</p>
+                        <p><strong>Shelter Name:</strong> {user.name}</p>
+                        <p><strong>Address:</strong> {user.address}</p>
+                        <p><strong>Phone:</strong> {user.phone}</p>
+                    </div>
+                )}
+                <button className="btn btn-secondary btn-block" onClick={clickEdit}>Edit Account</button>    
+            </div>
+            <EditAccountModal showModal={showEditModal} setShowModal={setShowEditModal} user={user} setUser={setUser} isShelter={isShelter} />
 
-            {!shelter && ( 
-                <div class="container mt-4">
-                    <p>Adopt User</p>
-                    <p><strong>Email:</strong> {auth.currentUser.email}</p>
-                    <p><strong>First Name:</strong> {user.firstName}</p>
-                    <p><strong>Last Name:</strong> {user.lastName}</p>
-                    <p><strong>Preferences</strong></p>
-                    {user.preferences && (user.preferences.map(preference => (
-                        <p>{preference}</p>
-                    )))}
-                </div>
-            )}
-            {shelter && ( 
-                <div class="container mt-4">
-                    <p><strong>Email:</strong> {auth.currentUser.email}</p>
-                    <p><strong>Shelter Name:</strong> {user.name}</p>
-                    <p><strong>Address:</strong> {user.address}</p>
-                    <p><strong>Phone:</strong> {user.phone}</p>
-                </div>
-            )} 
-            <button className="btn btn-secondary btn-block">Edit Account</button>    
         </div>
     );
 };
