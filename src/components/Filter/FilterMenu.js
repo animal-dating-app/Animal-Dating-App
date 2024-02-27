@@ -20,27 +20,35 @@ const FilterMenu = ({ selectedFilters, handleFilterChange, animals, onClose }) =
     };
 
     return (
-        <div className="container">
+        <div>
             <div className="filter-menu">
-            <button onClick={handleClose} className="close-button">Hide Filters</button>
+            <button onClick={handleClose} style = {{
+                                                    marginRight: '10px', 
+                                                    padding: '10px', 
+                                                    borderRadius: '5px', 
+                                                    border: 'none', 
+                                                    background: 'none', 
+                                                    color: '#007bff', 
+                                                    cursor: 'pointer'}}>Hide Filters</button>
                 {Object.keys(selectedFilters).map(category => (
                     category !== 'type' && category !== 'dateCreated' && ( // Exclude 'dateCreated' category
                         <div key={category}>
                             {category === 'age' ? (
                                 <div>
-                                    <h3 style={{ alignItems: 'center' }}> Filter by {category}:
-                                        <span
+                                    <h3> Filter by {category}:
+                                        <div
                                             style={{
                                                 cursor: 'pointer',
                                                 marginLeft: '5px',
-                                            
-                                                position: 'relative',
+                                                position: 'relative', 
+                                                justifyContent: 'center'
                                             }}
 
-                                            onClick={() => setWhatsThisVisible(!whatsThisVisible)}
-                                        >
+                                            onClick={() => setWhatsThisVisible(!whatsThisVisible)}>
+                                                
                                             <div
                                                 style={{
+                                                    position: 'relative',
                                                     width: '20px',
                                                     height: '20px',
                                                     borderRadius: '50%',
@@ -49,15 +57,16 @@ const FilterMenu = ({ selectedFilters, handleFilterChange, animals, onClose }) =
                                                     justifyContent: 'center',
                                                     alignItems: 'center',
                                                     color: 'rgb(128, 128, 128)',
-                                                    fontSize: '14px',
-                                                }}
-                                            >
+                                                    fontSize: '14px'
+                                                }}>
+
                                                 &#63;
                                             </div>
-                                        </span>
+                                        </div>
                                     </h3>
                                     {whatsThisVisible && (
                                         <div style={{ 
+                                                        marginTop: '20px',
                                                         border: '1px solid #ccc', 
                                                         padding: '10px', 
                                                         background: 'rgb(221, 237, 234)', 

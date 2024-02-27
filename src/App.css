@@ -13,10 +13,6 @@ html, body {
   margin: auto;
 }
 
-.container {
-  position: relative;
-}
-
 .filter-menu {
   position: fixed;
   top: 0;
@@ -28,10 +24,6 @@ html, body {
   background-color: white;
   padding: 20px;
   border: 1px solid #ccc;
-}
-
-.content {
-  padding-top: 10px; /* Adjust as needed based on the height of your filter menu */
 }
 
 .pageWrapper {
