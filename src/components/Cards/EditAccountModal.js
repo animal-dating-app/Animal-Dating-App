@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { auth, db } from "../../firebaseConfig";
 import { doc, updateDoc } from "firebase/firestore";
-import { updateEmail } from "firebase/auth";
+import { updateEmail, signOut  } from "firebase/auth";
 import ShelterFrom from './ShelterForm';
 import AdoptFrom from './AdoptForm';
+import { useNavigate } from 'react-router-dom';
 
 const EditAccountModal = ({ showModal, setShowModal, user, setUser, isShelter }) => {
 
+    const navigate = useNavigate();
     const [currentUser, setCurrentUser] = useState(user);
 
     const handleChange = (e) => {
@@ -31,7 +33,20 @@ const EditAccountModal = ({ showModal, setShowModal, user, setUser, isShelter })
 
         // If email changed update Firebase Auth
         if (curAccountBody.email !== auth.currentUser.email) {
-            await updateEmail(auth.currentUser, curAccountBody.email);
+
+            try {
+                await updateEmail(auth.currentUser, curAccountBody.email);
+            }
+            // Redirect back to login if authentication session expired
+            catch (e) {
+                if(e) {
+                    signOut(auth).then(() => {
+                        navigate("/login")
+                    }).catch((e) => {
+
+                    });
+                }
+            }
         }
         
         // Update Shelter 
@@ -70,14 +85,16 @@ const EditAccountModal = ({ showModal, setShowModal, user, setUser, isShelter })
                         </div>
                         <div className="modal-body">
                             <form>
-
+                                <div className="alert alert-warning" role="alert">
+                                Changing your email address requires a recent login, if you have not logged in recently you will be redirected to the login page.
+                                </div>
                                 {isShelter && (
                                     <ShelterFrom currentUser={currentUser} handleChange={handleChange} />
                                 )}
                                 {!isShelter && (
                                     <AdoptFrom currentUser={currentUser} handleChange={handleChange} />
                                 )}
-                            </form> 
+                            </form>
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" onClick={handleModalClose}>Close</button>
