@@ -41,7 +41,7 @@ const EditAccountModal = ({ showModal, setShowModal, user, setUser, isShelter })
             catch (e) {
                 if(e) {
                     signOut(auth).then(() => {
-                        navigate("/login")
+                        navigate("/sign-in");
                     }).catch((e) => {
 
                     });
