@@ -130,7 +130,7 @@ const AnimalGalleryCard = ({
         src={animalImage}
         className="card-img-top"
         alt={animal.name}
-        style={{ width: "100%", height: "auto", maxHeight: "300px" }} // Img size/dimension, adjust as needed.
+        style={{ width: "100%", height: "auto", maxHeight: "500px" }} // Img size/dimension, adjust as needed.
       />
       <div className="card-body text-start">
         {animal.name && <h5 className="card-title">{animal.name}</h5>}
