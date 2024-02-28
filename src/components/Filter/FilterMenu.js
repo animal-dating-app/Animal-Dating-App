@@ -41,6 +41,7 @@ const FilterMenu = ({ selectedFilters, handleFilterChange, animals, onClose }) =
                                                 cursor: 'pointer',
                                                 marginLeft: '5px',
                                                 position: 'relative', 
+                                                display: 'flex',
                                                 justifyContent: 'center'
                                             }}
 
@@ -71,17 +72,24 @@ const FilterMenu = ({ selectedFilters, handleFilterChange, animals, onClose }) =
                                                         padding: '10px', 
                                                         background: 'rgb(221, 237, 234)', 
                                                         color: 'rgb(128, 128, 128)',
-                                                        position: 'absolute', 
-                                                        zIndex: 1 
+                                                        position: 'relative', 
+                                                        maxWidth: '450px',
+                                                        zIndex: 1,
+                                                        left: '50%',
+                                                        transform: 'translateX(-50%)', // To keep the text box center on all screen size
+                                                        textAlign: 'center',
+                                                        
                                                     }}>
-
+                                            <div>
                                             Age range explanation:
                                             <p>Adult: Animals that are between 3-7 years old. </p>
                                             <p>Senior: Animals that are 8 years old and older. </p>
                                             <p>Young: Animals that are between 1-3 years old. </p>
                                             <p>Puppy: Dogs that are younger than 1 year old. </p>
                                             <p>Kitten: Cats that are younger than 1 year old. </p>
+                                            </div>
                                         </div>
+                                    
                                     )}
                                     {getUniqueValuesForCategory(animals, category).map(value => (
                                         <div key={value} style={{ marginBottom: '10px' }}>
@@ -146,6 +154,15 @@ const FilterMenu = ({ selectedFilters, handleFilterChange, animals, onClose }) =
                         </div>
                     )
                 ))}
+                <button onClick={handleClose} style = {{
+                                                    marginTop: '30px',
+                                                    marginRight: '10px', 
+                                                    padding: '10px', 
+                                                    borderRadius: '5px', 
+                                                    border: 'none', 
+                                                    background: 'none', 
+                                                    color: '#007bff', 
+                                                    cursor: 'pointer'}}>Hide Filters</button>
                 </div>
         </div>
     );
