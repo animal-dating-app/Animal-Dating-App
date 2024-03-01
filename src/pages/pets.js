@@ -187,6 +187,7 @@ const Pets = () => {
                     selectedFilters={selectedFilters}
                     handleFilterChange={handleFilterChange}
                     animals={animals}
+                    onClose={() => setShowFilters(false)}
                 />
             )}
             
