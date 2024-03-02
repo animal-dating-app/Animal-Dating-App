@@ -53,14 +53,26 @@ const ImageUploader = ({onImageUpload}) => {
     }
   };
 
-
+  
   //  Fixed Problem with reload form when type input before upload image 
   return (
     <div>
       <input type="file" onChange={handleFileChange} accept="image/*" />
-      <button type='button' onClick={uploadImage}>Upload Image</button>
+      <button type='button' style={buttonStyles} onClick={uploadImage}>Upload Image</button>
     </div>
   );
+};
+
+const buttonStyles = {
+  backgroundColor: 'var(--bs-primary)',  // Use the same primary color as your selectStyles
+  color: 'white',
+  padding: '10px',
+  border: 'none',  // Remove the border to make it consistent with selectStyles
+  borderRadius: 'var(--bs-border-radius)',
+  cursor: 'pointer',  // Add a pointer cursor for interaction
+  transition: 'background-color .15s ease-in-out',  // Smooth transition on hover
+  outline: 'none',  // Remove the outline on focus (for accessibility)
+  // Add any other styles you want to apply
 };
 
 export default ImageUploader;

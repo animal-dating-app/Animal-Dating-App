@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { auth, db } from "../../firebaseConfig";
 import {  createUserWithEmailAndPassword  } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { addDoc, collection } from "firebase/firestore";
+import emailjs from '@emailjs/browser';
 
 const SignUpUser = () => {
+    const form = useRef();
 
     const navigate = useNavigate();
     
@@ -37,6 +39,20 @@ const SignUpUser = () => {
 
     const onSubmit = async (e) => {
         e.preventDefault();
+
+        // Send email to user using emailjs.com
+        emailjs
+        .sendForm('service_7wslv2f', 'template_92jc4dk', form.current, {
+            publicKey: 'G8CzJ-OhJH7qfmi_C',
+        })
+        .then(
+            () => {
+            console.log('SUCCESS!');
+            },
+            (error) => {
+            console.log('FAILED...', error.text);
+            },
+        );
         const newUserData = newUser;
         newUserData["preferences"] = preferences;
         let user = null;
@@ -67,6 +83,7 @@ const SignUpUser = () => {
 
     return (
         <div>
+            <form ref={form} onSubmit={onSubmit}>
             <div>
                 <label htmlFor="email-address"><strong>Email address</strong></label>
                 <br></br>
@@ -91,6 +108,7 @@ const SignUpUser = () => {
                 <input id="lastName" name="lastName" type="lastName" required placeholder="Last Name"
                     onChange={handleNewUserChange}/>
             </div>
+            </form>
             <div>
                 <p><strong>Preferences</strong></p>
                 <div className="row">

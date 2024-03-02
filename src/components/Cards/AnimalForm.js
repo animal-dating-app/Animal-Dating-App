@@ -210,12 +210,6 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
           {/* - Need to delete previous input so the next "add animal" does not show previous image field*/}
 
           {/* Include the ImageUploader component and pass the callback */}
-          <ImageUploader
-            onImageUpload={handleImageUpload}
-            name="pictureUri"
-            value={animal.pictureUri}
-            onChange={(e) => handleAnimalChange(e)}
-          />
 
           <label htmlFor="status" className="form-label">
             Status
@@ -231,6 +225,13 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
               (status) => status.value === animal.status
             )}
           />
+
+        <ImageUploader
+            onImageUpload={handleImageUpload}
+            name="pictureUri"
+            value={animal.pictureUri}
+            onChange={(e) => handleAnimalChange(e)}
+          />  
         </form>
       </div>
       <div className="col-lg-6 mt-lg-0 mt-4">
