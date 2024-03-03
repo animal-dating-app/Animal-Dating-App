@@ -10,6 +10,7 @@ import {
 import { UserProvider, useUser } from './UserContext';
 import Home from "./pages/home.js";
 import Cats from "./pages/cats.js";
+import Dogs from "./pages/dogs.js";
 import Pets from "./pages/pets.js";
 import SignUp from "./pages/signup";
 import SignIn from "./pages/signin.js";
@@ -49,6 +50,7 @@ function AuthenticatedApp() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/cats" element={<Cats />} />
+                    <Route path="/dogs" element={<Dogs />} />
                     <Route path="/pets" element={<Pets />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/settings" element={<Settings />} />

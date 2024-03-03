@@ -1,10 +1,18 @@
 import React, { useState, useRef, useEffect } from "react";
 import { db } from "../../firebaseConfig";
 import { updateDoc, doc } from "firebase/firestore";
+import ImageUploader from "./Imageupload";
 
 const EditShelterProfileModal = ({ showModal, setShowModal, shelter, shelterDocId, onShelterUpdate }) => {
 	const [unsavedChanges, setUnsavedChanges] = useState(false);
 	const [currentShelter, setCurrentShelter] = useState(shelter);
+
+  const handleImageUpload = (url) => {
+    // This callback will update the 'pictureUri' property in the 'animal' state
+		let newImages = [...currentShelter.headerImages];
+		newImages.push(url);
+		setCurrentShelter({ ...currentShelter, headerImages: newImages });
+  };
 
 	useEffect(() => {
 		setCurrentShelter(shelter);
@@ -92,19 +100,19 @@ const EditShelterProfileModal = ({ showModal, setShowModal, shelter, shelterDocI
 							<div className="row">
 								<div className="col-lg-12 mb-4 text-start">
 									<form ref={formRef}>
-                                        <label htmlFor="email" className="form-label">
-                                            Public Email
-                                        </label>
+										<label htmlFor="email" className="form-label">
+												Public Email
+										</label>
 
-                                        <input
-                                            type="email"
-                                            className="form-control mb-2"
-                                            placeholder="Email"
-                                            name="email"
-                                            value={currentShelter?.email}
-                                            onChange={handleShelterChange}
-                                            required
-                                        />
+										<input
+												type="email"
+												className="form-control mb-2"
+												placeholder="Email"
+												name="email"
+												value={currentShelter?.email}
+												onChange={handleShelterChange}
+												required
+										/>
 
 										<label htmlFor="description" className="form-label">
 											Description
@@ -116,6 +124,42 @@ const EditShelterProfileModal = ({ showModal, setShowModal, shelter, shelterDocI
 											value={currentShelter?.description}
 											onChange={handleShelterChange}
 										></textarea>
+
+										<label htmlFor="images" className="form-label">
+											Header Images
+										</label>
+										{/* Show list of existing images with delete buttons */}
+										{ currentShelter.headerImages && currentShelter.headerImages.length > 0 && (
+											<table className="table">
+												<thead>
+													<tr>
+														<th>Image</th>
+														<th>Action</th>
+													</tr>
+												</thead>
+												<tbody>
+													{currentShelter.headerImages.map((image, index) => (
+														<tr key={index}>
+															<td>
+																<img src={image} alt="header" style={{width: "128px"}} />
+															</td>
+															<td>
+																<button type="button" className="btn btn-danger" onClick={() => {
+																	let newImages = [...currentShelter.headerImages];
+																	newImages.splice(index, 1);
+																	setCurrentShelter({ ...currentShelter, headerImages: newImages });
+																}}>Delete</button>
+															</td>
+														</tr>
+													))}
+												</tbody>
+											</table>
+										)}
+										{/* Add new images */}
+										<ImageUploader
+											onImageUpload={handleImageUpload}
+											name="pictureUri"
+										/>  
 									</form>
 								</div>
 							</div>

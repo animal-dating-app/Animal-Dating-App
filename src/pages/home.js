@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import Carousel from "../components/Carousel/Carousel";
 import { useNavigate } from 'react-router-dom';
 import catImage from '../assets/images/cat.png'; 
+import dogImage from '../assets/images/dog.png'; 
 
 const Home = () => {
   const [animals, setAnimals] = useState([]);
@@ -56,15 +57,27 @@ const Home = () => {
       {loading && <p>Loading...</p>}
       <Carousel animals={animals} />
 
-      {/* Cats Card */}
+      {/* Cats and Dogs Cards */}
       <div className="container">
         <div className="row pb-4">
+          {/* Cats Card */}
           <div className="col-6 col-lg-4 d-flex align-items-stretch my-2">
             <div className="card" style={{ width: '100%', cursor: 'pointer' }} onClick={() => navigate('/cats')}>
               <img src={catImage} className="card-img-top" alt="Cats"/>
               <div className="card-body">
                 <h5 className="card-title">Cats</h5>
                 <p className="card-text">Check out our adorable cats!</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Dogs Card */}
+          <div className="col-6 col-lg-4 d-flex align-items-stretch my-2">
+            <div className="card" style={{ width: '100%', cursor: 'pointer' }} onClick={() => navigate('/dogs')}>
+              <img src={dogImage} className="card-img-top" alt="Dogs"/>
+              <div className="card-body">
+                <h5 className="card-title">Dogs</h5>
+                <p className="card-text">Check out our adorable dogs!</p>
               </div>
             </div>
           </div>
