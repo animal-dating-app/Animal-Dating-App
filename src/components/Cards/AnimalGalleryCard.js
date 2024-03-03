@@ -127,6 +127,8 @@ const AnimalGalleryCard = ({
 			onClick={handleCardClick}
 			style={onClickAnimal ? { cursor: "pointer" } : {}}
 		>
+		      <div className={"card-carousel"}>
+
 			<div
 				className="card-img-overlay d-flex"
 				style={{
@@ -243,6 +245,7 @@ const AnimalGalleryCard = ({
 					}
 				`}</style>
 			)}
+			</div>
 		</div>
 	);
 };
