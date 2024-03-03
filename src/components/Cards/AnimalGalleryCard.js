@@ -15,7 +15,8 @@ import {
 import { auth } from "../../firebaseConfig";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { faStar as faStarOutline, faHeart as faHeartOutline } from "@fortawesome/free-regular-svg-icons";
+import { faStar as faStarOutline } from "@fortawesome/free-regular-svg-icons";
+import FavoriteButton from "../FavoriteButton";
 
 const AnimalGalleryCard = ({
 	animal,
@@ -49,7 +50,11 @@ const AnimalGalleryCard = ({
 	};
 
 	const handleCardClick = (e) => {
-    if (e.target.classList.contains("pet-featured") || e.target.parentElement.classList.contains("pet-featured")) return;
+    if (e.target.classList.contains("pet-featured") || 
+			e.target.parentElement.classList.contains("pet-featured") ||
+			e.target.classList.contains("pet-favorite") ||
+			e.target.parentElement.classList.contains("pet-favorite")
+		) return;
 		else if (e.target.type === "checkbox") return;
 		else if (onClickAnimal) onClickAnimal(animal);
 	};
@@ -178,9 +183,7 @@ const AnimalGalleryCard = ({
               animal.featured ? "gold" : "black"
             } className="pet-featured"
             onClick={() => onFeaturedClick(animal.id)} />
-          ) : ( !owner && 
-            <FontAwesomeIcon icon={faHeartOutline} size="lg" color="black" className="pet-favorite" />
-          )}
+          ) : <FavoriteButton animal={animal} animalId={animal.id} />}
 				</div>
 				{animal.breed && (
 					<p className="card-text mb-0">
