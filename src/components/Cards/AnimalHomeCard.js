@@ -13,20 +13,20 @@ const AnimalHomecard = ({ animal, onClickAnimal }) => {
   };
 
   return (
-    <div className="box" onClick={handleCardClick}>
-      <div className="card">
+    <div className="box-carousel" onClick={handleCardClick}>
+      <div className="card-carousel">
         <img
           src={animal.pictureUri}
-          className="card-img-top"
+          className="card-img-top-carousel"
           alt={animal.name}
         />
-        <div className="card-body">
+        <div className="card-body-carousel">
           <h5 className="card-title">{animal.name}</h5>
           <p className="card-type">
             <strong>Type:</strong> {animal.type}
           </p>
           <p
-            className={`card-availability ${
+            className={`card-availability-carousel ${
               animal.status === "Available" ? "available" : "not-available"
             }`}
           >
@@ -37,16 +37,16 @@ const AnimalHomecard = ({ animal, onClickAnimal }) => {
       </div>
 
       <style jsx>{`
-        card-body {
+        card-body-carousel {
           background-color: white;
         }
-        .box {
+        .box-carousel {
           display: flex;
           justify-content: center;
           align-items: center;
           gap: 32px;
         }
-        .card {
+        .card-carousel {
           position: relative;
           width: 250px;
           height: 350px;
@@ -58,18 +58,18 @@ const AnimalHomecard = ({ animal, onClickAnimal }) => {
         }
 
         @media only screen and (max-width: 768px) {
-          .box {
+          .box-carousel {
             flex-direction: column;
           }
 
-          .card {
+          .card-carousel {
             width: 100%;
             max-width: none;
           }
         }
 
-        .card::before,
-        .card::after {
+        .card-carousel::before,
+        .card-carousel::after {
           content: "";
           position: absolute;
           top: 0;
@@ -84,15 +84,15 @@ const AnimalHomecard = ({ animal, onClickAnimal }) => {
           transform-origin: center; /* Add this line */
         }
 
-        .card:hover::after {
+        .card-carousel:hover::after {
           transform: rotate(10deg);
         }
 
-        .card:hover::before {
+        .card-carousel:hover::before {
           transform: rotate(20deg);
         }
 
-        .card-img-top {
+        .card-img-top-carousel {
           position: absolute;
           z-index: 1;
           background: white;
@@ -103,11 +103,11 @@ const AnimalHomecard = ({ animal, onClickAnimal }) => {
           object-position: 80% 100%;
         }
 
-        .card:hover .card-img-top {
+        .card-carousel:hover .card-img-top-carousel {
           transform : translateY(-20%);
         }
 
-        img {
+        img .card-img-top-carousel {
           position: absolute;
           width: 100%;
           height: 100%;
@@ -115,7 +115,7 @@ const AnimalHomecard = ({ animal, onClickAnimal }) => {
           left: 0;
         }
 
-        .card-body {
+        .card-body-carousel {
 
           position: absolute;
           left: 10px;
@@ -124,7 +124,7 @@ const AnimalHomecard = ({ animal, onClickAnimal }) => {
           height: 100px;
         }
 
-        h5 {
+        card-title {
           margin-top: 1px;
           padding: 0;
           font-weight: 900;
@@ -133,7 +133,7 @@ const AnimalHomecard = ({ animal, onClickAnimal }) => {
           line-height: 1.15em;
         }
 
-        .card-availability {
+        .card-availability-carousel {
           font-weight: 400;
           font-size: 15px;
           color: green;
