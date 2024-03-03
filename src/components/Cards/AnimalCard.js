@@ -1,7 +1,7 @@
 import React from "react";
+import FavoriteButton from "../FavoriteButton";
 
-const AnimalCard = ({ animal }) => {
-
+const AnimalCard = ({ animal, animalId }) => {
     let statusColor = (function () {
         switch (animal.status) {
             case "Pending":
@@ -32,8 +32,11 @@ const AnimalCard = ({ animal }) => {
                 </div>
                 <img src={animal.pictureUri} className="card-img-top" alt={animal.name} />
                 
-                <div className="card-body text-start">
-                    {animal.name && <h2 class="card-title">{animal.name}</h2> }
+                <div className="card-body text-start z-3">
+                    <div className="d-flex flex-row justify-content-between">
+                        {animal.name && <h2 className="card-title">{animal.name}</h2>}
+                        <FavoriteButton animal={animal} animalId={animalId} />
+                    </div>
                     <hr></hr>
                     {animal.breed && <p className="card-text"><strong>Breed:</strong> {animal.breed}</p> }
                     {animal.age && <p className="card-text"><strong>Age:</strong> {animal.age}</p> }

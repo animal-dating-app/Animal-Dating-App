@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { auth, db } from "../../firebaseConfig";
 import {  createUserWithEmailAndPassword  } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { addDoc, collection } from "firebase/firestore";
+import emailjs from '@emailjs/browser';
 
 const SignUpShelter = () => {
+    const form = useRef();
 
     const navigate = useNavigate();
     
@@ -22,6 +24,18 @@ const SignUpShelter = () => {
 
     const onSubmit = async (e) => {
         e.preventDefault()
+        emailjs
+        .sendForm('service_7wslv2f', 'template_92jc4dk', form.current, {
+            publicKey: 'G8CzJ-OhJH7qfmi_C',
+        })
+        .then(
+            () => {
+            console.log('SUCCESS!');
+            },
+            (error) => {
+            console.log('FAILED...', error.text);
+            },
+        );
        
         // Create Firebase Auth account 
         await createUserWithEmailAndPassword(auth, newShelter.email, password)
@@ -50,6 +64,7 @@ const SignUpShelter = () => {
     return (
         <div>
             <div className="col">
+            <form ref={form} onSubmit={onSubmit}>
                 <div>
                     <label htmlFor="email-address"><strong>Email address</strong></label>
                     <br></br>
@@ -68,6 +83,7 @@ const SignUpShelter = () => {
                     <input id="name" name="name" type="name" required placeholder="Shelter Name"
                         onChange={handleNewUserChange}/>
                 </div>
+                </form>
                 <div>
                     <label htmlFor="address"><strong>Address</strong></label>
                     <br></br>
