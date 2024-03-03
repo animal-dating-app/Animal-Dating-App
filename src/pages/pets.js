@@ -112,8 +112,10 @@ const Pets = () => {
     };
 
     const applyFilters = (animal) => {
+
+        const filtersApplied = Object.values(selectedFilters).some(filter => filter.length > 0);
         
-        if (searchTerm.trim() === "") {
+        if (searchTerm.trim() === "" && !filtersApplied) {
             
             return true;
         }
@@ -130,8 +132,14 @@ const Pets = () => {
                 }
             
             } else if (selectedFilters[category].length > 0 && !selectedFilters[category].includes(animal[category])) {
+
                 return false;
             }     
+        }
+
+        if (searchTerm.trim() === "" && filtersApplied) {
+
+            return true;
         }
 
         return animal.type.toLowerCase() === searchTerm.toLowerCase();
@@ -195,9 +203,9 @@ const Pets = () => {
             <div className="container">
                 <div className="row pb-4">
                     {searchTerm === '' ? (
-                        // If the search bar is empty, display the entire animal database
+                        // If the search bar is empty, display the entire animal database or filtered animals
                         results.length === 0 ? (
-                            animals.map(animal => (
+                            filteredAnimals.map(animal => (
                                 <div className="col-6 col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
                                     <AnimalGalleryCard animal={animal} onClickAnimal={() => navigate('/pet', {state:{pet:animal}})}/>
                                 </div>
