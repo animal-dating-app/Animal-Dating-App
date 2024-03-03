@@ -12,7 +12,8 @@ import {
 	other,
 } from "../../assets/images";
 
-import { auth } from "../../firebaseConfig";
+import { auth, db } from "../../firebaseConfig";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faStarOutline } from "@fortawesome/free-regular-svg-icons";
@@ -29,6 +30,7 @@ const AnimalGalleryCard = ({
 }) => {
 	const [isSelected, setIsSelected] = useState(selected);
 	const [animalImage, setAnimalImage] = useState("");
+	const [favoriteCount, setFavoriteCount] = useState(0);
 
 	const petsPath = window.location.pathname === "/pets" ? true : false;
 
@@ -126,6 +128,18 @@ const AnimalGalleryCard = ({
 
 	if (callToAction === undefined) callToAction = "Click to learn more!";
 
+	useEffect(() => {
+		const getFavoriteCount = async () => {
+			const q = query(collection(db, "users"), where("favorites", "array-contains", animal.id));
+			const querySnapshot = await getDocs(q);
+			setFavoriteCount(querySnapshot.size);
+		};
+
+		if (animal?.id) {
+			getFavoriteCount();
+		}
+	}, [animal.id]);
+
 	return (
 		<div
 			className={cardClass}
@@ -198,6 +212,11 @@ const AnimalGalleryCard = ({
 				{animal.gender && (
 					<p className="card-text mb-0">
 						<strong>Gender:</strong> {animal.gender}
+					</p>
+				)}
+				{owner && selectable && favoriteCount > 0 && (
+					<p className="card-text mb-0">
+						<strong>User Favorites:</strong> {favoriteCount}
 					</p>
 				)}
 				{animal.dateCreated && (
