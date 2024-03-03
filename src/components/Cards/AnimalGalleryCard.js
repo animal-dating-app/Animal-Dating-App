@@ -12,10 +12,12 @@ import {
 	other,
 } from "../../assets/images";
 
-import { auth } from "../../firebaseConfig";
+import { auth, db } from "../../firebaseConfig";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { faStar as faStarOutline, faHeart as faHeartOutline } from "@fortawesome/free-regular-svg-icons";
+import { faStar as faStarOutline } from "@fortawesome/free-regular-svg-icons";
+import FavoriteButton from "../FavoriteButton";
 
 const AnimalGalleryCard = ({
 	animal,
@@ -28,6 +30,7 @@ const AnimalGalleryCard = ({
 }) => {
 	const [isSelected, setIsSelected] = useState(selected);
 	const [animalImage, setAnimalImage] = useState("");
+	const [favoriteCount, setFavoriteCount] = useState(0);
 
 	const petsPath = window.location.pathname === "/pets" ? true : false;
 
@@ -49,7 +52,11 @@ const AnimalGalleryCard = ({
 	};
 
 	const handleCardClick = (e) => {
-    if (e.target.classList.contains("pet-featured") || e.target.parentElement.classList.contains("pet-featured")) return;
+    if (e.target.classList.contains("pet-featured") || 
+			e.target.parentElement.classList.contains("pet-featured") ||
+			e.target.classList.contains("pet-favorite") ||
+			e.target.parentElement.classList.contains("pet-favorite")
+		) return;
 		else if (e.target.type === "checkbox") return;
 		else if (onClickAnimal) onClickAnimal(animal);
 	};
@@ -121,6 +128,18 @@ const AnimalGalleryCard = ({
 
 	if (callToAction === undefined) callToAction = "Click to learn more!";
 
+	useEffect(() => {
+		const getFavoriteCount = async () => {
+			const q = query(collection(db, "users"), where("favorites", "array-contains", animal.id));
+			const querySnapshot = await getDocs(q);
+			setFavoriteCount(querySnapshot.size);
+		};
+
+		if (animal?.id) {
+			getFavoriteCount();
+		}
+	}, [animal.id]);
+
 	return (
 		<div
 			className={cardClass}
@@ -178,9 +197,7 @@ const AnimalGalleryCard = ({
               animal.featured ? "gold" : "black"
             } className="pet-featured"
             onClick={() => onFeaturedClick(animal.id)} />
-          ) : ( !owner && 
-            <FontAwesomeIcon icon={faHeartOutline} size="lg" color="black" className="pet-favorite" />
-          )}
+          ) : <FavoriteButton animal={animal} animalId={animal.id} />}
 				</div>
 				{animal.breed && (
 					<p className="card-text mb-0">
@@ -195,6 +212,11 @@ const AnimalGalleryCard = ({
 				{animal.gender && (
 					<p className="card-text mb-0">
 						<strong>Gender:</strong> {animal.gender}
+					</p>
+				)}
+				{owner && selectable && favoriteCount > 0 && (
+					<p className="card-text mb-0">
+						<strong>User Favorites:</strong> {favoriteCount}
 					</p>
 				)}
 				{animal.dateCreated && (
