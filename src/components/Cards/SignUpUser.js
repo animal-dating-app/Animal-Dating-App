@@ -3,9 +3,12 @@ import { auth, db } from "../../firebaseConfig";
 import {  createUserWithEmailAndPassword  } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { addDoc, collection } from "firebase/firestore";
+import emailjs from '@emailjs/browser';
+
 
 const SignUpUser = ({ setEmailError, setPasswordError }) => {
 
+    const form = useRef();
     const navigate = useNavigate();
     const [newUser, setNewUser] = useState({
         firstName: "",
@@ -36,6 +39,20 @@ const SignUpUser = ({ setEmailError, setPasswordError }) => {
 
     const onSubmit = async (e) => {
         e.preventDefault();
+
+        // Send email to user using emailjs.com
+        emailjs
+        .sendForm('service_7wslv2f', 'template_92jc4dk', form.current, {
+            publicKey: 'G8CzJ-OhJH7qfmi_C',
+        })
+        .then(
+            () => {
+            console.log('SUCCESS!');
+            },
+            (error) => {
+            console.log('FAILED...', error.text);
+            },
+        );
         const newUserData = newUser;
         newUserData["preferences"] = preferences;
         let user = null;
@@ -77,30 +94,32 @@ const SignUpUser = ({ setEmailError, setPasswordError }) => {
     return (
         <div>
             <form ref={formRef}>
-                <div>
-                    <label htmlFor="email-address"><strong>Email address</strong></label>
-                    <br></br>
-                    <input id="email-address" name="email" type="email" required placeholder="Email address"
-                        onChange={handleNewUserChange}/>
-                </div>
-                <div>
-                    <label htmlFor="password"><strong>Password</strong></label>
-                    <br></br>
-                    <input id="password" name="password" type="password" required placeholder="Password"
-                        onChange={(e) => setPassword(e.target.value)}/>
-                </div>
-                <div>
-                    <label htmlFor="firstName"><strong>First Name</strong></label>
-                    <br></br>
-                    <input id="firstName" name="firstName" type="firstName" required placeholder="First Name"
-                        onChange={handleNewUserChange}/>
-                </div>
-                <div>
-                    <label htmlFor="lastName"><strong>Last Name</strong></label>
-                    <br></br>
-                    <input id="lastName" name="lastName" type="lastName" required placeholder="Last Name"
-                        onChange={handleNewUserChange}/>
-                </div>
+                <form ref={form} onSubmit={onSubmit}>
+                    <div>
+                        <label htmlFor="email-address"><strong>Email address</strong></label>
+                        <br></br>
+                        <input id="email-address" name="email" type="email" required placeholder="Email address"
+                            onChange={handleNewUserChange}/>
+                    </div>
+                    <div>
+                        <label htmlFor="password"><strong>Password</strong></label>
+                        <br></br>
+                        <input id="password" name="password" type="password" required placeholder="Password"
+                            onChange={(e) => setPassword(e.target.value)}/>
+                    </div>
+                    <div>
+                        <label htmlFor="firstName"><strong>First Name</strong></label>
+                        <br></br>
+                        <input id="firstName" name="firstName" type="firstName" required placeholder="First Name"
+                            onChange={handleNewUserChange}/>
+                    </div>
+                    <div>
+                        <label htmlFor="lastName"><strong>Last Name</strong></label>
+                        <br></br>
+                        <input id="lastName" name="lastName" type="lastName" required placeholder="Last Name"
+                            onChange={handleNewUserChange}/>
+                    </div>
+                </form>
                 <div>
                     <p><strong>Preferences</strong></p>
                     <div className="row">

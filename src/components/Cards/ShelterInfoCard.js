@@ -1,4 +1,42 @@
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useState, useEffect } from 'react';
+
 function ShelterInfoCard({ shelter }) {
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    // Function to start or reset the image rotation timer
+    const startRotationTimer = () => {
+        if (shelter.headerImages && shelter.headerImages.length > 1) {
+            return setInterval(() => {
+                setCurrentImageIndex(prevIndex => prevIndex === shelter.headerImages.length - 1 ? 0 : prevIndex + 1);
+            }, 10000); // Change image every 10 seconds
+        }
+        return null;
+    };
+
+    useEffect(() => {
+        const timer = startRotationTimer();
+        return () => clearInterval(timer);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [shelter.headerImages]);
+
+    // Update current image index and reset timer for next/prev image
+    const updateImageIndex = (newIndex) => {
+        clearInterval(window.imageRotationTimer);
+        setCurrentImageIndex(newIndex);
+        window.imageRotationTimer = startRotationTimer();
+    };
+
+    const nextImage = () => {
+        updateImageIndex(currentImageIndex === shelter.headerImages.length - 1 ? 0 : currentImageIndex + 1);
+    };
+
+    const prevImage = () => {
+        updateImageIndex(currentImageIndex === 0 ? shelter.headerImages.length - 1 : currentImageIndex - 1);
+    };
+
     return (
         <div className="card mb-3">
             <div className="row g-0">
@@ -56,6 +94,30 @@ function ShelterInfoCard({ shelter }) {
                 </div>
                 )}
             </div>
+            {/* Image carousel row */}
+            {shelter.headerImages && shelter.headerImages.length > 0 && (
+                <>
+                <hr style={{ marginTop: '0' }} />
+                    <div className="row g-0 pb-4">
+                        <div className="col-md-12">
+                            <div className="image-carousel" style={{ textAlign: 'center', marginTop: '1rem', position: 'relative' }}>
+                                {shelter.headerImages.length > 1 && (
+                                    <>
+                                        <FontAwesomeIcon icon={faChevronLeft} size="2x" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', zIndex: 1, cursor: 'pointer' }} onClick={prevImage} />
+                                        <FontAwesomeIcon icon={faChevronRight} size="2x" style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', zIndex: 1, cursor: 'pointer' }} onClick={nextImage} />
+                                    </>
+                                )}
+                                <img
+                                    src={shelter.headerImages[currentImageIndex]}
+                                    alt={`Slide ${currentImageIndex}`}
+                                    style={{ maxWidth: '100%', height: 'auto', maxHeight: '300px', objectFit: 'cover', borderRadius: '0.25rem' }}
+                                />
+                            </div>
+                        </div>
+                        
+                    </div>
+                </>
+            )}
         </div>
     );
 }

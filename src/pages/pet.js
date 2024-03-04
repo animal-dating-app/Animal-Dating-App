@@ -52,7 +52,7 @@ const Pet = () => {
             <div className=" col-sm-5 mx-auto">
                 {/* Load animal */}
                 { animals && ( 
-                    <AnimalCard animal={animals} />
+                    <AnimalCard animal={animals} animalId={animal.id} />
                 )}
                 {/* Edit button if owner of animal*/}
                 { owner && (

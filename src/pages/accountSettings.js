@@ -2,6 +2,7 @@ import { auth, db } from "../firebaseConfig";
 import { collection, getDocs, query, where} from "firebase/firestore";
 import React, { useState, useEffect } from "react";
 import EditAccountModal from "../components/Cards/EditAccountModal";
+import FavoriteAnimalTable from "../components/FavoriteAnimalsTable";
 
 const Settings = () => {
 
@@ -102,6 +103,7 @@ const Settings = () => {
                 <button className="btn btn-secondary btn-block" onClick={clickEditSignIn} style={{marginTop: "0.25rem",  width: "150px"}}>
                     Edit Sign In Info</button>    
             </div>
+                <FavoriteAnimalTable />
                 <EditAccountModal showModal={showEditModal} setShowModal={setShowEditModal} user={user} setUser={setUser} 
                     isShelter={isShelter} editCredentials={editCredentials} setEditCredentials={setEditCredentials}/>
         </div>

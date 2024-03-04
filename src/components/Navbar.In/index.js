@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Nav,
     NavLink,
@@ -7,14 +7,40 @@ import {
     NavBtn,
     NavBtnLink,
 } from "./NavbarElements";
-import { auth } from "../../firebaseConfig";
-import {  signOut } from "firebase/auth";
+import { auth, db } from "../../firebaseConfig";
+import { signOut } from "firebase/auth";
+import { collection, getDocs, query, where} from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
 
 const Navbar = ({ user }) => {
     const [isActive, setIsActive] = useState(false); 
+    const [isShelter, setShelter] = useState(false);
     let button;
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const loadUser = async () => {
+            // Check shelter docs for auth user ID
+            const getShelterUser = async () => {
+                const q = query(collection(db, "shelters"), where("shelterId", "==", user.uid));
+                const shelterSnapshot = await getDocs(q);
+                const shelterUser = shelterSnapshot.docs.map ( doc => {
+                    return { id: doc.id, ...doc.data() };
+                });
+                // Update user if found
+                if (shelterUser.length > 0) {
+                    setShelter(true);
+                }
+            };
+    
+            // Search for shelter user 
+            if (user) {
+                getShelterUser();
+            }
+        };
+
+        loadUser();
+    }, [user]);
 
     // Log user out
     const handleLogout = () => {               
@@ -47,14 +73,14 @@ const Navbar = ({ user }) => {
                         <NavLink to="/pets" onClick={() => setIsActive(false)}>
                             Pets
                         </NavLink>
-                    {user && (
+                    {user && isShelter && (
                         <NavLink to="/dashboard" onClick={() => setIsActive(false)}>
                             Dashboard
                         </NavLink>
                     )}
                     { user && (
                         <NavLink to="/settings" onClick={() => setIsActive(false)}>
-                            Settings
+                            Account
                         </NavLink>
                     )}
                     {!user && (
