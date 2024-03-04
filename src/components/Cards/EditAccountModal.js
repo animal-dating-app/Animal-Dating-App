@@ -1,15 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { auth, db } from "../../firebaseConfig";
 import { doc, updateDoc } from "firebase/firestore";
-import { updateEmail, signOut  } from "firebase/auth";
+import { updateEmail, reauthenticateWithCredential, EmailAuthProvider, updatePassword } from "firebase/auth";
 import ShelterFrom from './ShelterForm';
 import AdoptFrom from './AdoptForm';
-import { useNavigate } from 'react-router-dom';
+import CredentialForm from './CredentialForm';
 
-const EditAccountModal = ({ showModal, setShowModal, user, setUser, isShelter }) => {
+const EditAccountModal = ({ showModal, setShowModal, user, setUser, isShelter, editCredentials, setEditCredentials }) => {
 
-    const navigate = useNavigate();
     const [currentUser, setCurrentUser] = useState(user);
+    const [reauthenticate, setReauthenticate] = useState(false);
+    const [password, setPassword] = useState('');
+    const [passwordError, setPasswordError] = useState(false);
+    const [email, setEmail] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmedPassword, setConfirmedPassword] = useState('');
+    const editingCredentials = editCredentials;
+    const [passwordMismatch, setPasswordMismatch] = useState(false);
+    const formRef = useRef(null);
 
     const handleChange = (e) => {
         setCurrentUser({...currentUser, [e.target.name]: e.target.value });
@@ -17,37 +25,24 @@ const EditAccountModal = ({ showModal, setShowModal, user, setUser, isShelter })
 
     useEffect(() => {
         setCurrentUser(user);
+        setEmail(auth.currentUser.email);
     }, [user]);
 
     const handleModalClose = () => {
         setShowModal(false);
+        if (editingCredentials) {
+            setEditCredentials(false);
+        }
+        if (reauthenticate) {
+            setReauthenticate(false);
+        }
     };
 
+    // Update account setting in database
     const handleUpdateAccount = async () => {
 
-        let curAccountBody = { 
-            ...currentUser
-        }
-
+        let curAccountBody = {...currentUser};
         delete curAccountBody.id;
-
-        // If email changed update Firebase Auth
-        if (curAccountBody.email !== auth.currentUser.email) {
-
-            try {
-                await updateEmail(auth.currentUser, curAccountBody.email);
-            }
-            // Redirect back to login if authentication session expired
-            catch (e) {
-                if(e) {
-                    signOut(auth).then(() => {
-                        navigate("/sign-in");
-                    }).catch((e) => {
-
-                    });
-                }
-            }
-        }
         
         // Update Shelter 
         if (isShelter) {
@@ -60,6 +55,74 @@ const EditAccountModal = ({ showModal, setShowModal, user, setUser, isShelter })
         
         setShowModal(false);
         setUser(currentUser);
+    };
+
+    // Reauthenticate user 
+    const handleReauthenticate = () => {
+        setPasswordError(false);
+        const credential = EmailAuthProvider.credential(auth.currentUser.email, password);
+        reauthenticateWithCredential(auth.currentUser, credential).then(() => {
+            setReauthenticate(false);
+          })
+          .catch((error) => {
+            setPasswordError(true);
+          });
+    };
+
+    // Update login credentials in Firebase Auth
+    const handleCredentialUpdate = async () => {
+        setPasswordError(false);
+        setPasswordMismatch(false);
+
+        if (formRef.current && formRef.current.checkValidity()) { 
+            
+            // If email changed update Firebase Auth
+            if (email !== auth.currentUser.email) {
+                try {
+                    await updateEmail(auth.currentUser, email)
+                    .then(setShowModal(false));
+                }
+                // Reauthenticate user if session expired
+                catch (error) {
+                    const errorCode = error.code;
+                    if(errorCode.includes("recent")) {
+                        setReauthenticate(true);
+                        setShowModal(true);
+                    }
+                }
+            }
+
+            // If password changed update Firebase Auth
+            if (newPassword !== '') {
+                // Make sure both password fields match
+                if (newPassword === confirmedPassword) {
+                    updatePassword(auth.currentUser, newPassword).then(() => {
+                        // Set variables 
+                        setEditCredentials(false);
+                        setShowModal(false);
+                        setNewPassword('');
+                        setConfirmedPassword('');
+                    })
+                    .catch((error) => {
+                        const errorCode = error.code;
+                        // User needs to reauthenticate
+                        if(errorCode.includes("recent")) {
+                            setReauthenticate(true);
+                        } 
+                        // Passwowrd Error
+                        else {
+                            setPasswordError(true);
+                        }
+                    });
+                }   
+                else {
+                    setPasswordMismatch(true);
+                }
+            }
+        }
+        else {
+            formRef.current && formRef.current.reportValidity();
+        }
     };
 
     const overlayStyle = {
@@ -80,26 +143,73 @@ const EditAccountModal = ({ showModal, setShowModal, user, setUser, isShelter })
                 <div className="modal-dialog modal-dialog-centered modal-xl">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">Edit Account</h5>
+                            {editingCredentials === false && ( 
+                                <h5 className="modal-title">Edit Account</h5>
+                            )}
+                            {editingCredentials === true &&( 
+                                <h5 className="modal-title">Edit Sign In</h5>
+                            )}
+
                             <button type="button" className="btn-close" onClick={handleModalClose}></button>
                         </div>
-                        <div className="modal-body">
-                            <form>
-                                <div className="alert alert-warning" role="alert">
-                                Changing your email address requires a recent login, if you have not logged in recently you will be redirected to the login page.
+                        {reauthenticate === true && (
+                            <div> 
+                                <div className="modal-body">
+                                    <h3>Re-Autenticate</h3> 
+                                    <div className="alert w-50 mx-auto alert-info" role="alert">
+                                        Please verify your password to continue.
+                                    </div>  
+                                    <div className="col-sm-2 mx-auto">
+                                        {passwordError === true && (
+                                        <div className="alert alert-danger" role="alert">
+                                            Invalid Password
+                                        </div>   
+                                        )}
+                                        <form ref={formRef}>
+                                            <div>
+                                                <label htmlFor="password"><strong>Password</strong></label>
+                                                <br></br>
+                                                <input id="password" name="password" type="password" placeholder="Password"                                                                                                                                         
+                                                    onChange={(e)=>setPassword(e.target.value)} required/>
+                                            </div>
+                                            <br></br>
+                                        </form>      
+                                    </div>              
                                 </div>
-                                {isShelter && (
-                                    <ShelterFrom currentUser={currentUser} handleChange={handleChange} />
-                                )}
-                                {!isShelter && (
-                                    <AdoptFrom currentUser={currentUser} handleChange={handleChange} />
-                                )}
-                            </form>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" onClick={handleModalClose}>Close</button>
-                            <button type="button" className="btn btn-primary" onClick={handleUpdateAccount}>Update</button>
-                        </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" onClick={handleModalClose}>Close</button>
+                                    <button type="button" className="btn btn-primary" onClick={handleReauthenticate}>Confirm</button>
+                                </div>
+                            </div>
+                        )}
+                        {reauthenticate === false && ( 
+                            <div>
+                                <div className="modal-body">
+                                    <form ref={formRef}>
+                                        {editingCredentials === true && (
+                                            <CredentialForm email={email} setEmail={setEmail} newPassword={newPassword} setNewPassword={setNewPassword} 
+                                                confirmedPassword={confirmedPassword} setConfirmedPassword={setConfirmedPassword} passwordError={passwordError} 
+                                                mismatch={passwordMismatch}/>
+                                        )}
+                                        {isShelter && editingCredentials === false && (
+                                            <ShelterFrom currentUser={currentUser} handleChange={handleChange} />
+                                        )}
+                                        {!isShelter && editingCredentials === false &&(
+                                            <AdoptFrom currentUser={currentUser} handleChange={handleChange} />
+                                        )}
+                                    </form>
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" onClick={handleModalClose}>Close</button>
+                                    {editingCredentials === true && ( 
+                                        <button type="button" className="btn btn-primary" onClick={handleCredentialUpdate}>Update</button>
+                                    )}
+                                    {editingCredentials === false && ( 
+                                        <button type="button" className="btn btn-primary" onClick={handleUpdateAccount}>Update</button>
+                                    )}                        
+                                </div>
+                            </div>
+                        )};
                     </div>
                 </div>
             </div>
