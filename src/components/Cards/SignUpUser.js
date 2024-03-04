@@ -93,7 +93,7 @@ const SignUpUser = ({ setEmailError, setPasswordError }) => {
 
     return (
         <div>
-            <form ref={formRef}>
+            {/* <form ref={formRef}> */}
                 <form ref={form} onSubmit={onSubmit}>
                     <div>
                         <label htmlFor="email-address"><strong>Email address</strong></label>
@@ -159,7 +159,7 @@ const SignUpUser = ({ setEmailError, setPasswordError }) => {
                 </div>
                 <button type="button" className="btn btn-primary btn-block" onClick={onSubmit}>Create Account</button>
                 <br></br>
-            </form>
+            {/* </form> */}        
         </div>
     );
 };

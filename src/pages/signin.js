@@ -9,6 +9,7 @@ const SignIn = ({ user }) => {
     const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
+    const [authError, setAuthError] = useState(false);
     const [showResetPassword, setShowResetPassword] = useState(false);
     const [resetError, setResetError] = useState(false);
     const formRef = useRef(null);
@@ -19,11 +20,16 @@ const SignIn = ({ user }) => {
     const onLogin = (e) => {
         e.preventDefault();
 
+        setEmailError(false);
+        setPasswordError(false);
+        setAuthError(false);
+
         if  (formRef.current && formRef.current.checkValidity()) {
             signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 setEmailError(false);
                 setPasswordError(false);
+                setAuthError(false);
                 navigate("/")
             })
             .catch((error) => {
@@ -33,8 +39,10 @@ const SignIn = ({ user }) => {
                     setEmailError(true);
                 }
                 if (errorCode.includes("password")) {
-                    console.log("here");
                     setPasswordError(true);
+                }
+                if (errorCode.includes("many")) {
+                    setAuthError(true);
                 }
             });
         }
@@ -48,8 +56,9 @@ const SignIn = ({ user }) => {
         setShowResetPassword(true);
         setEmail('');
         setPassword('');
-        setEmailError('false');
-        setPasswordError('false');
+        setEmailError(false);
+        setPasswordError(false);
+        setAuthError(false);
     };
 
     // Handles sending passord reset email
@@ -145,7 +154,12 @@ const SignIn = ({ user }) => {
                             <div className="alert alert-danger" role="alert">
                                 Invalid Email
                             </div>   
-                            )}                                     
+                            )}
+                            {authError === true && (
+                            <div className="alert alert-danger" role="alert">
+                                Too Many Attempts
+                            </div>   
+                            )}                                       
                             <div>
                                 <label htmlFor="email-address">Email address</label>
                                 <br></br>

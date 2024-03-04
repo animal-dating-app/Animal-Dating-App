@@ -29,20 +29,22 @@ const SignUpShelter = ({ setEmailError, setPasswordError }) => {
         setEmailError(false);
         setPasswordError(false);
 
-        emailjs
-        .sendForm('service_7wslv2f', 'template_92jc4dk', form.current, {
-            publicKey: 'G8CzJ-OhJH7qfmi_C',
-        })
-        .then(
-            () => {
-            console.log('SUCCESS!');
-            },
-            (error) => {
-            console.log('FAILED...', error.text);
-            },
-        );
+        //if  (formRef.current && formRef.current.checkValidity()) {
 
-        if  (formRef.current && formRef.current.checkValidity()) {
+            emailjs
+            .sendForm('service_7wslv2f', 'template_92jc4dk', form.current, {
+                publicKey: 'G8CzJ-OhJH7qfmi_C',
+            })
+            .then(
+                () => {
+                console.log('SUCCESS!');
+                },
+                (error) => {
+                console.log('FAILED...', error.text);
+                },
+            );
+
+        
             // Create Firebase Auth account 
             await createUserWithEmailAndPassword(auth, newShelter.email, password)
             .then(async (userCredential) => {
@@ -68,15 +70,15 @@ const SignUpShelter = ({ setEmailError, setPasswordError }) => {
                         setPasswordError(true);
                     }
             });
-        }
-        else {
+        //}
+        //else {
             formRef.current && formRef.current.reportValidity();
-        }
+       //}
     }
 
     return (
         <div>
-            <form ref={formRef}>
+            {/* <form ref={formRef}> */}
                 <div className="col">
                     <form ref={form} onSubmit={onSubmit}>     
                         <div>
@@ -113,7 +115,8 @@ const SignUpShelter = ({ setEmailError, setPasswordError }) => {
                     <br></br>
                     <button type="submit" className="btn btn-primary btn-block" onClick={onSubmit}>Create Account</button>
                 </div>
-            </form>
+            {/* </form> */}
+            
         </div>
     );
 };
