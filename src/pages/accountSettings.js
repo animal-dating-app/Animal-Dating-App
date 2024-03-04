@@ -12,6 +12,7 @@ const Settings = () => {
     const [user, setUser] = useState({});
     const [isShelter, setShelter] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [editCredentials, setEditCredentials] = useState(false);
 
     // Get user info from shelter or user database
     const loadUser = async () => {
@@ -49,13 +50,9 @@ const Settings = () => {
         // Search for adopt user if not found in shelter
         if (!isShelter) {
             getAdoptUser();
-        }
-
-        // Check if user has email in database add if not
-        // ToDo - update database so all entities have the same attributes
-        if (!user.hasOwnProperty('email')) {
-            user['email'] = auth.currentUser.email;
-        }
+        } 
+    
+        setUser(user);
     };
 
     useEffect(() => {
@@ -65,7 +62,12 @@ const Settings = () => {
         // eslint-disable-next-line
     }, []);
 
-    const clickEdit = (user) => {
+    const clickEditAccount = () => {
+        setShowEditModal(true);
+    };
+
+    const clickEditSignIn = () => {
+        setEditCredentials(true);
         setShowEditModal(true);
     };
 
@@ -76,7 +78,6 @@ const Settings = () => {
                 {/* Adopter */}
                 {!isShelter && ( 
                     <div className="container mt-4">
-                        <p><strong>Email:</strong> {auth.currentUser.email}</p>
                         <p><strong>First Name:</strong> {user.firstName}</p>
                         <p><strong>Last Name:</strong> {user.lastName}</p>
                         <p><strong>Preferences</strong></p>
@@ -88,17 +89,23 @@ const Settings = () => {
                 {/* Shelter */}
                 {isShelter && ( 
                     <div className="container mt-4">
-                        <p><strong>Email:</strong> {auth.currentUser.email}</p>
+                        {user.hasOwnProperty('email') && (
+                            <p><strong>Public Email:</strong> {user.email}</p>
+                        )}
                         <p><strong>Shelter Name:</strong> {user.name}</p>
                         <p><strong>Address:</strong> {user.address}</p>
                         <p><strong>Phone:</strong> {user.phone}</p>
                     </div>
                 )}
-                <button className="btn btn-secondary btn-block" onClick={clickEdit}>Edit Account</button>    
+                <button className="btn btn-primary btn-block" onClick={clickEditAccount} style={{marginBottom: "0.25rem", width: "150px"}}>
+                    Edit Account</button> 
+                <br></br>
+                <button className="btn btn-secondary btn-block" onClick={clickEditSignIn} style={{marginTop: "0.25rem",  width: "150px"}}>
+                    Edit Sign In Info</button>    
             </div>
-            <FavoriteAnimalTable />
-            <EditAccountModal showModal={showEditModal} setShowModal={setShowEditModal} user={user} setUser={setUser} isShelter={isShelter} />
-
+                <FavoriteAnimalTable />
+                <EditAccountModal showModal={showEditModal} setShowModal={setShowEditModal} user={user} setUser={setUser} 
+                    isShelter={isShelter} editCredentials={editCredentials} setEditCredentials={setEditCredentials}/>
         </div>
     );
 };

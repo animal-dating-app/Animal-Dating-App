@@ -21,12 +21,6 @@ const AdoptForm = ({ currentUser, handleChange}) => {
     return (
         <div className="col">
             <div>
-            <label htmlFor="email-address"><strong>Email address</strong></label>
-                <br></br>
-                <input id="email-address" name="email" type="email" required placeholder="Email address"
-                    value={currentUser.email || ''} onChange={handleChange}/>
-            </div>
-            <div>
                 <label htmlFor="firstName"><strong>First Name</strong></label>
                 <br></br>
                 <input id="firstName" name="firstName" type="firstName" required placeholder="First Name"
