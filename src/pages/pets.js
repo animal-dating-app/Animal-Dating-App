@@ -156,7 +156,7 @@ const Pets = () => {
             console.log("Date B:", dateB); // Log parsed date B
             return dateB - dateA;
         });
-        console.log("Sorted Animals (Newest First):", sortedAnimals); // Log sorted animals array
+        console.log("Sorted Animals (Newest First):", sortedAnimals);
         setAnimals(sortedAnimals);
     };
 
@@ -169,7 +169,7 @@ const Pets = () => {
             console.log("Date B:", dateB); // Log parsed date B
             return dateA - dateB;
         });
-        console.log("Sorted Animals (Oldest First):", sortedAnimals); // Log sorted animals array
+        console.log("Sorted Animals (Oldest First):", sortedAnimals);
         setAnimals(sortedAnimals);
     };
 
