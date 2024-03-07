@@ -149,20 +149,28 @@ const Pets = () => {
 
     const handleSortNewestFirst = () => {
         // Newest first sort
-        setAnimals([...animals].sort((a, b) => {
+        const sortedAnimals = [...animals].sort((a, b) => {
             const dateA = parseDate(a.dateCreated);
             const dateB = parseDate(b.dateCreated);
+            console.log("Date A:", dateA); // Log parsed date A
+            console.log("Date B:", dateB); // Log parsed date B
             return dateB - dateA;
-        }));
+        });
+        console.log("Sorted Animals (Newest First):", sortedAnimals); // Log sorted animals array
+        setAnimals(sortedAnimals);
     };
 
     const handleSortOldestFirst = () => {
         // Oldest first sort
-        setAnimals([...animals].sort((a, b) => {
+        const sortedAnimals = [...animals].sort((a, b) => {
             const dateA = parseDate(a.dateCreated);
             const dateB = parseDate(b.dateCreated);
+            console.log("Date A:", dateA); // Log parsed date A
+            console.log("Date B:", dateB); // Log parsed date B
             return dateA - dateB;
-        }));
+        });
+        console.log("Sorted Animals (Oldest First):", sortedAnimals); // Log sorted animals array
+        setAnimals(sortedAnimals);
     };
 
     const handleResetSorting = () => {
