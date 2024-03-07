@@ -152,11 +152,8 @@ const Pets = () => {
         const sortedAnimals = [...animals].sort((a, b) => {
             const dateA = parseDate(a.dateCreated);
             const dateB = parseDate(b.dateCreated);
-            console.log("Date A:", dateA); // Log parsed date A
-            console.log("Date B:", dateB); // Log parsed date B
             return dateB - dateA;
         });
-        console.log("Sorted Animals (Newest First):", sortedAnimals);
         setAnimals(sortedAnimals);
     };
 
@@ -165,11 +162,8 @@ const Pets = () => {
         const sortedAnimals = [...animals].sort((a, b) => {
             const dateA = parseDate(a.dateCreated);
             const dateB = parseDate(b.dateCreated);
-            console.log("Date A:", dateA); // Log parsed date A
-            console.log("Date B:", dateB); // Log parsed date B
             return dateA - dateB;
         });
-        console.log("Sorted Animals (Oldest First):", sortedAnimals);
         setAnimals(sortedAnimals);
     };
 
@@ -207,7 +201,6 @@ const Pets = () => {
                 setSearchTerm={setSearchTerm}
                 handleSearch={handleSearch}
                 toggleFilters={toggleFilters}
-                showFilters={showFilters}
                 showSortButtons={true}
                 handleSortNewestFirst={handleSortNewestFirst}
                 handleSortOldestFirst={handleSortOldestFirst}
