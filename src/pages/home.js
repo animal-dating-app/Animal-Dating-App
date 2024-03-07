@@ -6,6 +6,7 @@ import Carousel from "../components/Carousel/Carousel";
 import { useNavigate } from 'react-router-dom';
 import catImage from '../assets/images/cat.png'; 
 import dogImage from '../assets/images/dog.png'; 
+import otherAnimalsImage from '../assets/images/other.png';
 
 const Home = () => {
   const [animals, setAnimals] = useState([]);
@@ -57,7 +58,7 @@ const Home = () => {
       {loading && <p>Loading...</p>}
       <Carousel animals={animals} />
 
-      {/* Cats and Dogs Cards */}
+      {/* Cats, Dogs, and Others Cards */}
       <div className="container">
         <div className="row pb-4">
           {/* Cats Card */}
@@ -78,6 +79,17 @@ const Home = () => {
               <div className="card-body">
                 <h5 className="card-title">Dogs</h5>
                 <p className="card-text">Check out our adorable dogs!</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Others Card */}
+          <div className="col-6 col-lg-4 d-flex align-items-stretch my-2">
+            <div className="card" style={{ width: '100%', cursor: 'pointer' }} onClick={() => navigate('/others')}>
+              <img src={otherAnimalsImage} className="card-img-top" alt="Others"/>
+              <div className="card-body">
+                <h5 className="card-title">Others</h5>
+                <p className="card-text">Discover our other lovely animals!</p>
               </div>
             </div>
           </div>
