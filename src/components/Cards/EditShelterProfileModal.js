@@ -9,7 +9,8 @@ const EditShelterProfileModal = ({ showModal, setShowModal, shelter, shelterDocI
 
   const handleImageUpload = (url) => {
     // This callback will update the 'pictureUri' property in the 'animal' state
-		let newImages = [...currentShelter.headerImages];
+		let prevImages = currentShelter.headerImages || [];
+		let newImages = [...prevImages];
 		newImages.push(url);
 		setCurrentShelter({ ...currentShelter, headerImages: newImages });
   };
