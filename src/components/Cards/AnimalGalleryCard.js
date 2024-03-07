@@ -52,13 +52,15 @@ const AnimalGalleryCard = ({
 	};
 
 	const handleCardClick = (e) => {
-    if (e.target.classList.contains("pet-featured") || 
-			e.target.parentElement.classList.contains("pet-featured") ||
-			e.target.classList.contains("pet-favorite") ||
-			e.target.parentElement.classList.contains("pet-favorite")
-		) return;
-		else if (e.target.type === "checkbox") return;
-		else if (onClickAnimal) onClickAnimal(animal);
+		console.log(e.target)
+    if (e.target.closest(".pet-featured") || e.target.closest(".pet-favorite") || (e.target.type === "checkbox")) {
+			e.stopPropagation();
+			return
+		}
+		else if (onClickAnimal) {
+			console.log("running click handler")
+			onClickAnimal(animal);
+		}
 	};
 
 	useEffect(() => {
@@ -189,7 +191,7 @@ const AnimalGalleryCard = ({
 					objectFit: "cover",
 				}} // Img size/dimension, adjust as needed.
 			/>
-			<div className="card-body text-start z-3">
+			<div className="card-body text-start z-3 position-relative">
 				<div className="d-flex flex-row justify-content-between">
 					{animal.name && <h5 className="card-title">{animal.name}</h5>}
 					{( owner && selectable) ? (

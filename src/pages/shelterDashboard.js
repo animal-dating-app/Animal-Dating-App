@@ -187,6 +187,13 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
+            { animals.length === 0 && !loading && (
+                <div className="container">
+                    <p className="text-start">
+						You have no animals available for adoption. Add a new animal to get started!
+					</p>
+                </div>
+            )}
             {shelterSection("Pending Adoption", "Pending")}
             {shelterSection("Available for Adoption", "Available")}
             {shelterSection("Adopted", "Adopted")}
