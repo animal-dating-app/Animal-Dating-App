@@ -78,6 +78,11 @@ const Navbar = ({ user }) => {
                             Dashboard
                         </NavLink>
                     )}
+                    {user && !isShelter && (
+                        <NavLink to="/match" onClick={() => setIsActive(false)}>
+                            Match
+                        </NavLink>
+                    )}
                     { user && (
                         <NavLink to="/settings" onClick={() => setIsActive(false)}>
                             Account

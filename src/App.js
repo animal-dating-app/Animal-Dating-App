@@ -23,6 +23,7 @@ import Header from './components/Header/Header.js';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PageNotFound from "./components/404Page/404Page.js";
+import PetMatcher from "./pages/petMatcher.js";
 function App() {
     return (
         <UserProvider>
@@ -52,6 +53,7 @@ function AuthenticatedApp() {
                     <Route path="/cats" element={<Cats />} />
                     <Route path="/dogs" element={<Dogs />} />
                     <Route path="/pets" element={<Pets />} />
+                    <Route path="/match" element={<PetMatcher />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/sign-up" element={<SignUp user={user} />} />
