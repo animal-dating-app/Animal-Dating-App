@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const SearchBar = ({ searchTerm, setSearchTerm, handleSearch, toggleFilters, 
-                    showFilters, showSortButtons, handleSortNewestFirst, handleSortOldestFirst, 
+                     showSortButtons, handleSortNewestFirst, handleSortOldestFirst, 
                     handleResetSorting }) => {
 
   const [sortBy, setSortBy] = useState("");
@@ -65,7 +65,7 @@ const SearchBar = ({ searchTerm, setSearchTerm, handleSearch, toggleFilters,
                         cursor: 'pointer'
                       }} 
                 onClick={toggleFilters}>
-          {showFilters ? "Hide Filters" : "Show Filters"}
+          Show Filters
         </button>
         <button style={{ 
                         padding: '10px', 

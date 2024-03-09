@@ -148,11 +148,23 @@ const Pets = () => {
     const filteredAnimals = animals.filter(animal => applyFilters(animal));
 
     const handleSortNewestFirst = () => {
-        setAnimals([...animals].sort((a, b) => new Date(b.dateCreated) - new Date(a.dateCreated)));
+        // Newest first sort
+        const sortedAnimals = [...animals].sort((a, b) => {
+            const dateA = parseDate(a.dateCreated);
+            const dateB = parseDate(b.dateCreated);
+            return dateB - dateA;
+        });
+        setAnimals(sortedAnimals);
     };
 
     const handleSortOldestFirst = () => {
-        setAnimals([...animals].sort((a, b) => new Date(a.dateCreated) - new Date(b.dateCreated)));
+        // Oldest first sort
+        const sortedAnimals = [...animals].sort((a, b) => {
+            const dateA = parseDate(a.dateCreated);
+            const dateB = parseDate(b.dateCreated);
+            return dateA - dateB;
+        });
+        setAnimals(sortedAnimals);
     };
 
     const handleResetSorting = () => {
@@ -165,6 +177,12 @@ const Pets = () => {
             });
             setAnimals(animalList);
         });
+    };
+
+    const parseDate = dateString => {
+        // Parse the date strings
+        const [month, day, year] = dateString.split('-').map(Number);
+        return new Date(year, month - 1, day);
     };
 
     // Function to toggle the visibility of the entire filter section
@@ -183,7 +201,6 @@ const Pets = () => {
                 setSearchTerm={setSearchTerm}
                 handleSearch={handleSearch}
                 toggleFilters={toggleFilters}
-                showFilters={showFilters}
                 showSortButtons={true}
                 handleSortNewestFirst={handleSortNewestFirst}
                 handleSortOldestFirst={handleSortOldestFirst}
