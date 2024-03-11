@@ -108,8 +108,6 @@ const Pet = () => {
                     </div>
                 )}
             </div>
-
-
             <div>
                 <EditAnimalModal showModal={showEditModal} setShowModal={setShowEditModal} loadAnimals={loadAnimals} animal={animal} />
             </div>
