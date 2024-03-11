@@ -25,7 +25,6 @@ const SignUpShelter = ({ setEmailError, setPasswordError }) => {
 
     const onSubmit = async (e) => {
         e.preventDefault()
-
         setEmailError(false);
         setPasswordError(false);
 
