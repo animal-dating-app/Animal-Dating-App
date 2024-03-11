@@ -81,7 +81,7 @@ const SignUpShelter = ({ setEmailError, setPasswordError }) => {
                         <div>
                             <label htmlFor="email-address"><strong>Login Email</strong></label>
                             <br></br>
-                            <input id="login-email-address" name="loginEmail" type="email" required placeholder=" Login Email"
+                            <input id="login-email-address" name="loginEmail" type="email" required placeholder="Login Email"
                                 onChange={(e) => setLoginEmail(e.target.value)}/>
                         </div>
                         <div>
