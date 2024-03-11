@@ -56,7 +56,6 @@ const Settings = () => {
         };
 
         loadUser();
-
     }, [isShelter]);
 
     const clickEditAccount = () => {
