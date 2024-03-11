@@ -14,53 +14,49 @@ const Settings = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     const [editCredentials, setEditCredentials] = useState(false);
 
-    // Get user info from shelter or user database
-    const loadUser = async () => {
-         
-        // Check shelter docs for auth user ID
-        const getShelterUser = async () => {
-            const q = query(collection(db, "shelters"), where("shelterId", "==", auth.currentUser.uid));
-            const shelterSnapshot = await getDocs(q);
-            const shelterUser = shelterSnapshot.docs.map ( doc => {
-                return { id: doc.id, ...doc.data() };
-            });
-            // Update user if found
-            if (shelterUser.length > 0) {
-                setUser(shelterUser[0]);
-                setShelter(true);
-            }
-        };
-
-        // Check user docs for auth user ID
-        const getAdoptUser = async () => {
-            const q = query(collection(db, "users"), where("userId", "==", auth.currentUser.uid));
-            const adoptSnapshot = await getDocs(q);
-            const adoptrUser = adoptSnapshot.docs.map ( doc => {
-                return { id: doc.id, ...doc.data() };
-            });
-            // Update user if found
-            if (adoptrUser.length > 0) {
-                setUser(adoptrUser[0]);
-            }
-        };
-
-        // Search for shelter user 
-        getShelterUser();
-
-        // Search for adopt user if not found in shelter
-        if (!isShelter) {
-            getAdoptUser();
-        } 
-    
-        setUser(user);
-    };
-
     useEffect(() => {
-        loadUser();
 
-        // Temp fix
-        // eslint-disable-next-line
-    }, []);
+        // Get user info from shelter or user database
+        const loadUser = async () => {
+
+            // Check shelter docs for auth user ID
+            const getShelterUser = async () => {
+                const q = query(collection(db, "shelters"), where("shelterId", "==", auth.currentUser.uid));
+                const shelterSnapshot = await getDocs(q);
+                const shelterUser = shelterSnapshot.docs.map ( doc => {
+                    return { id: doc.id, ...doc.data() };
+                });
+                // Update user if found
+                if (shelterUser.length > 0) {
+                    setUser(shelterUser[0]);
+                    setShelter(true);
+                }
+            };
+
+            // Check user docs for auth user ID
+            const getAdoptUser = async () => {
+                const q = query(collection(db, "users"), where("userId", "==", auth.currentUser.uid));
+                const adoptSnapshot = await getDocs(q);
+                const adoptUser = adoptSnapshot.docs.map ( doc => {
+                    return { id: doc.id, ...doc.data() };
+                });
+                // Update user if found
+                if (adoptUser.length > 0) {
+                    setUser(adoptUser[0]);
+                }
+            };
+
+            // Search for shelter user 
+            getShelterUser();
+
+            // Search for adopt user if not found in shelter
+            if (!isShelter) {
+                getAdoptUser();
+            } 
+        };
+
+        loadUser();
+    }, [isShelter]);
 
     const clickEditAccount = () => {
         setShowEditModal(true);
@@ -89,11 +85,11 @@ const Settings = () => {
                 {/* Shelter */}
                 {isShelter && ( 
                     <div className="container mt-4">
-                        {user.hasOwnProperty('email') && (
-                            <p><strong>Public Email:</strong> {user.email}</p>
-                        )}
                         <p><strong>Shelter Name:</strong> {user.name}</p>
                         <p><strong>Address:</strong> {user.address}</p>
+                        {user.hasOwnProperty('email') && (
+                            <p><strong>Contact Email:</strong> {user.email}</p>
+                        )}
                         <p><strong>Phone:</strong> {user.phone}</p>
                     </div>
                 )}

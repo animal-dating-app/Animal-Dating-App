@@ -14,10 +14,10 @@ const SignUpShelter = ({ setEmailError, setPasswordError }) => {
         name: "",
         address: "",
         phone: "",
-        email: ""
+        email: "",
     });
     const [password, setPassword] = useState();
-    const formRef = useRef(null);
+    const [loginEmail, setLoginEmail] = useState();
 
     const handleNewUserChange = (e) => {
         setNewShelter({...newShelter, [e.target.name]: e.target.value });
@@ -25,12 +25,12 @@ const SignUpShelter = ({ setEmailError, setPasswordError }) => {
 
     const onSubmit = async (e) => {
         e.preventDefault()
-
         setEmailError(false);
         setPasswordError(false);
 
-        //if  (formRef.current && formRef.current.checkValidity()) {
-
+        if  (form.current && form.current.checkValidity()) {
+    
+            // Send email to user using emailjs.com
             emailjs
             .sendForm('service_7wslv2f', 'template_92jc4dk', form.current, {
                 publicKey: 'G8CzJ-OhJH7qfmi_C',
@@ -43,14 +43,11 @@ const SignUpShelter = ({ setEmailError, setPasswordError }) => {
                 console.log('FAILED...', error.text);
                 },
             );
-
-        
+            
             // Create Firebase Auth account 
-            await createUserWithEmailAndPassword(auth, newShelter.email, password)
+            await createUserWithEmailAndPassword(auth, loginEmail, password)
             .then(async (userCredential) => {
                     const user = userCredential.user.uid;
-                    delete newShelter.email;
-                    delete newShelter.password;
 
                     // Add shelter info to database
                     await addDoc(collection(db, "shelters"), {
@@ -70,22 +67,21 @@ const SignUpShelter = ({ setEmailError, setPasswordError }) => {
                         setPasswordError(true);
                     }
             });
-        //}
-        //else {
-            formRef.current && formRef.current.reportValidity();
-       //}
+        }
+        else {
+            form.current && form.current.reportValidity();
+        }
     }
 
     return (
         <div>
-            {/* <form ref={formRef}> */}
                 <div className="col">
                     <form ref={form} onSubmit={onSubmit}>     
                         <div>
-                            <label htmlFor="email-address"><strong>Email address</strong></label>
+                            <label htmlFor="email-address"><strong>Login Email</strong></label>
                             <br></br>
-                            <input id="email-address" name="email" type="email" required placeholder="Email address"
-                                onChange={handleNewUserChange}/>
+                            <input id="login-email-address" name="loginEmail" type="email" required placeholder="Login Email"
+                                onChange={(e) => setLoginEmail(e.target.value)}/>
                         </div>
                         <div>
                             <label htmlFor="password"><strong>Password</strong></label>
@@ -99,24 +95,28 @@ const SignUpShelter = ({ setEmailError, setPasswordError }) => {
                             <input id="name" name="name" type="name" required placeholder="Shelter Name"
                                 onChange={handleNewUserChange}/>
                         </div>
+                        <div>
+                            <label htmlFor="address"><strong>Address</strong></label>
+                            <br></br>
+                            <input id="address" name="address" type="address" required placeholder="Address"
+                                onChange={handleNewUserChange}/>
+                        </div>
+                        <div>
+                            <label htmlFor="email-address"><strong>Contact Email</strong></label>
+                            <br></br>
+                            <input id="contact-email-address" name="email" type="email" required placeholder="Contact Email"
+                                onChange={handleNewUserChange}/>
+                        </div>
+                        <div>
+                            <label htmlFor="phone"><strong>Phone Number</strong></label>
+                            <br></br>
+                            <input id="phone" name="phone" type="phone" required placeholder="Phone Number"
+                                onChange={handleNewUserChange}/>
+                        </div>
                     </form>
-                    <div>
-                        <label htmlFor="address"><strong>Address</strong></label>
-                        <br></br>
-                        <input id="address" name="address" type="address" required placeholder="Address"
-                            onChange={handleNewUserChange}/>
-                    </div>
-                    <div>
-                        <label htmlFor="phone"><strong>Phone Number</strong></label>
-                        <br></br>
-                        <input id="phone" name="phone" type="phone" required placeholder="Phone Number"
-                            onChange={handleNewUserChange}/>
-                    </div>
                     <br></br>
                     <button type="submit" className="btn btn-primary btn-block" onClick={onSubmit}>Create Account</button>
-                </div>
-            {/* </form> */}
-            
+                </div> 
         </div>
     );
 };
