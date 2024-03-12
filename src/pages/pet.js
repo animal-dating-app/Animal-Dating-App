@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {useLocation} from 'react-router-dom';
 import { AnimalCard }  from "../components/Cards";
 import { auth, db } from "../firebaseConfig";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, query, where, collection, getDocs } from "firebase/firestore";
 import EditAnimalModal from "../components/Cards/EditAnimalModal";
 
 const Pet = () => {
@@ -19,9 +19,9 @@ const Pet = () => {
          owner = (user.uid === animal.shelterId) ? true : false;
     }
 
-
     const [animals, setAnimal] = useState();
     const [showEditModal, setShowEditModal] = useState(false);
+    const [shelter, setShelter] = useState();
 
     const loadAnimals = async () => {
         const getAnimals = async () => {
@@ -40,8 +40,20 @@ const Pet = () => {
             setAnimal(itemSnap.data());
         };
 
+        const getShelter = async () => { 
+            const q = query(collection(db, "shelters"), where("shelterId", "==", animal.shelterId));
+            const shelterSnapshot = await getDocs(q);
+            const shelterList = shelterSnapshot.docs.map(doc => {
+                return { id: doc.id, ...doc.data() };
+            });
+            
+            setShelter(shelterList[0]);
+        };
+
         getAnimals();
-    }, [animal.id]);
+        getShelter();
+
+    }, [animal.id, animal.shelterId]);
 
     const editAnimal = () => {
         setShowEditModal(true);
@@ -80,8 +92,12 @@ const Pet = () => {
                                     <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div className="modal-body">
-                                        <p>shelter@gmail.com</p>
-                                    
+                                        {shelter && shelter.email !== null && (
+                                            <p>Contact Email: {shelter.email}</p>
+                                        )}
+                                        {shelter && (
+                                            <p>Phone Number: {shelter.phone}</p>
+                                        )}                                
                                     </div>
                                     <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -92,8 +108,6 @@ const Pet = () => {
                     </div>
                 )}
             </div>
-
-
             <div>
                 <EditAnimalModal showModal={showEditModal} setShowModal={setShowEditModal} loadAnimals={loadAnimals} animal={animal} />
             </div>

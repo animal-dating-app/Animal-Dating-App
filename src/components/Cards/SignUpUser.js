@@ -17,7 +17,6 @@ const SignUpUser = ({ setEmailError, setPasswordError }) => {
     });
     const [preferences, setPreferences] = useState([]);
     const [password, setPassword] = useState();
-    const formRef = useRef(null);
 
     const handleNewUserChange = (e) => {
         setNewUser({...newUser, [e.target.name]: e.target.value });
@@ -40,26 +39,28 @@ const SignUpUser = ({ setEmailError, setPasswordError }) => {
     const onSubmit = async (e) => {
         e.preventDefault();
 
-        // Send email to user using emailjs.com
-        emailjs
-        .sendForm('service_7wslv2f', 'template_92jc4dk', form.current, {
-            publicKey: 'G8CzJ-OhJH7qfmi_C',
-        })
-        .then(
-            () => {
-            console.log('SUCCESS!');
-            },
-            (error) => {
-            console.log('FAILED...', error.text);
-            },
-        );
-        const newUserData = newUser;
-        newUserData["preferences"] = preferences;
-        let user = null;
-        setEmailError(false);
-        setPasswordError(false);
+        if  (form.current && form.current.checkValidity()) {
+            
+            // Send email to user using emailjs.com
+            emailjs
+            .sendForm('service_7wslv2f', 'template_92jc4dk', form.current, {
+                publicKey: 'G8CzJ-OhJH7qfmi_C',
+            })
+            .then(
+                () => {
+                console.log('SUCCESS!');
+                },
+                (error) => {
+                console.log('FAILED...', error.text);
+                },
+            );
+            
+            const newUserData = newUser;
+            newUserData["preferences"] = preferences;
+            let user = null;
+            setEmailError(false);
+            setPasswordError(false);
 
-        if  (formRef.current && formRef.current.checkValidity()) {
             // Create Firebase Auth account 
             await createUserWithEmailAndPassword(auth, newUser.email, password)
                 .then(async (userCredential) => {
@@ -87,16 +88,15 @@ const SignUpUser = ({ setEmailError, setPasswordError }) => {
             });
         }
         else {
-            formRef.current && formRef.current.reportValidity();
+            form.current && form.current.reportValidity();
         }
     }
 
     return (
         <div>
-            {/* <form ref={formRef}> */}
                 <form ref={form} onSubmit={onSubmit}>
                     <div>
-                        <label htmlFor="email-address"><strong>Email address</strong></label>
+                        <label htmlFor="email-address"><strong>Email</strong></label>
                         <br></br>
                         <input id="email-address" name="email" type="email" required placeholder="Email address"
                             onChange={handleNewUserChange}/>
@@ -158,8 +158,7 @@ const SignUpUser = ({ setEmailError, setPasswordError }) => {
                     </div>
                 </div>
                 <button type="button" className="btn btn-primary btn-block" onClick={onSubmit}>Create Account</button>
-                <br></br>
-            {/* </form> */}        
+                <br></br>     
         </div>
     );
 };
