@@ -50,20 +50,25 @@ const AnimalCard = ({ animal, animalId }) => {
                                 </div>
                             ))}
                         </div>
-                        <button className="carousel-control-prev" type="button" onClick={handlePrevClick}>
-                            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span className="visually-hidden">Previous</span>
-                        </button>
-                        <button className="carousel-control-next" type="button" onClick={handleNextClick}>
-                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span className="visually-hidden">Next</span>
-                        </button>
+                        
+                        {animal.pictureUri.length > 1 && (
+                            <>
+                            <button className="carousel-control-prev" type="button" onClick={handlePrevClick}>
+                                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span className="visually-hidden">Previous</span>
+                            </button>
+                            <button className="carousel-control-next" type="button" onClick={handleNextClick}>
+                                <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span className="visually-hidden">Next</span>
+                            </button>
 
-                        <div className="card-img-overlay d-flex" style={{ alignItems: 'flex-start', paddingTop: '0.5rem', paddingLeft: '0.5rem' }}>
-                            <div className={`text-white fw-semibold`} style={{ padding: '0.25rem 0.5rem', borderRadius: '0.25rem', fontSize: '0.8rem', backgroundColor: statusColor }}>
-                                {animal.status}
+                            <div className="card-img-overlay d-flex" style={{ alignItems: 'flex-start', paddingTop: '0.5rem', paddingLeft: '0.5rem' }}>
+                                <div className={`text-white fw-semibold`} style={{ padding: '0.25rem 0.5rem', borderRadius: '0.25rem', fontSize: '0.8rem', backgroundColor: statusColor }}>
+                                    {animal.status}
+                                </div>
                             </div>
-                        </div>
+                            </>
+                        )}
                     </div>
 
                         ) : (
