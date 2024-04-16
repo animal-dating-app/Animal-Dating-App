@@ -24,7 +24,7 @@ const AnimalGalleryCard = ({
 	selectable,
 	onSelectAnimal,
 	onClickAnimal,
-  onFeaturedClick,
+    onFeaturedClick,
 	selected,
 	callToAction,
 }) => {
