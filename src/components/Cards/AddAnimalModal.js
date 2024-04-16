@@ -13,7 +13,7 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
         description: "",
         type: "",
         gender: "",
-        pictureUri: "",
+        pictureUri: [],
         status: "Available", 
         disposition: [],
     });
@@ -62,7 +62,7 @@ const AddAnimalModal = ({ showModal, setShowModal, loadAnimals }) => {
             description: "",
             type: "",
             gender: "",
-            pictureUri: "",
+            pictureUri: [],
             available: true,
         });
         setUnsavedChanges(false);
