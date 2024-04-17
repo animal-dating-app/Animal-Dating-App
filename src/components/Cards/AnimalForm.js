@@ -4,7 +4,7 @@ import { AnimalGalleryCard } from ".";
 import ImageUploader from "./Imageupload";
 
 const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
-  const [imageURL, setImageURL] = useState("");
+  const [imageURL, setImageURL] = useState([]);
 
   console.log(imageURL);  // delete warning
 

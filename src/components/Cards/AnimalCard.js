@@ -1,7 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import FavoriteButton from "../FavoriteButton";
 
 const AnimalCard = ({ animal, animalId }) => {
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    const handlePrevClick = () => {
+        setCurrentImageIndex((prevIndex) => (prevIndex === 0 ? animal.pictureUri.length - 1 : prevIndex - 1));
+    };
+
+    const handleNextClick = () => {
+        setCurrentImageIndex((prevIndex) => (prevIndex === animal.pictureUri.length - 1 ? 0 : prevIndex + 1));
+    };
+
     let statusColor = (function () {
         switch (animal.status) {
             case "Pending":
@@ -30,7 +40,40 @@ const AnimalCard = ({ animal, animalId }) => {
                         {animal.status}
                     </div>
                 </div>
-                <img src={animal.pictureUri} className="card-img-top" alt={animal.name} />
+
+                {Array.isArray(animal.pictureUri) ? (
+                    <div className="carousel slide" data-bs-ride="carousel">
+                        <div className="carousel-inner">
+                            {animal.pictureUri.map((pictureUri, index) => (
+                                <div key={index} className={`carousel-item ${index === currentImageIndex ? 'active' : ''}`}>
+                                    <img src={pictureUri} className="card-img-top" alt={animal.name}  />
+                                </div>
+                            ))}
+                        </div>
+                        
+                        {animal.pictureUri.length > 1 && (
+                            <>
+                            <button className="carousel-control-prev" type="button" onClick={handlePrevClick}>
+                                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span className="visually-hidden">Previous</span>
+                            </button>
+                            <button className="carousel-control-next" type="button" onClick={handleNextClick}>
+                                <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span className="visually-hidden">Next</span>
+                            </button>
+
+                            <div className="card-img-overlay d-flex" style={{ alignItems: 'flex-start', paddingTop: '0.5rem', paddingLeft: '0.5rem' }}>
+                                <div className={`text-white fw-semibold`} style={{ padding: '0.25rem 0.5rem', borderRadius: '0.25rem', fontSize: '0.8rem', backgroundColor: statusColor }}>
+                                    {animal.status}
+                                </div>
+                            </div>
+                            </>
+                        )}
+                    </div>
+
+                        ) : (
+                            <img src={animal.pictureUri} className="card-img-top" alt={animal.name} />
+                    )}
                 
                 <div className="card-body text-start z-3">
                     <div className="d-flex flex-row justify-content-between">
