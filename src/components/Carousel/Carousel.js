@@ -82,6 +82,7 @@ const Carousel = ({ animals, onClickAnimal }) => {
       .container-carousel .card:hover  {
         transform: scale(1.05);
         z-index: 10;
+        background-color: rgb(221, 237, 234);
       }
 
       .container-carousel .card-img-top {
