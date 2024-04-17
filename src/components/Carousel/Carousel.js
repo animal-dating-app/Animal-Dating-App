@@ -12,7 +12,7 @@ const Carousel = ({ animals, onClickAnimal }) => {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 4, // adjust the number of slides to show
+    slidesToShow: 3, // adjust the number of slides to show
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000, // Set the speed of the carousel
@@ -82,6 +82,7 @@ const Carousel = ({ animals, onClickAnimal }) => {
       .container-carousel .card:hover  {
         transform: scale(1.05);
         z-index: 10;
+        background-color: rgb(221, 237, 234);
       }
 
       .container-carousel .card-img-top {
