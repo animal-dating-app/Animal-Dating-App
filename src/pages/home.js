@@ -56,11 +56,15 @@ const Home = () => {
   return (
     <>
       {loading && <p>Loading...</p>}
-      <Carousel animals={animals} />
+      
 
-      {/* Cats, Dogs, and Others Cards */}
+      {/* Container for Cards and Carousel */}
       <div className="container">
+      
+      {/* Carousel at the top of the cards */}
         <div className="row pb-4">
+            <Carousel animals={animals} />
+        
           {/* Cats Card */}
           <div className="col-6 col-lg-4 d-flex align-items-stretch my-2">
             <div className="card" style={{ width: '100%', cursor: 'pointer' }} onClick={() => navigate('/cats')}>

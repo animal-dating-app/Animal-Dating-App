@@ -12,7 +12,7 @@ const Carousel = ({ animals, onClickAnimal }) => {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 4, // adjust the number of slides to show
+    slidesToShow: 3, // adjust the number of slides to show
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000, // Set the speed of the carousel
