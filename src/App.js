@@ -26,6 +26,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import PageNotFound from "./components/404Page/404Page.js";
 import PetMatcher from "./pages/petMatcher.js";
 import Messages from "./pages/messages.js";
+import Admin from "./pages/admin.js";
+
 function App() {
     return (
         <UserProvider>
@@ -62,6 +64,7 @@ function AuthenticatedApp() {
                     <Route path="/sign-up" element={<SignUp user={user} />} />
                     <Route path="/sign-in" element={<SignIn user={user} />} />
                     <Route path="/pet" element={<Pet />} />
+                    <Route path="/admin" element={<Admin/>}/>
                     <Route path="/shelter">
                         <Route
                             path=":id"

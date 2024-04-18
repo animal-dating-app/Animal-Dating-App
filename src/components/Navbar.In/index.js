@@ -17,8 +17,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const Navbar = ({ user }) => {
     const [isActive, setIsActive] = useState(false); 
     const [isShelter, setShelter] = useState(false);
+    const [isAdmin, setAdmin] = useState(false);
     let button;
     const navigate = useNavigate();
+
+    const adminUID = "L89J59dWmKYqWupE2ngVY2NIhNq1";
 
     useEffect(() => {
         const loadUser = async () => {
@@ -37,7 +40,16 @@ const Navbar = ({ user }) => {
     
             // Search for shelter user 
             if (user) {
-                getShelterUser();
+
+                // Check for admin 
+                if (user.uid === adminUID) {
+                    setAdmin(true);
+                } 
+                // Else check for shelter user
+                else {
+                    setAdmin(false);
+                    getShelterUser();    
+                }
             }
         };
 
@@ -75,27 +87,38 @@ const Navbar = ({ user }) => {
                         <NavLink to="/pets" onClick={() => setIsActive(false)}>
                             Pets
                         </NavLink>
-                    {user && isShelter && (
-                        <NavLink to="/dashboard" onClick={() => setIsActive(false)}>
-                            Dashboard
-                        </NavLink>
-                    )}
-                    {user && !isShelter && (
-                        <NavLink to="/match" onClick={() => setIsActive(false)}>
-                            Match
-                        </NavLink>
-                    )}
-                    { user && (
-                        <NavLink to="/settings" onClick={() => setIsActive(false)}>
-                            Account
-                        </NavLink>
-                    )}
-                    {!user && (
-                        <NavLink to="/sign-up" onClick={() => setIsActive(false)}>
-                            Sign Up
-                        </NavLink>
-                    )}
+                        {/* Not Admin */}
+                        {user && !isAdmin && (
+                            <>
+                            {isShelter && (
+                                <NavLink to="/dashboard" onClick={() => setIsActive(false)}>
+                                    Dashboard
+                                </NavLink>
+                            )}
+                            {!isShelter && (
+                                <NavLink to="/match" onClick={() => setIsActive(false)}>
+                                    Match
+                                </NavLink>
+                            )}
+                            <NavLink to="/settings" onClick={() => setIsActive(false)}>
+                                Account
+                            </NavLink>  
+                            </>
+                        )}
+                        {/* Admin */}
+                        {user && isAdmin && (
+                            <NavLink to="/admin" onClick={() => setIsActive(false)}>
+                                Admin
+                            </NavLink>
+                        )}
+
+                        {!user && (
+                            <NavLink to="/sign-up" onClick={() => setIsActive(false)}>
+                                Sign Up
+                            </NavLink>
+                        )}
                 </NavMenu>
+
                 <span style={{display: "flex", alignItems: "center"}}>
                 {user && (
                         <NavLink to="/messages" onClick={() => setIsActive(false)}>
@@ -106,6 +129,11 @@ const Navbar = ({ user }) => {
                         {button}
                     </NavBtn>
                 </span>
+
+                    <NavBtn>
+                        {button}
+                    </NavBtn>
+
             </Nav>
         </>
     );
