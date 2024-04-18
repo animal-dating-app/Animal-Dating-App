@@ -11,7 +11,7 @@ import { auth, db } from "../../firebaseConfig";
 import { signOut } from "firebase/auth";
 import { collection, getDocs, query, where} from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
-import { faInbox, faMessage } from "@fortawesome/free-solid-svg-icons";
+import { faInbox } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Navbar = ({ user }) => {

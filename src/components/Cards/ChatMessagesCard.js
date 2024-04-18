@@ -1,17 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Col, ListGroup, Form, Button, Card } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { auth } from '../../firebaseConfig';
+import { auth, db } from '../../firebaseConfig';
+import { doc, setDoc, collection, query, where, onSnapshot, or } from "firebase/firestore";
 
-function ChatMessagesCard({ messages }) {
+function ChatMessagesCard() {
   const [selectedChat, setSelectedChat] = useState(null);
   const [inputMessage, setInputMessage] = useState('');
   const [chats, setChats] = useState({});
+  const [messages, setMessages] = useState([]); 
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  const messagesContainerRef = useRef(null);
 
   const shelterName = location.state?.shelterName;
   const shelterId = location.state?.shelterId;
@@ -20,11 +24,34 @@ function ChatMessagesCard({ messages }) {
   const currentUserId = auth.currentUser.uid;
 
   useEffect(() => {
+    // Create a query against the collection.
+    const messagesRef = collection(db, "messages");
+    const q = query(
+      messagesRef,
+      or(where("fromId", "==", currentUserId), where("toId", "==", currentUserId)),
+      // orderBy("date", "desc")
+    );
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const messages = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        date: doc.data().date.toDate(),
+        ...doc.data()
+      }));
+      setMessages(messages);
+    }, (error) => {
+      console.error("Error fetching messages: ", error);
+    });
+
+    return () => unsubscribe();
+  }, [currentUserId]);
+
+  useEffect(() => {
     const groupedMessages = messages.reduce((acc, message) => {
-      const otherUserId = message.from.id === currentUserId ? message.to.id : message.from.id;
+      const otherUserId = message.fromId === currentUserId ? message.toId : message.fromId;
       const key = otherUserId;
       if (!acc[key]) {
-        acc[key] = { messages: [], user: message.from.id === currentUserId ? message.to : message.from };
+        acc[key] = { messages: [], user: message.fromId === currentUserId ? { id: message.toId, name: message.toName } : { id: message.fromId, name: message.fromName } };
       }
       acc[key].messages.push(message);
       return acc;
@@ -38,6 +65,16 @@ function ChatMessagesCard({ messages }) {
     setSelectedChat(shelterId || Object.keys(groupedMessages)[0] || null);
   }, [messages, currentUserId, shelterId, shelterName]);
 
+  useEffect(() => {
+    const scrollToBottom = () => {
+      if (messagesContainerRef.current) {
+        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+      }
+    };
+  
+    scrollToBottom();
+  }, [chats]);
+
   const handleSelectChat = (userId) => {
     setSelectedChat(userId);
     setInputMessage('');
@@ -46,10 +83,26 @@ function ChatMessagesCard({ messages }) {
     }
   };
 
-  const sendMessage = () => {
-    console.log('Sending message:', inputMessage);
-    // Additional logic to handle sending the attached pet card
-    setInputMessage('');
+  const sendMessage = async () => {
+    if (!inputMessage) return;
+  
+    const newMessage = {
+      fromId: auth.currentUser.uid,
+      toId: selectedChat,
+      fromName: auth.currentUser.displayName,
+      toName: chats[selectedChat].user.name,
+      date: new Date(),
+      content: inputMessage,
+      pet: pet || undefined
+    };
+  
+    try {
+      await setDoc(doc(collection(db, "messages")), newMessage);
+      setInputMessage('');
+      setPet(null);
+    } catch (error) {
+      console.error("Error sending message: ", error, error.message);
+    }
   };
 
   const removePetAttachment = () => {
@@ -72,7 +125,7 @@ function ChatMessagesCard({ messages }) {
                   <div className='text-start p-2'>
                     {chats[userId].user.name}
                     <div className="text-muted small">
-                      {chats[userId].messages.at(-1)?.date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })} {chats[userId].messages.at(-1)?.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      {chats[userId].messages.at(-1)?.date.toDate().toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })} {chats[userId].messages.at(-1)?.date.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </div>
                     {chats[userId].messages.at(-1) ?
                       <div className="text-muted">
@@ -90,13 +143,21 @@ function ChatMessagesCard({ messages }) {
           {selectedChat ? (
             <>
               <h5 className="pb-2">{chats[selectedChat].user.name}</h5>
-              <div style={{ overflowY: 'auto', height: '70vh' }}>
+              <div style={{ overflowY: 'auto', height: '70vh' }} ref={messagesContainerRef}>
                 {chats[selectedChat].messages.length > 0 ? chats[selectedChat].messages.map((msg, index) => (
-                  <div key={index} style={{ textAlign: msg.from.id === currentUserId ? 'right' : 'left' }} className="mb-2">
-                    <div style={{ backgroundColor: msg.from.id === currentUserId ? '#DDECEA' : 'grey', color: msg.from.id === currentUserId ? 'black' : 'white', display: 'inline-block', padding: '5px 15px', borderRadius: '10px' }}>
+                  <div key={index} style={{ textAlign: msg.fromId === currentUserId ? 'right' : 'left' }} className="mb-2">
+                    {msg.pet && (
+                      <>
+                      <div className="mb-2" style={{ backgroundColor: msg.fromId === currentUserId ? '#DDECEA' : 'grey', color: msg.fromId === currentUserId ? 'black' : 'white', display: 'inline-block', padding: '5px 15px', borderRadius: '10px' }}>
+                        <div className="small p-1" style={{ color: 'grey' }}>Attached Pet: <button className="btn btn-link" onClick={() => navigate('/pet', { state: { pet: msg.pet } })}>{msg.pet.name}</button></div>
+                    </div>
+                    <br/>
+                    </>
+                    )}
+                    <div className="mb-2" style={{ backgroundColor: msg.fromId === currentUserId ? '#DDECEA' : 'grey', color: msg.fromId === currentUserId ? 'black' : 'white', display: 'inline-block', padding: '5px 15px', borderRadius: '10px' }}>
                       {msg.content}
                     </div>
-                    <div className={`small p${msg.from.id === currentUserId ? 'e' : 's'}-1`} style={{ color: 'grey' }}>{msg.date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })} {msg.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+                    <div className={`small p${msg.fromId === currentUserId ? 'e' : 's'}-1`} style={{ color: 'grey' }}>{msg.date.toDate().toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })} {msg.date.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
                   </div>
                 )) : <div>No messages in this chat.</div>}
               </div>
