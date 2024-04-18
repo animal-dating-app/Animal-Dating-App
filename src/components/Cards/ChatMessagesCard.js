@@ -56,7 +56,7 @@ function ChatMessagesCard() {
     }, {});
 
     if (userId && !groupedMessages[userId]) {
-      groupedMessages[userId] = { messages: [], user: { id: userId, name: (userId || 'Anonymous User') } };
+      groupedMessages[userId] = { messages: [], user: { id: userId, name: (userName || 'Anonymous User') } };
     }
 
     setChats(groupedMessages);
