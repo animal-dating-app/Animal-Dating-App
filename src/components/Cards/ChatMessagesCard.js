@@ -17,19 +17,17 @@ function ChatMessagesCard() {
 
   const messagesContainerRef = useRef(null);
 
-  const shelterName = location.state?.shelterName;
-  const shelterId = location.state?.shelterId;
+  const userName = location.state?.userName;
+  const userId = location.state?.userId;
   const [pet, setPet] = useState(location.state?.pet);
 
   const currentUserId = auth.currentUser.uid;
 
   useEffect(() => {
-    // Create a query against the collection.
     const messagesRef = collection(db, "messages");
     const q = query(
       messagesRef,
-      or(where("fromId", "==", currentUserId), where("toId", "==", currentUserId)),
-      // orderBy("date", "desc")
+      or(where("fromId", "==", currentUserId), where("toId", "==", currentUserId))
     );
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -57,13 +55,13 @@ function ChatMessagesCard() {
       return acc;
     }, {});
 
-    if (shelterId && shelterName && !groupedMessages[shelterId]) {
-      groupedMessages[shelterId] = { messages: [], user: { id: shelterId, name: shelterName } };
+    if (userId && !groupedMessages[userId]) {
+      groupedMessages[userId] = { messages: [], user: { id: userId, name: (userId || 'Anonymous User') } };
     }
 
     setChats(groupedMessages);
-    setSelectedChat(shelterId || Object.keys(groupedMessages)[0] || null);
-  }, [messages, currentUserId, shelterId, shelterName]);
+    setSelectedChat(userId || Object.keys(groupedMessages)[0] || null);
+  }, [messages, currentUserId, userId, userName]);
 
   useEffect(() => {
     const scrollToBottom = () => {
@@ -79,7 +77,7 @@ function ChatMessagesCard() {
     setSelectedChat(userId);
     setInputMessage('');
     if (pet) {
-      setPet(null);  // Reset pet when changing chats
+      setPet(null);
     }
   };
 
@@ -123,7 +121,7 @@ function ChatMessagesCard() {
                   style={{ backgroundColor: selectedChat === userId ? '#DDECEA' : 'transparent' }}
                 >
                   <div className='text-start p-2'>
-                    {chats[userId].user.name}
+                    {chats[userId].user.name || 'Anonymous User'}
                     <div className="text-muted small">
                       {chats[userId].messages.at(-1)?.date.toDate().toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })} {chats[userId].messages.at(-1)?.date.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </div>
@@ -142,14 +140,16 @@ function ChatMessagesCard() {
         <Col xs={12} md={8} className="bg-light rounded p-3">
           {selectedChat ? (
             <>
-              <h5 className="pb-2">{chats[selectedChat].user.name}</h5>
+              <h5 className="pb-2">{chats[selectedChat].user.name || 'Anonymous User'}</h5>
               <div style={{ overflowY: 'auto', height: '70vh' }} ref={messagesContainerRef}>
                 {chats[selectedChat].messages.length > 0 ? chats[selectedChat].messages.map((msg, index) => (
                   <div key={index} style={{ textAlign: msg.fromId === currentUserId ? 'right' : 'left' }} className="mb-2">
                     {msg.pet && (
                       <>
                       <div className="mb-2" style={{ backgroundColor: msg.fromId === currentUserId ? '#DDECEA' : 'grey', color: msg.fromId === currentUserId ? 'black' : 'white', display: 'inline-block', padding: '5px 15px', borderRadius: '10px' }}>
-                        <div className="small p-1" style={{ color: 'grey' }}>Attached Pet: <button className="btn btn-link" onClick={() => navigate('/pet', { state: { pet: msg.pet } })}>{msg.pet.name}</button></div>
+                        <div className="small p-1" style={{ color: msg.fromId === currentUserId ? 'grey' : 'white' }}>Attached Pet: <button className="btn btn-link" onClick={() => navigate('/pet', { state: { pet: msg.pet } })}
+                        style={{ color: msg.fromId === currentUserId ? 'blue' : 'white' }}
+                        >{msg.pet.name}</button></div>
                     </div>
                     <br/>
                     </>

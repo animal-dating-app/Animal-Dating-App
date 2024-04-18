@@ -78,7 +78,7 @@ function ShelterInfoCard({ shelter }) {
 
                             { auth.currentUser && shelter.shelterId !== auth.currentUser.uid && (
                                 <Button variant="primary" style={{marginTop: "1rem"}}
-                                onClick={() => navigate('/messages', {state:{shelterId: shelter.shelterId, shelterName: shelter.name}})}>Send Message</Button>
+                                onClick={() => navigate('/messages', {state:{userId: shelter.shelterId, userName: shelter.name}})}>Send Message</Button>
                             )}
                         </p>
                         {/* <p className="card-text"><small className="text-body-secondary">Last updated 3 mins ago</small></p> */}

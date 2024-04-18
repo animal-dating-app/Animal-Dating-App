@@ -103,7 +103,7 @@ const Pet = () => {
                                         )}          
                                         {shelter && (
                                             <Button variant="primary" style={{marginTop: "1rem"}} data-bs-dismiss="modal"
-                                            onClick={() => navigate('/messages', {state:{pet: animal, shelterId: animal.shelterId, shelterName: shelter.name}})}
+                                            onClick={() => navigate('/messages', {state:{pet: animal, userId: animal.shelterId, userName: shelter.name}})}
                                             >Send Message</Button>
                                         )}                      
                                     </div>
