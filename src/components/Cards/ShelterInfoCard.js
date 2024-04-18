@@ -1,6 +1,8 @@
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState, useEffect } from 'react';
+import { Button } from 'react-bootstrap';
+import { auth } from "../../firebaseConfig";
 
 function ShelterInfoCard({ shelter }) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -71,6 +73,10 @@ function ShelterInfoCard({ shelter }) {
                                 <br />
                             </>
                             }
+
+                            { auth.currentUser && shelter.shelterId !== auth.currentUser.uid && (
+                                <Button variant="primary" style={{marginTop: "1rem"}}>Send Message</Button>
+                            )}
                         </p>
                         {/* <p className="card-text"><small className="text-body-secondary">Last updated 3 mins ago</small></p> */}
                     </div>

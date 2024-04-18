@@ -25,6 +25,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PageNotFound from "./components/404Page/404Page.js";
 import PetMatcher from "./pages/petMatcher.js";
+import Messages from "./pages/messages.js";
 function App() {
     return (
         <UserProvider>
@@ -67,6 +68,7 @@ function AuthenticatedApp() {
                             element={<Shelter />}
                         />
                     </Route>
+                    <Route path="/messages" element={<Messages />} />
                     <Route
                         path="*"
                         element={<PageNotFound />}
