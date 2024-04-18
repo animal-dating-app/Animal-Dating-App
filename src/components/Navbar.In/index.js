@@ -130,10 +130,6 @@ const Navbar = ({ user }) => {
                     </NavBtn>
                 </span>
 
-                    <NavBtn>
-                        {button}
-                    </NavBtn>
-
             </Nav>
         </>
     );
