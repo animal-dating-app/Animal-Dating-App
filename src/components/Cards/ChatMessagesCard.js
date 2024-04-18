@@ -2,12 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { Col, ListGroup, Form, Button, Card } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { auth } from '../../firebaseConfig';
 
-function ChatMessagesCard({ messages, currentUserId, newChatUserId, petId }) {
+function ChatMessagesCard({ messages }) {
   const [selectedChat, setSelectedChat] = useState(null);
   const [inputMessage, setInputMessage] = useState('');
   const [chats, setChats] = useState({});
-  const [pet, setPet] = useState(null);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const shelterName = location.state?.shelterName;
+  const shelterId = location.state?.shelterId;
+  const [pet, setPet] = useState(location.state?.pet);
+
+  const currentUserId = auth.currentUser.uid;
 
   useEffect(() => {
     const groupedMessages = messages.reduce((acc, message) => {
@@ -20,19 +30,13 @@ function ChatMessagesCard({ messages, currentUserId, newChatUserId, petId }) {
       return acc;
     }, {});
 
-    if (newChatUserId && !groupedMessages[newChatUserId]) {
-      // Initialize a new chat with 'newChatUserId' if it does not exist
-      groupedMessages[newChatUserId] = { messages: [], user: { id: newChatUserId, name: 'New User' } };
+    if (shelterId && shelterName && !groupedMessages[shelterId]) {
+      groupedMessages[shelterId] = { messages: [], user: { id: shelterId, name: shelterName } };
     }
 
     setChats(groupedMessages);
-    // If there's a newChatUserId, select it, otherwise select the first available chat
-    setSelectedChat(newChatUserId || Object.keys(groupedMessages)[0] || null);
-
-    if (petId) {
-      setPet({ id: petId, name: 'Cute Pet', link: `/pets/${petId}` });
-    }
-  }, [messages, currentUserId, newChatUserId, petId]);
+    setSelectedChat(shelterId || Object.keys(groupedMessages)[0] || null);
+  }, [messages, currentUserId, shelterId, shelterName]);
 
   const handleSelectChat = (userId) => {
     setSelectedChat(userId);
@@ -63,31 +67,36 @@ function ChatMessagesCard({ messages, currentUserId, newChatUserId, petId }) {
                   key={userId}
                   action
                   onClick={() => handleSelectChat(userId)}
-                  style={{ backgroundColor: selectedChat === userId ? 'rgb(221, 237, 234)' : 'transparent' }}
+                  style={{ backgroundColor: selectedChat === userId ? '#DDECEA' : 'transparent' }}
                 >
-                  {chats[userId].user.name}
-                  <div className="text-muted small">
-                    {chats[userId].messages.at(-1)?.date.toLocaleString()}
-                  </div>
-                  <div className="text-muted">
-                    {chats[userId].messages.at(-1)?.content.slice(0, 30)}...
+                  <div className='text-start p-2'>
+                    {chats[userId].user.name}
+                    <div className="text-muted small">
+                      {chats[userId].messages.at(-1)?.date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })} {chats[userId].messages.at(-1)?.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </div>
+                    {chats[userId].messages.at(-1) ?
+                      <div className="text-muted">
+                        {chats[userId].messages.at(-1)?.content.slice(0, 30)}...
+                      </div>
+                      : <div className="text-muted">No messages yet</div>
+                    }
                   </div>
                 </ListGroup.Item>
               ))}
             </ListGroup>
-          ) : <div>No chats available</div>}
+          ) : <div className="p-4">No conversations found.<br/><br/>Start a new conversation from a pet or shelter profile page.</div>}
         </Col>
         <Col xs={12} md={8} className="bg-light rounded p-3">
           {selectedChat ? (
             <>
-              <h5>{chats[selectedChat].user.name}</h5>
+              <h5 className="pb-2">{chats[selectedChat].user.name}</h5>
               <div style={{ overflowY: 'auto', height: '70vh' }}>
                 {chats[selectedChat].messages.length > 0 ? chats[selectedChat].messages.map((msg, index) => (
-                  <div key={index} style={{ textAlign: msg.from.id === currentUserId ? 'right' : 'left' }}>
-                    <div style={{ backgroundColor: msg.from.id === currentUserId ? 'blue' : 'grey', color: 'white', display: 'inline-block', padding: '5px 15px', borderRadius: '10px' }}>
+                  <div key={index} style={{ textAlign: msg.from.id === currentUserId ? 'right' : 'left' }} className="mb-2">
+                    <div style={{ backgroundColor: msg.from.id === currentUserId ? '#DDECEA' : 'grey', color: msg.from.id === currentUserId ? 'black' : 'white', display: 'inline-block', padding: '5px 15px', borderRadius: '10px' }}>
                       {msg.content}
-                      <div className="small">{msg.date.toLocaleTimeString()}</div>
                     </div>
+                    <div className={`small p${msg.from.id === currentUserId ? 'e' : 's'}-1`} style={{ color: 'grey' }}>{msg.date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })} {msg.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
                   </div>
                 )) : <div>No messages in this chat.</div>}
               </div>
@@ -95,7 +104,7 @@ function ChatMessagesCard({ messages, currentUserId, newChatUserId, petId }) {
                 <Card className="mb-2">
                   <Card.Body className="d-flex justify-content-between align-items-center">
                     <div>
-                      Attached: {pet.name} - <a href={pet.link}>View Pet</a>
+                      Attached Pet: <button className="btn btn-link" onClick={() => navigate('/pet', { state: { pet } })}>{pet.name}</button>
                     </div>
                     <Button variant="outline-danger" size="sm" onClick={removePetAttachment}>
                       <FontAwesomeIcon icon={faTimes} />
@@ -113,12 +122,12 @@ function ChatMessagesCard({ messages, currentUserId, newChatUserId, petId }) {
                   rows={1}
                   className='p-2 flex-grow-1 me-2'
                 />
-                <Button onClick={sendMessage} variant="primary">
+                <Button onClick={sendMessage} variant="secondary">
                   <FontAwesomeIcon icon={faPaperPlane} />
                 </Button>
               </Form>
             </>
-          ) : <div>Please select a chat to view messages</div>}
+          ) : <div className="p-4">Please select a chat to view messages</div>}
         </Col>
       </div>
     </div>
