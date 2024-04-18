@@ -1,9 +1,13 @@
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState, useEffect } from 'react';
+import { Button } from 'react-bootstrap';
+import { auth } from "../../firebaseConfig";
+import { useNavigate } from 'react-router-dom';
 
 function ShelterInfoCard({ shelter }) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const navigate = useNavigate();
 
     // Function to start or reset the image rotation timer
     const startRotationTimer = () => {
@@ -71,6 +75,11 @@ function ShelterInfoCard({ shelter }) {
                                 <br />
                             </>
                             }
+
+                            { auth.currentUser && shelter.shelterId !== auth.currentUser.uid && (
+                                <Button variant="primary" style={{marginTop: "1rem"}}
+                                onClick={() => navigate('/messages', {state:{userId: shelter.shelterId, userName: shelter.name}})}>Send Message</Button>
+                            )}
                         </p>
                         {/* <p className="card-text"><small className="text-body-secondary">Last updated 3 mins ago</small></p> */}
                     </div>

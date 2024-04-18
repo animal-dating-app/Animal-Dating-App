@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
-import {useLocation} from 'react-router-dom';
+import {useLocation, useNavigate } from 'react-router-dom';
 import { AnimalCard }  from "../components/Cards";
 import { auth, db } from "../firebaseConfig";
 import { getDoc, doc, query, where, collection, getDocs } from "firebase/firestore";
 import EditAnimalModal from "../components/Cards/EditAnimalModal";
+import { Button } from "react-bootstrap";
 
 const Pet = () => {
 
     // Animal passed to component
     const location = useLocation();
     const animal = location.state.pet;
+
+    const navigate = useNavigate();
 
     // Get user from auth 
     const user = auth.currentUser;
@@ -97,7 +100,12 @@ const Pet = () => {
                                         )}
                                         {shelter && (
                                             <p>Phone Number: {shelter.phone}</p>
-                                        )}                                
+                                        )}          
+                                        {shelter && (
+                                            <Button variant="primary" style={{marginTop: "1rem"}} data-bs-dismiss="modal"
+                                            onClick={() => navigate('/messages', {state:{pet: animal, userId: animal.shelterId, userName: shelter.name}})}
+                                            >Send Message</Button>
+                                        )}                      
                                     </div>
                                     <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>

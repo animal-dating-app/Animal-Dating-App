@@ -9,6 +9,7 @@ import EditAnimalModal from "../components/Cards/EditAnimalModal";
 import EditShelterProfileModal from "../components/Cards/EditShelterProfileModal";
 import FullScreenLoader from "../components/FullScreenLoader";
 import { useNavigate } from "react-router-dom";
+import RecentMessagesCard from "../components/Cards/RecentMessagesCard";
 
 const Dashboard = () => {
     const [animals, setAnimals] = useState([]);
@@ -186,6 +187,9 @@ const Dashboard = () => {
                         <button className="btn btn-secondary" onClick={() => setShowShelterProfileModal(true)}>Edit Profile</button>
                     </div>
                 </div>
+            </div>
+            <div className="container mb-4">
+                <RecentMessagesCard shelter={shelter} />
             </div>
             { animals.length === 0 && !loading && (
                 <div className="container">
