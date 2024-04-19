@@ -186,7 +186,7 @@ const AnimalGalleryCard = ({
 				alt={animal.name}
 				style={{
 					width: "100%",
-					height: "auto",
+					height: "250px",
 					maxHeight: "300px",
 					objectFit: "cover",
 				}} // Img size/dimension, adjust as needed.
@@ -253,13 +253,18 @@ const AnimalGalleryCard = ({
 						))}
 					</div>
 				)}
-
+				<div className="call-to-action">
 				{callToAction && (
 					<>
+
 						<br></br>
-						<strong>{callToAction}</strong>
+						<strong >{callToAction}</strong>
+
 					</>
 				)}
+										</div>
+
+				
 			</div>
 			{petsPath && (
 				<style jsx>{`
@@ -268,6 +273,8 @@ const AnimalGalleryCard = ({
 						z-index: 10;
 						background-color: rgb(221, 237, 234);
 					}
+
+								}
 				`}</style>
 			)}
 			</div>

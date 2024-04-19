@@ -9,12 +9,11 @@ import { useNavigate } from "react-router-dom";
 const Carousel = ({ animals, onClickAnimal }) => {
   // Slick Carousel settings
   const sliderSettings = {
-    dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 3, // adjust the number of slides to show
+    slidesToShow: 4, // adjust the number of slides to show
     slidesToScroll: 1,
-    autoplay: true,
+    autoplay: false,
     autoplaySpeed: 3000, // Set the speed of the carousel
     draggable: true,               // Enable dragging to navigate
     responsive: [
@@ -64,20 +63,7 @@ const Carousel = ({ animals, onClickAnimal }) => {
         ))}
       </Slider>
       <style jsx>{`
-      .slick-dots {
-        bottom: 10px;
-      }
-      
-      .slick-dots li button::before {
-        font-size: 12px; 
-        color: black; 
-        opacity: 0.7; 
-      }
-      
-      .slick-dots li.slick-active button::before {
-        color: grey; 
-        opacity: 1; 
-      }
+
 
       .container-carousel .card:hover  {
         transform: scale(1.05);
@@ -85,20 +71,17 @@ const Carousel = ({ animals, onClickAnimal }) => {
         background-color: rgb(221, 237, 234);
       }
 
-      .container-carousel .card-img-top {
-        max-width: 300px; /* Adjust the width as needed */
-        max-height: 300px;
-      }
+
 
       .container-carousel .card{
         position: relative;
-        width: 300px;
         max-width: 300px;
           background: white;
           color: black;
           border-radius: 3px;
           margin:  40px auto;
           box-shadow: 0 3px 10px #00000033;
+          height: 550px;
       }
 
       .container-carousel{
@@ -107,6 +90,8 @@ const Carousel = ({ animals, onClickAnimal }) => {
         gap: 32px;
       }
 
+
+	
     
     
       
