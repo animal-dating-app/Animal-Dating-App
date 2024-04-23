@@ -13,7 +13,7 @@ const Carousel = ({ animals, onClickAnimal }) => {
     speed: 500,
     slidesToShow: 4, // adjust the number of slides to show
     slidesToScroll: 1,
-    autoplay: true,
+    autoplay: false,
     autoplaySpeed: 3000, // Set the speed of the carousel
     draggable: true,               // Enable dragging to navigate
     responsive: [
