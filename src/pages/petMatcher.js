@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { auth, db } from "../firebaseConfig";
 import { collection, getDocs, where, query, doc, updateDoc, getDoc } from 'firebase/firestore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faCheck, faCommentDots } from '@fortawesome/free-solid-svg-icons';
 import FullScreenLoader from '../components/FullScreenLoader';
 import { AnimalGalleryCard } from '../components/Cards';
 import { useNavigate } from 'react-router-dom';
@@ -130,6 +130,16 @@ const PetMatcher = () => {
       }
     };
 
+    const sendMessage = () => {
+      const shelterId = animals[currentPetIndex].shelterId;
+
+      const q = query(collection(db, "shelters"), where("shelterId", "==", shelterId));
+      getDocs(q).then(snapshot => {
+        const shelter = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))[0];
+        navigate('/messages', {state:{pet: animals[currentPetIndex], userId: shelterId, userName: shelter.name}});
+      });
+    };
+
     if (loading) {
         return <FullScreenLoader fadingOut={fadingOut} />;
     }
@@ -154,6 +164,9 @@ const PetMatcher = () => {
                     <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
                         <button onClick={handleDismiss} style={{ border: 'none', borderRadius: '50%', padding: '10px', cursor: 'pointer', backgroundColor: '#ff5757', height: '52px', width: '52px' }}>
                             <FontAwesomeIcon icon={faTimes} size="2x" />
+                        </button>
+                        <button onClick={sendMessage} style={{ border: 'none', borderRadius: '50%', padding: '10px', cursor: 'pointer', backgroundColor: '#809bce', height: '52px', width: '52px' }}>
+                            <FontAwesomeIcon icon={faCommentDots} size="2x" />
                         </button>
                         <button onClick={handleLike} style={{ border: 'none', borderRadius: '50%', padding: '10px', cursor: 'pointer', backgroundColor: '#4ab22d', height: '52px', width: '52px' }}>
                             <FontAwesomeIcon icon={faCheck} size="2x" />

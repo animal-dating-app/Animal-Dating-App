@@ -9,7 +9,7 @@ import {
 } from "./NavbarElements";
 import { auth, db } from "../../firebaseConfig";
 import { signOut } from "firebase/auth";
-import { collection, getDocs, query, where} from "firebase/firestore";
+import { and, collection, getDocs, onSnapshot, or, query, where} from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
 import { faInbox } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,6 +18,7 @@ const Navbar = ({ user }) => {
     const [isActive, setIsActive] = useState(false); 
     const [isShelter, setShelter] = useState(false);
     const [isAdmin, setAdmin] = useState(false);
+    const [unreadMessages, setUnreadMessages] = useState(0);
     let button;
     const navigate = useNavigate();
 
@@ -40,7 +41,6 @@ const Navbar = ({ user }) => {
     
             // Search for shelter user 
             if (user) {
-
                 // Check for admin 
                 if (user.uid === adminUID) {
                     setAdmin(true);
@@ -54,6 +54,31 @@ const Navbar = ({ user }) => {
         };
 
         loadUser();
+    }, [user]);
+
+    useEffect(() => {
+        if (!user) {
+            return;
+        }
+
+        const messagesRef = collection(db, "messages");
+        const q = query(
+            messagesRef,
+            and(where("toId", "==", user.uid), or(where("read", "==", false), where("read", "==", null)))
+        );
+    
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const messages = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                date: doc.data().date.toDate(),
+                ...doc.data()
+            }));
+            setUnreadMessages(messages.length);
+        }, (error) => {
+            console.error("Error fetching messages: ", error);
+        });
+    
+        return () => unsubscribe();
     }, [user]);
 
     // Log user out
@@ -120,9 +145,17 @@ const Navbar = ({ user }) => {
                 </NavMenu>
 
                 <span style={{display: "flex", alignItems: "center"}}>
-                {user && (
+                    {user && (
                         <NavLink to="/messages" onClick={() => setIsActive(false)}>
-                            <FontAwesomeIcon icon={faInbox} />
+                            <span className="position-relative">
+                                <FontAwesomeIcon icon={faInbox} />
+                                {unreadMessages > 0 && (
+                                    <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        {unreadMessages > 99 ? "99+" : unreadMessages}
+                                        <span className="visually-hidden">unread messages</span>
+                                    </span>
+                                )}
+                            </span>
                         </NavLink>
                     )}
                     <NavBtn>
