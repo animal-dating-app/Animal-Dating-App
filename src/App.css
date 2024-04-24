@@ -13,6 +13,20 @@ html, body {
   margin: auto;
 }
 
+.carousel-indicators button {
+  background-color: rgb(185, 185, 185);  
+  border: 1px solid rgb(173, 173, 173);
+  width: 20px;
+  height: 5px; 
+  margin: 0 5px;
+  border-radius: 2px;
+}
+
+.carousel-indicators button.active {
+  background-color: rgb(221, 237, 234);
+  border-color: rgb(143, 227, 213)
+}
+
 .filter-menu {
   position: fixed;
   top: 0;

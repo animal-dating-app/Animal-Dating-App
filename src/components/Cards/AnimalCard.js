@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FavoriteButton from "../FavoriteButton";
 
 const AnimalCard = ({ animal, animalId }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [activeIndex, setActiveIndex] = useState(0);
+
+    useEffect(() => {
+        setActiveIndex(currentImageIndex);
+    }, [currentImageIndex]);
 
     const handlePrevClick = () => {
         setCurrentImageIndex((prevIndex) => (prevIndex === 0 ? animal.pictureUri.length - 1 : prevIndex - 1));
@@ -61,6 +66,17 @@ const AnimalCard = ({ animal, animalId }) => {
                                 <span className="carousel-control-next-icon" aria-hidden="true"></span>
                                 <span className="visually-hidden">Next</span>
                             </button>
+
+                            <div className="carousel-indicators">
+                                {animal.pictureUri.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        type="button"
+                                        className={index === activeIndex ? "active" : ""}
+                                        aria-current={index === activeIndex ? "true" : "false"}
+                                    />
+                                ))}
+                            </div>
 
                             <div className="card-img-overlay d-flex" style={{ alignItems: 'flex-start', paddingTop: '0.5rem', paddingLeft: '0.5rem' }}>
                                 <div className={`text-white fw-semibold`} style={{ padding: '0.25rem 0.5rem', borderRadius: '0.25rem', fontSize: '0.8rem', backgroundColor: statusColor }}>
