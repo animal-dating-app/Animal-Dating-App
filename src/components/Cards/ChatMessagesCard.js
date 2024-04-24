@@ -91,7 +91,8 @@ function ChatMessagesCard() {
       toName: chats[selectedChat].user.name,
       date: new Date(),
       content: inputMessage,
-      pet: pet || undefined
+      pet: pet || undefined,
+      read: false
     };
   
     try {
@@ -107,6 +108,21 @@ function ChatMessagesCard() {
     setPet(null);
   };
 
+  useEffect(() => {
+    if (!selectedChat) return;
+
+    const markAsRead = async (userId) => {
+      const unreadMessages = chats[userId].messages.filter(msg => msg.fromId !== currentUserId && (msg.read === false || msg.read === undefined) );
+      if (unreadMessages.length > 0) {
+        unreadMessages.forEach(async msg => {
+          await setDoc(doc(db, "messages", msg.id), { ...msg, read: true });
+        });
+      }
+    }
+
+    markAsRead(selectedChat);
+  }, [selectedChat, chats, currentUserId]);
+
   return (
     <div className="card mb-3">
       <div className="row g-0">
@@ -121,7 +137,12 @@ function ChatMessagesCard() {
                   style={{ backgroundColor: selectedChat === userId ? '#DDECEA' : 'transparent' }}
                 >
                   <div className='text-start p-2'>
-                    {chats[userId].user.name || 'Anonymous User'}
+                    <span className={`${chats[userId].messages.filter(msg => msg.fromId !== currentUserId && !msg.read).length > 0 ? 'fw-bold' : ''}`}>
+                      {chats[userId].user.name || 'Anonymous User'}
+                    </span>
+                    { chats[userId].messages.filter(msg => msg.fromId !== currentUserId && !msg.read).length > 0 &&
+                      <span className="badge bg-secondary ms-2">{chats[userId].messages.filter(msg => msg.fromId !== currentUserId && !msg.read).length}</span>
+                    }
                     <div className="text-muted small">
                       {chats[userId].messages.at(-1)?.date.toDate().toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })} {chats[userId].messages.at(-1)?.date.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </div>
