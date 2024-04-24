@@ -9,11 +9,13 @@ import { useNavigate } from "react-router-dom";
 const Carousel = ({ animals, onClickAnimal }) => {
   // Slick Carousel settings
   const sliderSettings = {
+    
+    dots : true,
     infinite: true,
     speed: 500,
     slidesToShow: 4, // adjust the number of slides to show
     slidesToScroll: 1,
-    autoplay: false,
+    autoplay: true,
     autoplaySpeed: 3000, // Set the speed of the carousel
     draggable: true,               // Enable dragging to navigate
     responsive: [
