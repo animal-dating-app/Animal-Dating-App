@@ -56,12 +56,21 @@ const Cats = () => {
 
   return (
     <>
+      <style>
+        {`
+          .card:hover {
+            transform: scale(1.05);
+            z-index: 10;
+            background-color: rgb(221, 237, 234);
+          }
+        `}
+      </style>
       {loading && <p>Loading...</p>}
       <div className="container">
         <div className="row pb-4">
           {animals.map(animal => (
             <div className="col-6 col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
-              <AnimalGalleryCard animal={animal} onClickAnimal={() => navigate('/pet', {state: {pet: animal}})}/>
+                <AnimalGalleryCard animal={animal} onClickAnimal={() => navigate('/pet', {state: {pet: animal}})}/>
             </div>
           ))}
         </div>

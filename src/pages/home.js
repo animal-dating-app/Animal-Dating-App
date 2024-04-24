@@ -55,6 +55,15 @@ const Home = () => {
 
   return (
     <>
+              <style>
+        {`
+          .card:hover {
+            transform: scale(1.05);
+            z-index: 10;
+            background-color: rgb(221, 237, 234);
+          }
+        `}
+      </style>
       {loading && <p>Loading...</p>}
       
 
