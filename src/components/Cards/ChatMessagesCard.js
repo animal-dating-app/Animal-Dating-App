@@ -213,9 +213,9 @@ function ChatMessagesCard() {
                       { pet.pictureUri && testImageSrc(pet.pictureUri) && (
                         <div className="col-2">
                           {typeof pet.pictureUri === 'string' ?
-                            <img src={pet.pictureUri} className="img-fluid rounded-start" alt="Pet Profile" />
+                            <img src={pet.pictureUri} className="h-100 img-fluid rounded-start" alt="Pet Profile" />
                             :
-                            <img src={pet.pictureUri[0]} className="img-fluid rounded-start" alt="Pet Profile" />
+                            <img src={pet.pictureUri[0]} className="h-100 img-fluid rounded-start" alt="Pet Profile" />
                           }
                         </div>
                       )}
