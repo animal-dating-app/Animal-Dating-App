@@ -83,7 +83,7 @@ const AnimalGalleryCard = ({
     let type = animal.type ? animal.type.toLowerCase() : "other";
     let placeholder = placeholderImages[type] || placeholderImages.other;
 
-    let uri = typeof animal.pictureUri === "string" ? animal.pictureUri : animal.pictureUri[0];
+    let uri = Array.isArray(animal.pictureUri) ? animal.pictureUri[0] : animal.pictureUri;
 
     // If image fails to load, fallback to placeholder
     if (uri) {

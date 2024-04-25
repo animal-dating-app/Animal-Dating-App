@@ -107,7 +107,7 @@ function ChatMessagesCard() {
   const testImageSrc = (pictureUri) => {
     let src = pictureUri;
 
-    if (typeof pictureUri !== 'string') {
+    if (Array.isArray(pictureUri)) {
       src = pictureUri[0];
     }
 
@@ -183,11 +183,11 @@ function ChatMessagesCard() {
                         { msg.pet.pictureUri && testImageSrc(msg.pet.pictureUri) && (
                             <div className="col-6">
                               {
-                            typeof msg.pet.pictureUri === 'string' ?
-                              <img src={msg.pet.pictureUri} className="img-fluid rounded-start" alt="Pet Profile" />
-                              :
-                              <img src={msg.pet.pictureUri[0]} className="img-fluid rounded-start" alt="Pet Profile" />
-                          }
+                                Array.isArray(msg.pet.pictureUri) ?
+                                  <img src={msg.pet.pictureUri[0]} className="img-fluid rounded-start" alt="Pet Profile" />
+                                  :
+                                  <img src={msg.pet.pictureUri} className="img-fluid rounded-start" alt="Pet Profile" />
+                              }
                             </div>
                           ) }
 
@@ -212,10 +212,11 @@ function ChatMessagesCard() {
                     <div className="row g-0">
                       { pet.pictureUri && testImageSrc(pet.pictureUri) && (
                         <div className="col-2">
-                          {typeof pet.pictureUri === 'string' ?
-                            <img src={pet.pictureUri} className="h-100 img-fluid rounded-start" alt="Pet Profile" />
-                            :
+                          {Array.isArray(pet.pictureUri) ?
                             <img src={pet.pictureUri[0]} className="h-100 img-fluid rounded-start" alt="Pet Profile" />
+                            :
+                            <img src={pet.pictureUri} className="h-100 img-fluid rounded-start" alt="Pet Profile" />
+                            
                           }
                         </div>
                       )}
