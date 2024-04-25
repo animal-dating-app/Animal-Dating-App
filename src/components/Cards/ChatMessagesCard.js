@@ -91,7 +91,7 @@ function ChatMessagesCard() {
       toName: chats[selectedChat].user.name,
       date: new Date(),
       content: inputMessage,
-      pet: pet || undefined,
+      pet: pet || null,
       read: false
     };
   
