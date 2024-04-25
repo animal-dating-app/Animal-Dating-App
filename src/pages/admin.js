@@ -101,6 +101,7 @@ const Admin = () => {
                 }
                 else {
                     console.log("Here!!");
+                    console.log(animalDelErrList);
                     window.alert(`Cannot delete shelter because it has the following animals: ${animalDelErrList}`);
                 }
                 
