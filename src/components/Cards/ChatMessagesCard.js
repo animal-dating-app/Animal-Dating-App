@@ -4,9 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { auth, db } from '../../firebaseConfig';
-import { doc, setDoc, collection, query, where, onSnapshot, or } from "firebase/firestore";
+import { doc, setDoc, collection, query, where, onSnapshot, or, orderBy } from 'firebase/firestore';
 
-function ChatMessagesCard() {
+function ChatMessagesCard({ user }) {
   const [selectedChat, setSelectedChat] = useState(null);
   const [inputMessage, setInputMessage] = useState('');
   const [chats, setChats] = useState({});
@@ -27,7 +27,8 @@ function ChatMessagesCard() {
     const messagesRef = collection(db, "messages");
     const q = query(
       messagesRef,
-      or(where("fromId", "==", currentUserId), where("toId", "==", currentUserId))
+      or(where("fromId", "==", currentUserId), where("toId", "==", currentUserId)),
+      orderBy("date", "asc")
     );
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -60,8 +61,11 @@ function ChatMessagesCard() {
     }
 
     setChats(groupedMessages);
-    setSelectedChat(userId || Object.keys(groupedMessages)[0] || null);
-  }, [messages, currentUserId, userId, userName]);
+
+    if (selectedChat === null) {
+      setSelectedChat(userId || Object.keys(groupedMessages)[0] || null);
+    }
+  }, [messages, currentUserId, userId, userName, selectedChat]);
 
   useEffect(() => {
     const scrollToBottom = () => {
@@ -83,15 +87,17 @@ function ChatMessagesCard() {
 
   const sendMessage = async () => {
     if (!inputMessage) return;
+
+    console.log(user)
   
     const newMessage = {
       fromId: auth.currentUser.uid,
       toId: selectedChat,
-      fromName: auth.currentUser.displayName,
+      fromName: (user.firstName || user.lastName) ? `${user.firstName} ${user.lastName}` : (user.name) ? user.name : null,
       toName: chats[selectedChat].user.name,
       date: new Date(),
       content: inputMessage,
-      pet: pet || undefined,
+      pet: pet || null,
       read: false
     };
   
@@ -104,9 +110,20 @@ function ChatMessagesCard() {
     }
   };
 
-  const removePetAttachment = () => {
-    setPet(null);
-  };
+  const testImageSrc = (pictureUri) => {
+    let src = pictureUri;
+
+    if (Array.isArray(pictureUri)) {
+      src = pictureUri[0];
+    }
+
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+      img.src = src;
+    });
+  }
 
   useEffect(() => {
     if (!selectedChat) return;
@@ -164,13 +181,26 @@ function ChatMessagesCard() {
               <h5 className="pb-2">{chats[selectedChat].user.name || 'Anonymous User'}</h5>
               <div style={{ overflowY: 'auto', height: '70vh' }} ref={messagesContainerRef}>
                 {chats[selectedChat].messages.length > 0 ? chats[selectedChat].messages.map((msg, index) => (
-                  <div key={index} style={{ textAlign: msg.fromId === currentUserId ? 'right' : 'left' }} className="mb-2">
+                  <div key={index} style={{ textAlign: msg.fromId === currentUserId ? 'right' : 'left', cursor: 'pointer' }} className="mb-2" onClick={() => msg.pet && navigate('/pet', { state: { pet: msg.pet } })}>
                     {msg.pet && (
                       <>
-                      <div className="mb-2" style={{ backgroundColor: msg.fromId === currentUserId ? '#DDECEA' : 'grey', color: msg.fromId === currentUserId ? 'black' : 'white', display: 'inline-block', padding: '5px 15px', borderRadius: '10px' }}>
-                        <div className="small p-1" style={{ color: msg.fromId === currentUserId ? 'grey' : 'white' }}>Attached Pet: <button className="btn btn-link" onClick={() => navigate('/pet', { state: { pet: msg.pet } })}
-                        style={{ color: msg.fromId === currentUserId ? 'blue' : 'white' }}
-                        >{msg.pet.name}</button></div>
+                      <div className="mb-2 p-0" style={{ backgroundColor: msg.fromId === currentUserId ? '#DDECEA' : 'grey', color: msg.fromId === currentUserId ? 'black' : 'white', display: 'inline-block', padding: '5px 15px', borderRadius: '10px' }}>
+                        <div className="row g-0" style={{ maxWidth: '250px' }}>
+                        { msg.pet.pictureUri && testImageSrc(msg.pet.pictureUri) && (
+                            <div className="col-6">
+                              {
+                                Array.isArray(msg.pet.pictureUri) ?
+                                  <img src={msg.pet.pictureUri[0]} className="img-fluid rounded-start" alt="Pet Profile" />
+                                  :
+                                  <img src={msg.pet.pictureUri} className="img-fluid rounded-start" alt="Pet Profile" />
+                              }
+                            </div>
+                          ) }
+
+                        <div className={`small col-${msg.pet.pictureUri && testImageSrc(msg.pet.pictureUri) ? '6' : '12'}`} style={{ color: msg.fromId === currentUserId ? 'grey' : 'white' }}>
+                          <div className="h-100 p-3 d-flex flex-wrap text-center align-items-center justify-content-center">Attached Pet: <span className="text-black fw-bold">{msg.pet.name}</span></div>
+                          </div>
+                        </div>
                     </div>
                     <br/>
                     </>
@@ -184,13 +214,31 @@ function ChatMessagesCard() {
               </div>
               {pet && (
                 <Card className="mb-2">
-                  <Card.Body className="d-flex justify-content-between align-items-center">
-                    <div>
-                      Attached Pet: <button className="btn btn-link" onClick={() => navigate('/pet', { state: { pet } })}>{pet.name}</button>
+                  <Card.Body className="d-flex justify-content-between align-items-center p-0">
+                    <div className="row g-0">
+                      { pet.pictureUri && testImageSrc(pet.pictureUri) && (
+                        <div className="col-2">
+                          {Array.isArray(pet.pictureUri) ?
+                            <img src={pet.pictureUri[0]} className="h-100 img-fluid rounded-start" alt="Pet Profile" />
+                            :
+                            <img src={pet.pictureUri} className="h-100 img-fluid rounded-start" alt="Pet Profile" />
+                            
+                          }
+                        </div>
+                      )}
+                      <div className={`col-${pet.pictureUri && testImageSrc(pet.pictureUri) ? '9' : '10'}`}>
+                        <div className="h-100 p-3 d-flex flex-wrap text-center align-items-center justify-content-center">
+                        Attached Pet: <button className="btn btn-link" onClick={() => navigate('/pet', { state: { pet } })}>{pet.name}</button>
+                        </div>
+                      </div>
+                      <div className="col-1">
+                        <div className="h-100 p-3 d-flex flex-wrap text-center align-items-center justify-content-center">
+                          <Button variant="outline-danger" size="sm" onClick={() => setPet(null)}>
+                            <FontAwesomeIcon icon={faTimes} />
+                          </Button>
+                        </div>
+                        </div>
                     </div>
-                    <Button variant="outline-danger" size="sm" onClick={removePetAttachment}>
-                      <FontAwesomeIcon icon={faTimes} />
-                    </Button>
                   </Card.Body>
                 </Card>
               )}

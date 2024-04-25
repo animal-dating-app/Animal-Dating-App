@@ -1,5 +1,6 @@
-import React from "react";
-import { auth } from "../firebaseConfig";
+import React, { useState, useEffect } from "react";
+import { auth, db } from "../firebaseConfig";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 import ChatMessagesCard from "../components/Cards/ChatMessagesCard";
 
@@ -8,19 +9,57 @@ const Messages = () => {
     // if user is not logged in, redirect to sign in page
     if (!auth.currentUser) window.location.href = "/sign-in";
 
-    const messages = [
-      { from: { id: 1, name: 'Alice' }, to: { id: 2, name: 'Bob' }, date: new Date(), content: 'Hello, how are you?' },
-      { from: { id: 2, name: 'Bob' }, to: { id: 1, name: 'Alice' }, date: new Date(), content: 'I am good, thanks!' },
-      { from: { id: 1, name: 'Alice' }, to: { id: 2, name: 'Bob' }, date: new Date(), content: 'Great to hear!' },
-      { from: { id: 2, name: 'Bob' }, to: { id: 1, name: 'Alice' }, date: new Date(), content: 'How about you?' },
-      { from: { id: 3, name: 'Charlie' }, to: { id: 1, name: 'Alice' }, date: new Date(), content: 'Hi Alice, I am interested in adopting a pet. This is a long string of text that will be wrapped in the chat message card.' },
-      { from: { id: 1, name: 'Alice' }, to: { id: 3, name: 'Charlie' }, date: new Date(), content: 'Hi Charlie, I am glad to hear that you are interested in adopting a pet. I can help you with that.' },
-    ];
+    const [user, setUser] = useState({});
+    const [isShelter, setShelter] = useState(false);
+
+    useEffect(() => {
+
+      // Get user info from shelter or user database
+      const loadUser = async () => {
+
+          // Check shelter docs for auth user ID
+          const getShelterUser = async () => {
+              const q = query(collection(db, "shelters"), where("shelterId", "==", auth.currentUser.uid));
+              const shelterSnapshot = await getDocs(q);
+              const shelterUser = shelterSnapshot.docs.map ( doc => {
+                  return { id: doc.id, ...doc.data() };
+              });
+              // Update user if found
+              if (shelterUser.length > 0) {
+                  setUser(shelterUser[0]);
+                  setShelter(true);
+              }
+          };
+
+          // Check user docs for auth user ID
+          const getAdoptUser = async () => {
+              const q = query(collection(db, "users"), where("userId", "==", auth.currentUser.uid));
+              const adoptSnapshot = await getDocs(q);
+              const adoptUser = adoptSnapshot.docs.map ( doc => {
+                  return { id: doc.id, ...doc.data() };
+              });
+              // Update user if found
+              if (adoptUser.length > 0) {
+                  setUser(adoptUser[0]);
+              }
+          };
+
+          // Search for shelter user 
+          getShelterUser();
+
+          // Search for adopt user if not found in shelter
+          if (!isShelter) {
+              getAdoptUser();
+          } 
+      };
+
+      loadUser();
+  }, [isShelter]);
 
     return (
       <>
         <div className="container mb-4">
-            <ChatMessagesCard messages={messages} />
+            <ChatMessagesCard user={user} />
         </div>
       </>
     );
