@@ -96,7 +96,14 @@ const Admin = () => {
             }
             // Shelter has animal DONOT delete send alert
             else {
-                window.alert(`Cannot delete shelter because it has the following animals: ${animalDelErrList.join("\n")}`);
+                if (animalDelErrList.length > 1) {
+                    window.alert(`Cannot delete shelter because it has the following animals: ${animalDelErrList.join("\n")}`);
+                }
+                else {
+                    console.log("Here!!");
+                    window.alert(`Cannot delete shelter because it has the following animals: ${animalDelErrList}`);
+                }
+                
             }
         }
         // Else delete aninal or adopter
