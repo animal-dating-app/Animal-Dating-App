@@ -4,9 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { auth, db } from '../../firebaseConfig';
-import { doc, setDoc, collection, query, where, onSnapshot, or } from "firebase/firestore";
+import { doc, setDoc, collection, query, where, onSnapshot, or, orderBy } from 'firebase/firestore';
 
-function ChatMessagesCard() {
+function ChatMessagesCard({ user }) {
   const [selectedChat, setSelectedChat] = useState(null);
   const [inputMessage, setInputMessage] = useState('');
   const [chats, setChats] = useState({});
@@ -27,7 +27,8 @@ function ChatMessagesCard() {
     const messagesRef = collection(db, "messages");
     const q = query(
       messagesRef,
-      or(where("fromId", "==", currentUserId), where("toId", "==", currentUserId))
+      or(where("fromId", "==", currentUserId), where("toId", "==", currentUserId)),
+      orderBy("date", "asc")
     );
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -60,8 +61,11 @@ function ChatMessagesCard() {
     }
 
     setChats(groupedMessages);
-    setSelectedChat(userId || Object.keys(groupedMessages)[0] || null);
-  }, [messages, currentUserId, userId, userName]);
+
+    if (selectedChat === null) {
+      setSelectedChat(userId || Object.keys(groupedMessages)[0] || null);
+    }
+  }, [messages, currentUserId, userId, userName, selectedChat]);
 
   useEffect(() => {
     const scrollToBottom = () => {
@@ -83,11 +87,13 @@ function ChatMessagesCard() {
 
   const sendMessage = async () => {
     if (!inputMessage) return;
+
+    console.log(user)
   
     const newMessage = {
       fromId: auth.currentUser.uid,
       toId: selectedChat,
-      fromName: auth.currentUser.displayName,
+      fromName: (user.firstName || user.lastName) ? `${user.firstName} ${user.lastName}` : (user.name) ? user.name : null,
       toName: chats[selectedChat].user.name,
       date: new Date(),
       content: inputMessage,
