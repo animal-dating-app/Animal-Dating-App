@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Select from "react-select";
 import { AnimalGalleryCard } from ".";
 import ImageUploader from "./Imageupload";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 
 const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
   const [imageURL, setImageURL] = useState([]);
@@ -13,6 +15,15 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
     // This callback will update the 'pictureUri' property in the 'animal' state
     handleAnimalChange({ target: { name: "pictureUri", value: url } });
   };
+
+  const handleImageDelete = (indexToDelete) => {
+
+    // Filter out the image URL to delete
+    const filteredImageUrls = animal.pictureUri.filter((_, index) => index !== indexToDelete);
+    handleAnimalChange({ target: { name: "pictureUri", value: filteredImageUrls } });
+
+  };
+
 
   const animalTypes = [
     { value: "Dog", label: "Dog" },
@@ -95,6 +106,9 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
       "&:hover": {},
     }),
   };
+
+  // Convert pictureUri to an array if it's not already one
+  const animalUris = Array.isArray(animal.pictureUri) ? animal.pictureUri : [animal.pictureUri];
 
   return (
     <div className="row">
@@ -232,6 +246,32 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
             value={animal.pictureUri}
             onChange={(e) => handleAnimalChange(e)}
           />  
+
+        {animalUris && animalUris.length > 0 && (
+            <div className="mt-3">
+              <p className="fw-bold">Images in Database:</p>
+              {animalUris.map((url, index) => (
+                url ? <div key={index} style={{ position: 'relative', display: 'inline-block', margin: '5px' }}>
+                  
+                  <img src={url} alt={`Animal ${index}`} style={{ maxWidth: '100%', maxHeight: '200px'}} />
+                  
+                  <button onClick={() => handleImageDelete(index)} 
+                      style={{ 
+                        position: 'absolute', 
+                        top: '0', 
+                        left: '0', 
+                        border: 'none', 
+                        background: 'none',
+                        padding: '2px',
+                        }}>
+
+                    <FontAwesomeIcon icon={faTrashCan} style={{ width: '24px', height: '24px', color: 'rgb(249, 86, 86)' }} />
+                  </button>
+                </div> : null
+              ))}
+            </div>
+          )}
+
         </form>
       </div>
       <div className="col-lg-6 mt-lg-0 mt-4">
