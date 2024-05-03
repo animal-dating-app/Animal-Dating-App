@@ -4,6 +4,8 @@ import { AnimalGalleryCard } from ".";
 import ImageUploader from "./Imageupload";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
+import { storage as firebaseStorage } from '../../firebaseConfig';
+import { ref, deleteObject } from 'firebase/storage';
 
 const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
   const [imageURL, setImageURL] = useState([]);
@@ -16,14 +18,26 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
     handleAnimalChange({ target: { name: "pictureUri", value: url } });
   };
 
-  const handleImageDelete = (indexToDelete) => {
+  const handleImageDelete = async (indexToDelete) => {
 
-    // Filter out the image URL to delete
-    const filteredImageUrls = animal.pictureUri.filter((_, index) => index !== indexToDelete);
-    handleAnimalChange({ target: { name: "pictureUri", value: filteredImageUrls } });
+    try {
+
+      const imageUrlToDelete = animal.pictureUri[indexToDelete];
+      const imageRef = ref(firebaseStorage, imageUrlToDelete);
+  
+      // Delete the image
+      await deleteObject(imageRef);
+  
+      // Filter out the image URL to delete from the animal's pictureUri array
+      const filteredImageUrls = animal.pictureUri.filter((_, index) => index !== indexToDelete);
+      handleAnimalChange({ target: { name: "pictureUri", value: filteredImageUrls } });
+
+    } catch (error) {
+
+      console.error('Error deleting image:', error);
+    }
 
   };
-
 
   const animalTypes = [
     { value: "Dog", label: "Dog" },
@@ -239,6 +253,7 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
               (status) => status.value === animal.status
             )}
           />
+          </form>
 
         <ImageUploader
             onImageUpload={handleImageUpload}
@@ -255,7 +270,7 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
                   
                   <img src={url} alt={`Animal ${index}`} style={{ maxWidth: '100%', maxHeight: '200px'}} />
                   
-                  <button onClick={() => handleImageDelete(index)} 
+                  <button type="button" onClick={() => handleImageDelete(index)} 
                       style={{ 
                         position: 'absolute', 
                         top: '0', 
@@ -271,8 +286,7 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
               ))}
             </div>
           )}
-
-        </form>
+        
       </div>
       <div className="col-lg-6 mt-lg-0 mt-4">
         <div>

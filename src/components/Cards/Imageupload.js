@@ -16,6 +16,7 @@ import { storage as firebaseStorage  } from '../../firebaseConfig';
 const ImageUploader = ({onImageUpload}) => {
   const [files, setFiles] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
+  const [inputFile, setInputFile] = useState(0);
 
   const handleFileChange = (event) => {
     const selectedFiles = event.target.files;
@@ -50,6 +51,8 @@ const ImageUploader = ({onImageUpload}) => {
 
         setImageUrls([]);
 
+        setInputFile((prevFile) => prevFile + 1);
+
         console.log('Image uploaded to Firebase Storage:', downloadUrls);
         
       } catch (error) {
@@ -64,7 +67,7 @@ const ImageUploader = ({onImageUpload}) => {
   //  Fixed Problem with reload form when type input before upload image 
   return (
     <div>
-      <input type="file" onChange={handleFileChange} accept="image/*" multiple />
+      <input key={inputFile} type="file" onChange={handleFileChange} accept="image/*" multiple />
       <button type='button' style={buttonStyles} onClick={uploadImage}>Upload Image</button>
 
       <div>
