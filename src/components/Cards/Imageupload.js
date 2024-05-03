@@ -48,6 +48,8 @@ const ImageUploader = ({onImageUpload}) => {
         const downloadUrls = await Promise.all(uploadPromises);
         onImageUpload(downloadUrls);
 
+        setImageUrls([]);
+
         console.log('Image uploaded to Firebase Storage:', downloadUrls);
         
       } catch (error) {
