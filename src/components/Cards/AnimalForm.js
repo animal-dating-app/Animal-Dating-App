@@ -6,6 +6,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { storage as firebaseStorage } from '../../firebaseConfig';
 import { ref, deleteObject } from 'firebase/storage';
+import { Carousel } from 'react-responsive-carousel';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+
 
 const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
   const [imageURL, setImageURL] = useState([]);
@@ -253,48 +256,56 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
               (status) => status.value === animal.status
             )}
           />
-          </form>
-
+        
         <ImageUploader
             onImageUpload={handleImageUpload}
             name="pictureUri"
             value={animal.pictureUri}
             onChange={(e) => handleAnimalChange(e)}
-          />  
-
-        {animalUris && animalUris.length > 0 && (
-            <div className="mt-3">
-              <p className="fw-bold">Images in Database:</p>
-              {animalUris.map((url, index) => (
-                url ? <div key={index} style={{ position: 'relative', display: 'inline-block', margin: '5px' }}>
-                  
-                  <img src={url} alt={`Animal ${index}`} style={{ maxWidth: '100%', maxHeight: '200px'}} />
-                  
-                  <button type="button" onClick={() => handleImageDelete(index)} 
-                      style={{ 
-                        position: 'absolute', 
-                        top: '0', 
-                        left: '0', 
-                        border: 'none', 
-                        background: 'none',
-                        padding: '2px',
-                        }}>
-
-                    <FontAwesomeIcon icon={faTrashCan} style={{ width: '24px', height: '24px', color: 'rgb(249, 86, 86)' }} />
-                  </button>
-                </div> : null
-              ))}
-            </div>
-          )}
-        
+        />
+        </form>  
       </div>
-      <div className="col-lg-6 mt-lg-0 mt-4">
-        <div>
-          <AnimalGalleryCard
-            animal={animal}
-            selectable={false}
-            callToAction=""
-          />
+        
+      <div className="col-lg-6">
+          
+          <AnimalGalleryCard animal={animal} selectable={false} callToAction="" />
+          
+        <div className="mt-3">
+          <h6>Image(s) in Database:</h6>
+              {animalUris && animalUris.length > 0 && (
+
+              <Carousel
+                  showArrows={animalUris.length > 1}
+                  centerMode={animalUris.length > 2}
+                  centerSlidePercentage={animalUris.length > 2 ? 33 : 100}
+                  dynamicHeight
+                  emulateTouch={animalUris.length > 1}
+                  infiniteLoop={animalUris.length > 1}
+                  swipeable={animalUris.length > 1}
+                  showThumbs={false}
+              >
+
+              {animalUris.map((url, index) => (
+                <div key={index} style={{ position: "relative" }}>
+                    <img src={url} alt={`Animal ${index}`} style={{ maxWidth: "100%", maxHeight: "400px" }} />
+                <button
+                    type="button"
+                    onClick={() => handleImageDelete(index)}
+                    style={{
+                    position: "absolute",
+                    top: "0",
+                    left: "0",
+                    border: "none",
+                    background: "none",
+                    padding: "2px",
+                  }}
+                >
+                  <FontAwesomeIcon icon={faTrashCan} style={{ width: "24px", height: "24px", color: "rgb(249, 86, 86)" }} />
+                </button>
+                </div>
+              ))}
+              </Carousel>
+              )}
         </div>
       </div>
     </div>

@@ -4,8 +4,6 @@ import { getDatabase, ref as dbRef, push } from 'firebase/database';
 import { storage as firebaseStorage  } from '../../firebaseConfig';
 
 
-
-
 // This component allows users to upload an image to Firebase Storage and store the download URL in Firebase Realtime Database
 // The onImageUpload callback is called with the download URL of the uploaded image
 //  - This component is used in the AnimalForm component to allow users to upload an image of an animal
