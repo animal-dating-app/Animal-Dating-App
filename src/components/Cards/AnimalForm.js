@@ -10,7 +10,7 @@ import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 
-const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
+const AnimalForm = ({ formRef, handleAnimalChange, animal, shouldClearImages }) => {
   const [imageURL, setImageURL] = useState([]);
 
   console.log(imageURL);  // delete warning
@@ -259,6 +259,7 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
         
         <ImageUploader
             onImageUpload={handleImageUpload}
+            shouldClear={{shouldClearImages}}
             name="pictureUri"
             value={animal.pictureUri}
             onChange={(e) => handleAnimalChange(e)}

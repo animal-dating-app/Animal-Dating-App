@@ -6,6 +6,8 @@ import { AnimalForm } from ".";
 const EditAnimalModal = ({ showModal, setShowModal, loadAnimals, animal }) => {
     const [unsavedChanges, setUnsavedChanges] = useState(false);
     const [currentAnimal, setCurrentAnimal] = useState(animal);
+    const [shouldClearImages, setShouldClearImages] = useState(false);
+
 
     useEffect(() => {
         setCurrentAnimal(animal);
@@ -18,6 +20,12 @@ const EditAnimalModal = ({ showModal, setShowModal, loadAnimals, animal }) => {
             setUnsavedChanges(false);
         }
     }, [showModal]);
+
+    useEffect(() => {
+        if (shouldClearImages) {
+            setTimeout(() => setShouldClearImages(false), 0);
+        }
+    }, [shouldClearImages]);
 
     const handleModalClose = () => {
         if (unsavedChanges) {
@@ -76,7 +84,7 @@ const EditAnimalModal = ({ showModal, setShowModal, loadAnimals, animal }) => {
                             <button type="button" className="btn-close" onClick={handleModalClose}></button>
                         </div>
                         <div className="modal-body">
-                            <AnimalForm formRef={formRef} handleAnimalChange={handleAnimalChange} animal={currentAnimal} />
+                            <AnimalForm formRef={formRef} handleAnimalChange={handleAnimalChange} animal={currentAnimal} shouldClearImages={shouldClearImages} />
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" onClick={handleModalClose}>Close</button>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getDatabase, ref as dbRef, push } from 'firebase/database';
 import { storage as firebaseStorage  } from '../../firebaseConfig';
@@ -11,10 +11,22 @@ import { storage as firebaseStorage  } from '../../firebaseConfig';
 //  - The download URL is then stored in the Firebase Realtime Database along with the other animal details
 //  - The ImageUploader component is used in the AnimalForm component to allow users to upload an image of an animal
 // Need add a function that willl delete previous input so the next "add animal" does not show previous image field
-const ImageUploader = ({onImageUpload}) => {
+const ImageUploader = ({onImageUpload, shouldClear}) => {
   const [files, setFiles] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
   const [inputFile, setInputFile] = useState(0);
+  const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    if (shouldClear) {
+        setFiles([]);
+        setImageUrls([]);
+
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+    }
+  }, [shouldClear]);
 
   const handleFileChange = (event) => {
     const selectedFiles = event.target.files;
@@ -74,7 +86,14 @@ const ImageUploader = ({onImageUpload}) => {
   //  Fixed Problem with reload form when type input before upload image 
   return (
     <div>
-      <input key={inputFile} type="file" onChange={handleFileChange} accept="image/*" multiple />
+      <input
+        ref={fileInputRef} 
+        key={inputFile} 
+        type="file" 
+        onChange={handleFileChange} 
+        accept="image/*" 
+        multiple 
+      />
       <button type='button' style={buttonStyles} onClick={uploadImage}>Upload Image</button>
 
       <div>
