@@ -270,9 +270,9 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
           
           <AnimalGalleryCard animal={animal} selectable={false} callToAction="" />
           
-        <div className="mt-3">
-          <h6>Image(s) in Database:</h6>
-              {animalUris && animalUris.length > 0 && (
+          {animalUris && animalUris.length > 0 && (  
+            <div className="mt-3">
+              <h6>Image(s) in Database:</h6>
 
               <Carousel
                   showArrows={animalUris.length > 1}
@@ -288,25 +288,25 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
               {animalUris.map((url, index) => (
                 <div key={index} style={{ position: "relative" }}>
                     <img src={url} alt={`Animal ${index}`} style={{ maxWidth: "100%", maxHeight: "400px" }} />
-                <button
-                    type="button"
-                    onClick={() => handleImageDelete(index)}
-                    style={{
-                    position: "absolute",
-                    top: "0",
-                    left: "0",
-                    border: "none",
-                    background: "none",
-                    padding: "2px",
-                  }}
-                >
-                  <FontAwesomeIcon icon={faTrashCan} style={{ width: "24px", height: "24px", color: "rgb(249, 86, 86)" }} />
-                </button>
+                  <button
+                      type="button"
+                      onClick={() => handleImageDelete(index)}
+                      style={{
+                      position: "absolute",
+                      top: "0",
+                      left: "0",
+                      border: "none",
+                      background: "none",
+                      padding: "2px",
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faTrashCan} style={{ width: "24px", height: "24px", color: "rgb(249, 86, 86)" }} />
+                  </button>
                 </div>
               ))}
               </Carousel>
-              )}
-        </div>
+            </div>
+          )}
       </div>
     </div>
   );
