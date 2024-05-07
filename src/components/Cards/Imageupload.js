@@ -25,6 +25,15 @@ const ImageUploader = ({onImageUpload}) => {
     setImageUrls(urls);
   };
 
+  const clearFiles = () => {
+
+    // Clear the files and image URLS
+    setFiles([]);
+    setImageUrls([]);
+    setInputFile(prevFile => prevFile + 1);
+
+  }
+
   const uploadImage = async () => {
     if (files.length > 0) {
       try {
@@ -73,6 +82,11 @@ const ImageUploader = ({onImageUpload}) => {
         <img key={index} src={url} alt={`Preview ${index}`} style={{maxWidth: '100px', maxHeight: '100px', margin: '5px'}} />
       ))}
       </div>
+
+      {imageUrls.length > 0 && (
+        <button type='button' style={clearButtonStyles} onClick={clearFiles}>Clear Files</button>
+      )}
+      
     </div>
   );
 };
@@ -87,6 +101,12 @@ const buttonStyles = {
   transition: 'background-color .15s ease-in-out',  // Smooth transition on hover
   outline: 'none',  // Remove the outline on focus (for accessibility)
   // Add any other styles you want to apply
+};
+
+const clearButtonStyles = {
+  ...buttonStyles,
+  backgroundColor: 'red', // Sets the background color to red
+  color: 'white'  // Ensures the text color is white for better visibility
 };
 
 export default ImageUploader;
