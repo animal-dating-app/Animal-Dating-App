@@ -83,10 +83,14 @@ const ImageUploader = ({onImageUpload}) => {
       ))}
       </div>
 
-      {imageUrls.length > 0 && (
+      {imageUrls.length === 1 && (
+        <button type='button' style={clearButtonStyles} onClick={clearFiles}>Clear File</button>
+      )}
+
+      {imageUrls.length > 1 && (
         <button type='button' style={clearButtonStyles} onClick={clearFiles}>Clear Files</button>
       )}
-      
+
     </div>
   );
 };
