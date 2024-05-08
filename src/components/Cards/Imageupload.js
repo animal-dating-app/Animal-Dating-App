@@ -3,16 +3,6 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getDatabase, ref as dbRef, push } from 'firebase/database';
 import { storage as firebaseStorage  } from '../../firebaseConfig';
 
-
-
-
-// This component allows users to upload an image to Firebase Storage and store the download URL in Firebase Realtime Database
-// The onImageUpload callback is called with the download URL of the uploaded image
-//  - This component is used in the AnimalForm component to allow users to upload an image of an animal
-//  - The onImageUpload callback is used to store the download URL of the uploaded image in the animal object
-//  - The download URL is then stored in the Firebase Realtime Database along with the other animal details
-//  - The ImageUploader component is used in the AnimalForm component to allow users to upload an image of an animal
-// Need add a function that willl delete previous input so the next "add animal" does not show previous image field
 const ImageUploader = ({onImageUpload}) => {
   const [files, setFiles] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
