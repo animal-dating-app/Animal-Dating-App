@@ -288,7 +288,7 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal, shouldClearImages }) 
 
               {animalUris.map((url, index) => (
                 <div key={index} style={{ position: "relative" }}>
-                    <img src={url} alt={`Animal ${index}`} style={{ maxWidth: "100%", maxHeight: "400px" }} />
+                    <img src={url} alt={`Animal ${index}`} style={{ maxWidth: "400%", maxHeight: "400px" }} />
                   <button
                       type="button"
                       onClick={() => handleImageDelete(index)}
