@@ -275,14 +275,15 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal, shouldClearImages }) 
             <div className="mt-3">
               <h6>Image(s) in Database:</h6>
 
+            {animalUris.length > 1 ? (
               <Carousel
-                  showArrows={animalUris.length > 1}
+                  showArrows={true}
                   centerMode={animalUris.length > 2}
                   centerSlidePercentage={animalUris.length > 2 ? 33 : 100}
                   dynamicHeight
-                  emulateTouch={animalUris.length > 1}
-                  infiniteLoop={animalUris.length > 1}
-                  swipeable={animalUris.length > 1}
+                  emulateTouch={true}
+                  infiniteLoop={true}
+                  swipeable={true}
                   showThumbs={false}
               >
 
@@ -293,12 +294,12 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal, shouldClearImages }) 
                       type="button"
                       onClick={() => handleImageDelete(index)}
                       style={{
-                      position: "absolute",
-                      top: "0",
-                      left: "0",
-                      border: "none",
-                      background: "none",
-                      padding: "2px",
+                          position: "absolute",
+                          top: "0px",
+                          left: "16px",
+                          border: "none",
+                          background: "none",
+                          padding: "2px",
                     }}
                   >
                     <FontAwesomeIcon icon={faTrashCan} style={{ width: "24px", height: "24px", color: "rgb(249, 86, 86)" }} />
@@ -306,6 +307,25 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal, shouldClearImages }) 
                 </div>
               ))}
               </Carousel>
+              ) : (
+                <div style={{ position: "relative" }}>
+                  <img src={animalUris[0]} alt="Animal" style={{ maxWidth: "100%", maxHeight: "400px" }} />
+                  <button
+                    type="button"
+                    onClick={() => handleImageDelete(0)}
+                    style={{
+                        position: "absolute",
+                        top: "0px",
+                        left: "0px",
+                        border: "none",
+                        background: "none",
+                        padding: "2px",
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faTrashCan} style={{ width: "24px", height: "24px", color: "rgb(249, 86, 86)" }} />
+                  </button>
+                </div>
+              )}
             </div>
           )}
       </div>
