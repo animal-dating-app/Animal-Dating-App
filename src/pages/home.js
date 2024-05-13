@@ -75,7 +75,7 @@ const Home = () => {
             <Carousel animals={animals} />
         
           {/* Cats Card */}
-          <div className="col-6 col-lg-4 d-flex align-items-stretch my-2">
+          <div className="col-12 col-lg-4 d-flex align-items-stretch my-2">
             <div className="card" style={{ width: '100%', cursor: 'pointer' }} onClick={() => navigate('/cats')}>
               <img src={catImage} className="card-img-top" alt="Cats"/>
               <div className="card-body">
@@ -86,7 +86,7 @@ const Home = () => {
           </div>
 
           {/* Dogs Card */}
-          <div className="col-6 col-lg-4 d-flex align-items-stretch my-2">
+          <div className="col-12 col-lg-4 d-flex align-items-stretch my-2">
             <div className="card" style={{ width: '100%', cursor: 'pointer' }} onClick={() => navigate('/dogs')}>
               <img src={dogImage} className="card-img-top" alt="Dogs"/>
               <div className="card-body">
@@ -97,7 +97,7 @@ const Home = () => {
           </div>
 
           {/* Others Card */}
-          <div className="col-6 col-lg-4 d-flex align-items-stretch my-2">
+          <div className="col-12 col-lg-4 d-flex align-items-stretch my-2">
             <div className="card" style={{ width: '100%', cursor: 'pointer' }} onClick={() => navigate('/others')}>
               <img src={otherAnimalsImage} className="card-img-top" alt="Others"/>
               <div className="card-body">
