@@ -8,6 +8,7 @@ const EditAnimalModal = ({ showModal, setShowModal, loadAnimals, animal }) => {
     const [currentAnimal, setCurrentAnimal] = useState(animal);
     const [shouldClearImages, setShouldClearImages] = useState(false);
     const [imageDeleted, setImageDeleted] = useState(false);
+    const [imageUploading, setImageUploading] = useState(false);
 
 
     useEffect(() => {
@@ -20,6 +21,7 @@ const EditAnimalModal = ({ showModal, setShowModal, loadAnimals, animal }) => {
         if (!showModal) {
             setUnsavedChanges(false);
             setImageDeleted(false);
+            setImageUploading(false);
         }
     }, [showModal]);
 
@@ -30,7 +32,7 @@ const EditAnimalModal = ({ showModal, setShowModal, loadAnimals, animal }) => {
     }, [shouldClearImages]);
 
     const handleModalClose = () => {
-        if (unsavedChanges && !imageDeleted) {
+        if (unsavedChanges && !imageDeleted && !imageUploading) {
             const confirmLeave = window.confirm("You have unsaved changes. Are you sure you want to close?");
             if (confirmLeave) {
                 setShowModal(false);
@@ -43,6 +45,7 @@ const EditAnimalModal = ({ showModal, setShowModal, loadAnimals, animal }) => {
     const handleAnimalChange = (e) => {
         setUnsavedChanges(true);
         setImageDeleted(false);
+        setImageUploading(false);
         loadAnimals();
         setCurrentAnimal({ ...currentAnimal, [e.target.name]: e.target.value });
     };
@@ -95,7 +98,8 @@ const EditAnimalModal = ({ showModal, setShowModal, loadAnimals, animal }) => {
                                 handleAnimalChange={handleAnimalChange} 
                                 animal={currentAnimal} 
                                 shouldClearImages={shouldClearImages}
-                                setImageDeleted={setImageDeleted}    
+                                setImageDeleted={setImageDeleted}
+                                setImageUploading={setImageUploading}    
                             />
                         </div>
                         <div className="modal-footer">

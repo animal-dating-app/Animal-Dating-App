@@ -12,15 +12,18 @@ import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 
-const AnimalForm = ({ formRef, handleAnimalChange, animal, shouldClearImages, setImageDeleted }) => {
+const AnimalForm = ({ formRef, handleAnimalChange, animal, shouldClearImages, setImageDeleted, setImageUploading }) => {
   const [imageURL, setImageURL] = useState([]);
 
   console.log(imageURL);  // delete warning
 
   const handleImageUpload = (url) => {
     setImageURL(url);
+    
     // This callback will update the 'pictureUri' property in the 'animal' state
     handleAnimalChange({ target: { name: "pictureUri", value: url } });
+
+    setImageUploading(true);
   };
 
   const handleImageDelete = async (indexToDelete) => {
@@ -277,6 +280,7 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal, shouldClearImages, se
           />
         
         <ImageUploader
+            animalId={animal.id}
             onImageUpload={handleImageUpload}
             shouldClear={{shouldClearImages}}
             name="pictureUri"

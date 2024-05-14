@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { getDatabase, ref as dbRef, push } from 'firebase/database';
+import { doc, getDoc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { db } from '../../firebaseConfig';
 import { storage as firebaseStorage  } from '../../firebaseConfig';
 
 
@@ -11,7 +12,7 @@ import { storage as firebaseStorage  } from '../../firebaseConfig';
 //  - The download URL is then stored in the Firebase Realtime Database along with the other animal details
 //  - The ImageUploader component is used in the AnimalForm component to allow users to upload an image of an animal
 // Need add a function that willl delete previous input so the next "add animal" does not show previous image field
-const ImageUploader = ({onImageUpload, shouldClear}) => {
+const ImageUploader = ({animalId, onImageUpload, shouldClear}) => {
   const [files, setFiles] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
   const [inputFile, setInputFile] = useState(0);
@@ -22,9 +23,9 @@ const ImageUploader = ({onImageUpload, shouldClear}) => {
         setFiles([]);
         setImageUrls([]);
 
-        if (fileInputRef.current) {
-          fileInputRef.current.value = "";
-        }
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     }
   }, [shouldClear]);
 
@@ -49,27 +50,40 @@ const ImageUploader = ({onImageUpload, shouldClear}) => {
   const uploadImage = async () => {
     if (files.length > 0) {
       try {
-        // Store the download URL in Firebase Realtime Database
-        const db = getDatabase();
-        const imagesRef = dbRef(db, 'images');
+          // Upload the new images
         const uploadPromises = Array.from(files).map(async file => {
           const storageRef = ref(firebaseStorage, `images/${file.name}`);
-          
-          // Upload the file to Firebase Storage
           await uploadBytes(storageRef, file);
-
-          // Get the download URL of the uploaded image
           const downloadURL = await getDownloadURL(storageRef);
-
-          push(imagesRef, { url: downloadURL });
           return downloadURL;
         });
 
         const downloadUrls = await Promise.all(uploadPromises);
-        onImageUpload(downloadUrls);
+
+        console.log('New image URLs:', downloadUrls);
+
+        if (animalId) {
+          // If animalId is provided, update the Firestore document
+          const animalDocRef = doc(db, 'animals', animalId);
+          const animalDoc = await getDoc(animalDocRef);
+          let existingImages = [];
+          if (animalDoc.exists()) {
+            const data = animalDoc.data();
+            existingImages = data.pictureUri || [];
+          }
+
+          await updateDoc(animalDocRef, {
+            pictureUri: arrayUnion(...downloadUrls)
+          });
+
+          const allImageUrls = [...existingImages, ...downloadUrls];
+          onImageUpload(allImageUrls);
+        } else {
+          // If animalId is not provided, pass the URLs to be handled by the parent component
+          onImageUpload(downloadUrls);
+        }
 
         setImageUrls([]);
-
         setInputFile((prevFile) => prevFile + 1);
 
         console.log('Image uploaded to Firebase Storage:', downloadUrls);
