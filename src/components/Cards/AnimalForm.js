@@ -25,6 +25,13 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal, shouldClearImages }) 
 
   const handleImageDelete = async (indexToDelete) => {
 
+    const confirmDelete = window.confirm("Are you sure you want to delete this image? Once it is deleted, it will be gone.");
+
+    if (!confirmDelete) {
+      // ABORT!!!
+      return;
+    }
+
     try {
 
       const imageUrlToDelete = animal.pictureUri[indexToDelete];
