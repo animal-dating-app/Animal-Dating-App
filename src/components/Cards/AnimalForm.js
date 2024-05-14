@@ -5,6 +5,8 @@ import ImageUploader from "./Imageupload";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { storage as firebaseStorage } from '../../firebaseConfig';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '../../firebaseConfig';
 import { ref, deleteObject } from 'firebase/storage';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -33,6 +35,14 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal, shouldClearImages }) 
   
       // Filter out the image URL to delete from the animal's pictureUri array
       const filteredImageUrls = animal.pictureUri.filter((_, index) => index !== indexToDelete);
+
+      const animalDocRef = doc(db, "animals", animal.id);
+
+      // Update the Firestore document to reflect the deletion
+      await updateDoc(animalDocRef, {
+        pictureUri: filteredImageUrls
+      });
+
       handleAnimalChange({ target: { name: "pictureUri", value: filteredImageUrls } });
 
     } catch (error) {

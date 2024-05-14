@@ -54,9 +54,11 @@ const EditAnimalModal = ({ showModal, setShowModal, loadAnimals, animal }) => {
             delete curAnimalBody.id;
 
             await updateDoc(doc(db, "animals", currentAnimal.id), curAnimalBody);
-        setShowModal(false);
-        setUnsavedChanges(false);
-        loadAnimals(); // Refresh the list of animals
+
+            setShowModal(false);
+            setUnsavedChanges(false);
+            loadAnimals(); // Refresh the list of animals
+            
         } else {
             formRef.current && formRef.current.reportValidity();
         }
