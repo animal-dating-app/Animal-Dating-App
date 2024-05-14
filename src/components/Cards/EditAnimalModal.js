@@ -7,6 +7,7 @@ const EditAnimalModal = ({ showModal, setShowModal, loadAnimals, animal }) => {
     const [unsavedChanges, setUnsavedChanges] = useState(false);
     const [currentAnimal, setCurrentAnimal] = useState(animal);
     const [shouldClearImages, setShouldClearImages] = useState(false);
+    const [imageDeleted, setImageDeleted] = useState(false);
 
 
     useEffect(() => {
@@ -18,6 +19,7 @@ const EditAnimalModal = ({ showModal, setShowModal, loadAnimals, animal }) => {
     useEffect(() => {
         if (!showModal) {
             setUnsavedChanges(false);
+            setImageDeleted(false);
         }
     }, [showModal]);
 
@@ -28,7 +30,7 @@ const EditAnimalModal = ({ showModal, setShowModal, loadAnimals, animal }) => {
     }, [shouldClearImages]);
 
     const handleModalClose = () => {
-        if (unsavedChanges) {
+        if (unsavedChanges && !imageDeleted) {
             const confirmLeave = window.confirm("You have unsaved changes. Are you sure you want to close?");
             if (confirmLeave) {
                 setShowModal(false);
@@ -40,6 +42,8 @@ const EditAnimalModal = ({ showModal, setShowModal, loadAnimals, animal }) => {
 
     const handleAnimalChange = (e) => {
         setUnsavedChanges(true);
+        setImageDeleted(false);
+        loadAnimals();
         setCurrentAnimal({ ...currentAnimal, [e.target.name]: e.target.value });
     };
 
@@ -86,7 +90,13 @@ const EditAnimalModal = ({ showModal, setShowModal, loadAnimals, animal }) => {
                             <button type="button" className="btn-close" onClick={handleModalClose}></button>
                         </div>
                         <div className="modal-body">
-                            <AnimalForm formRef={formRef} handleAnimalChange={handleAnimalChange} animal={currentAnimal} shouldClearImages={shouldClearImages} />
+                            <AnimalForm 
+                                formRef={formRef} 
+                                handleAnimalChange={handleAnimalChange} 
+                                animal={currentAnimal} 
+                                shouldClearImages={shouldClearImages}
+                                setImageDeleted={setImageDeleted}    
+                            />
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" onClick={handleModalClose}>Close</button>
