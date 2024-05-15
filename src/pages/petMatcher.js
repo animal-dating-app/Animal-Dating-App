@@ -82,27 +82,35 @@ const PetMatcher = () => {
         );
 
       // Separate animals based on user preferences
-      const preferredMatched = [];
-      const preferredAnimals = [];
+      const priorityMatched = [];
+      const matchedAnimals = [];
+      const priorityOther = [];
       const otherAnimals = [];
 
       animalList.forEach((animal) => {
         if (user.preferences && user.preferences.includes(animal.type)) {
-          preferredAnimals.push(animal);
-
           // If animal is good with kids and user has kids, add to preferredMatched, or if animal is good with other pets and user has other pets add to preferredMatched
           if (
-            (animal.disposition.includes("Good with children") &&
+            (animal.disposition && animal.disposition.includes("Good with children") &&
               familyDetails.includes("Have Kids")) ||
-            (animal.disposition.includes("Good with other animals") &&
+            (animal.disposition && animal.disposition.includes("Good with other animals") &&
               familyDetails.includes("Have Pets"))
           ) {
-            preferredMatched.push(animal);
+            priorityMatched.push(animal);
           } else {
-            preferredAnimals.push(animal);
+            matchedAnimals.push(animal);
           }
         } else {
-          otherAnimals.push(animal);
+          if (
+            (animal.disposition && animal.disposition.includes("Good with children") &&
+              familyDetails.includes("Have Kids")) ||
+            (animal.disposition && animal.disposition.includes("Good with other animals") &&
+              familyDetails.includes("Have Pets"))
+          ) {
+            priorityOther.push(animal);
+          } else {
+            otherAnimals.push(animal);
+          }
         }
       });
 
@@ -115,13 +123,13 @@ const PetMatcher = () => {
       };
 
       // Shuffle all arrays
-
-      shuffleArray(preferredMatched);
-      shuffleArray(preferredAnimals);
+      shuffleArray(priorityMatched);
+      shuffleArray(matchedAnimals);
+      shuffleArray(priorityOther);
       shuffleArray(otherAnimals);
 
       // Combine arrays, with preferred animals first
-      animalList = [...preferredMatched, ...preferredAnimals, ...otherAnimals];
+      animalList = [...priorityMatched, ...matchedAnimals, ...priorityOther, ...otherAnimals];
 
       setAnimals(animalList);
       setFadingOut(true);
