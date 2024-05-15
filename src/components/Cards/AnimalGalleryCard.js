@@ -52,7 +52,6 @@ const AnimalGalleryCard = ({
   };
 
   const handleCardClick = (e) => {
-    console.log(e.target);
     if (
       e.target.closest(".pet-featured") ||
       e.target.closest(".pet-favorite") ||
@@ -61,7 +60,6 @@ const AnimalGalleryCard = ({
       e.stopPropagation();
       return;
     } else if (onClickAnimal) {
-      console.log("running click handler");
       onClickAnimal(animal);
     }
   };
@@ -271,7 +269,7 @@ const AnimalGalleryCard = ({
           )}
         </div>
         {petsPath && (
-          <style jsx>{`
+          <style>{`
 					.card:hover {
 						transform: scale(1.05);
 						z-index: 10;

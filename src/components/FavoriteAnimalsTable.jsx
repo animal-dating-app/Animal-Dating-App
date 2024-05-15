@@ -61,7 +61,6 @@ function FavoriteAnimalTable() {
         }
       }
       setFavoritesData(favoritesArray);
-      console.log(favoritesArray)
     };
 
     loadFavorites();
