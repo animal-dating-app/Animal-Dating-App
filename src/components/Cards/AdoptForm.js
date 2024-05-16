@@ -18,6 +18,24 @@ const AdoptForm = ({ currentUser, handleChange}) => {
         }
     };
 
+    const handleDetailsClick = (e) => { 
+        const value = e.target.value;
+        const pressed = e.target.ariaPressed;
+
+        if (pressed === "true") {
+            if (!currentUser.familyDetails) {
+                currentUser.familyDetails = [];
+            }
+            currentUser.familyDetails.push(value);
+        }
+        else {
+            const index = currentUser.familyDetails.indexOf(value);
+            if (index > -1) {
+                currentUser.familyDetails.splice(index, 1);
+            }
+        }
+    };
+
     return (
         <div className="col">
             <div>
@@ -75,6 +93,19 @@ const AdoptForm = ({ currentUser, handleChange}) => {
                         <p className="d-inline-flex gap-1">
                         <button type="button" className={currentUser.preferences && currentUser.preferences.includes('Other') ? activeClass: inactiveClass}  
                         data-bs-toggle="button" value="Other" onClick={handlePreferenceClick}>Other</button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <p><strong>Family Details</strong></p>
+                <div className="row">
+                    <div className="col">
+                        <p className="d-inline-flex gap-1">
+                            <button type="button" className={currentUser.familyDetails && currentUser.familyDetails.includes('Have Kids') ? activeClass: inactiveClass} 
+                            data-bs-toggle="button" value="Have Kids" onClick={handleDetailsClick}>Have Kids</button>
+                            <button type="button" className={currentUser.familyDetails && currentUser.familyDetails.includes('Have Pets') ? activeClass: inactiveClass} 
+                                data-bs-toggle="button" value="Have Pets" onClick={handleDetailsClick}>Have Other Pets</button>
                         </p>
                     </div>
                 </div>

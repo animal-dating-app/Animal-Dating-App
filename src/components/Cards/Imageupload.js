@@ -85,8 +85,9 @@ const ImageUploader = ({animalId, onImageUpload, shouldClear}) => {
 
         setImageUrls([]);
         setInputFile((prevFile) => prevFile + 1);
+        
+        onImageUpload(downloadUrls);
 
-        console.log('Image uploaded to Firebase Storage:', downloadUrls);
         
       } catch (error) {
         console.error('Error uploading image:', error);
