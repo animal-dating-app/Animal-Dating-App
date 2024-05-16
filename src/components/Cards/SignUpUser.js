@@ -16,6 +16,7 @@ const SignUpUser = ({ setEmailError, setPasswordError }) => {
         email: ""
     });
     const [preferences, setPreferences] = useState([]);
+    const [familyDetails, setFamilyDetails] = useState([]);
     const [password, setPassword] = useState();
 
     const handleNewUserChange = (e) => {
@@ -33,6 +34,20 @@ const SignUpUser = ({ setEmailError, setPasswordError }) => {
         }
         else {
             setPreferences(prev => prev.filter(preferences => preferences !== value))
+        }
+    };
+
+    const handleDetailsClick = (e) => {
+        const value = e.target.value;
+        const pressed = e.target.ariaPressed;
+
+        if (pressed === "true") {
+            setFamilyDetails([
+                ...familyDetails, e.target.value                
+            ]);
+        }
+        else {
+            setFamilyDetails(prev => prev.filter(familyDetails => familyDetails !== value))
         }
     };
 
@@ -57,6 +72,7 @@ const SignUpUser = ({ setEmailError, setPasswordError }) => {
             
             const newUserData = newUser;
             newUserData["preferences"] = preferences;
+            newUserData["familyDetails"] = familyDetails;
             let user = null;
             setEmailError(false);
             setPasswordError(false);
@@ -153,6 +169,17 @@ const SignUpUser = ({ setEmailError, setPasswordError }) => {
                         <div className="col">
                             <p className="d-inline-flex gap-1">
                             <button type="button" className="btn" data-bs-toggle="button" value="Other" onClick={handlePreferenceClick}>Other</button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>Family Details</strong></p>
+                    <div className="row">
+                        <div className="col">
+                            <p className="d-inline-flex gap-1">
+                            <button type="button" className="btn mb-0" data-bs-toggle="button" value="Have Kids" onClick={handleDetailsClick}>Have Kids</button>
+                            <button type="button" className="btn" data-bs-toggle="button" value="Have Pets" onClick={handleDetailsClick}>Have Other Pets</button>
                             </p>
                         </div>
                     </div>

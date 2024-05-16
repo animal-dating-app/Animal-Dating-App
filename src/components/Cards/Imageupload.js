@@ -47,8 +47,6 @@ const ImageUploader = ({onImageUpload}) => {
 
         const downloadUrls = await Promise.all(uploadPromises);
         onImageUpload(downloadUrls);
-
-        console.log('Image uploaded to Firebase Storage:', downloadUrls);
         
       } catch (error) {
         console.error('Error uploading image:', error);

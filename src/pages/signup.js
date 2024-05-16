@@ -27,7 +27,7 @@ const SignUp = ({ user }) => {
     return (
         <div>                      
             <h1> Create Account</h1>
-            <div className="col-sm-1 mx-auto"> 
+            <div className="col-sm-12 mx-auto"> 
                 {emailError === true && passwordError === false &&(
                     <div className="alert alert-danger" role="alert">
                         Invalid Email

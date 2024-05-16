@@ -64,7 +64,7 @@ const Carousel = ({ animals, onClickAnimal }) => {
           </div>
         ))}
       </Slider>
-      <style jsx>{`
+      <style>{`
 
 
       .container-carousel .card:hover  {
