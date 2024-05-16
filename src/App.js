@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import Navbar from "./components/Navbar.In";
 import Footer from "./components/Footers/Footer.js";
@@ -27,15 +27,19 @@ import PageNotFound from "./components/404Page/404Page.js";
 import PetMatcher from "./pages/petMatcher.js";
 import Messages from "./pages/messages.js";
 import Admin from "./pages/admin.js";
+import { AdminContext } from "./adminContext.js";
 
 function App() {
+    const [adminPreviewID, setAdminPreviewID ] = useState(null);
     return (
         <UserProvider>
-            <Router>
-                <div className="App">
-                    <AuthenticatedApp />
-                </div>
-            </Router>
+            <AdminContext.Provider value={{adminPreviewID, setAdminPreviewID}}>
+                <Router>
+                    <div className="App">
+                        <AuthenticatedApp />
+                    </div>
+                </Router>
+            </AdminContext.Provider>
         </UserProvider>
     );
 }

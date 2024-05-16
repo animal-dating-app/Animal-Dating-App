@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { auth, db } from "../firebaseConfig";
 import { collection, getDocs, query, where, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import Select from 'react-select';
@@ -10,6 +10,7 @@ import EditShelterProfileModal from "../components/Cards/EditShelterProfileModal
 import FullScreenLoader from "../components/FullScreenLoader";
 import { useNavigate } from "react-router-dom";
 import RecentMessagesCard from "../components/Cards/RecentMessagesCard";
+import { AdminContext } from "../adminContext";
 
 const Dashboard = () => {
     const [animals, setAnimals] = useState([]);
@@ -23,15 +24,18 @@ const Dashboard = () => {
     const [fadingOut, setFadingOut] = useState(false);
     const [shelterDocId, setShelterDocId] = useState("");
     const [shelter, setShelter] = useState({});
+    const {adminPreviewID} = useContext(AdminContext);
 
     const navigate = useNavigate();
 
     // if user is not logged in, redirect to sign in page
     if (!auth.currentUser) window.location.href = "/sign-in";
 
+    const currentUserId = (adminPreviewID && adminPreviewID.hasOwnProperty("shelter"))? adminPreviewID.shelter : auth.currentUser.uid;
+
     // Check if current user is a shelter (document in shelters collection with shelterId = currentUser.uid)
     const loadShelter = async () => {
-        const q = query(collection(db, "shelters"), where("shelterId", "==", auth.currentUser.uid));
+        const q = query(collection(db, "shelters"), where("shelterId", "==", currentUserId));
         const shelterSnapshot = await getDocs(q);
         if (shelterSnapshot.empty) {
             window.location.href = "/pets";
@@ -48,7 +52,7 @@ const Dashboard = () => {
 
     const loadAnimals = async () => {
         const getAnimals = async () => {
-            const q = query(collection(db, "animals"), where("shelterId", "==", auth.currentUser.uid));
+            const q = query(collection(db, "animals"), where("shelterId", "==", currentUserId));
             const animalSnapshot = await getDocs(q);
             const animalList = animalSnapshot.docs.map(doc => {
                 return { id: doc.id, ...doc.data() };
@@ -67,6 +71,7 @@ const Dashboard = () => {
         loadShelter().then(() => {
             loadAnimals()
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleSelectAnimal = (animalId) => {
@@ -183,7 +188,7 @@ const Dashboard = () => {
                     </div>
                     <div className="col-md-6 text-md-end d-flex flex-row-reverse" style={{ gap: "0.5rem" }}>
                         <button className="btn btn-secondary" onClick={handleAddNewAnimalClick}>Add New Animal</button>
-                        <button className="btn btn-secondary" onClick={() => navigate(`/shelter/${auth.currentUser.uid}`)}>Public View</button>
+                        <button className="btn btn-secondary" onClick={() => navigate(`/shelter/${currentUserId}`)}>Public View</button>
                         <button className="btn btn-secondary" onClick={() => setShowShelterProfileModal(true)}>Edit Profile</button>
                     </div>
                 </div>

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
+import React, { useEffect, useRef, useState } from "react";
+import { collection, getDocs, doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
-
+import AdminInfoModal from "../components/Cards/AdminInfoModal";
 
 const Admin = () => {
 
@@ -14,7 +14,10 @@ const Admin = () => {
     const [userInfo, setUserInfo] = useState();
     const [userType, setUserType] = useState();
     const [animalDelErrList, setAnimalDelErrList] = useState([]);
-    const [docDeleted, setDocDeleted] = useState(false);
+    const [updated, setUpdated] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+
+    const formRef = useRef(null);
 
     const getData = async () => {
         // Shelter Data 
@@ -39,13 +42,13 @@ const Admin = () => {
         });
         setAdopters(adopterList);
         setLoading(false);
+        setUpdated(false);
     };
                 
     useEffect(() => {
-        getData();
-        setDocDeleted(false);
 
-    }, []);
+        getData();
+    }, [updated]);
     
     // Update all shelterIds in animals to match shelterId 
     // from Database rather than the shelter authentication id 
@@ -66,7 +69,6 @@ const Admin = () => {
         setAnimals(updatedAnimals);
     }
 
-
     // Set userInfo and userType to data from row
     const handleRowClick = (user, type) => {
         if (type === "Animal") {
@@ -74,10 +76,16 @@ const Admin = () => {
         }
         setUserInfo(user);
         setUserType(type);
+        //setPreviewID(user.id);
+
+        
+        setShowModal(true);
+        
     };
 
     // Delete document
     const handleDelete = (uid) => {
+
         // Check if deleting shelter 
         if (userType && userType === "Shelter") {
             const hasAnimals = checkShelterAnimals(userInfo.id);
@@ -93,14 +101,17 @@ const Admin = () => {
                 .catch(error => {
                     console.log(error);
                 })
+                setShowModal(false);
             }
             // Shelter has animal DONOT delete send alert
             else {
                 if (animalDelErrList.length > 1) {
                     window.alert(`Cannot delete shelter because it has the following animals: ${animalDelErrList.join("\n")}`);
+                    setAnimalDelErrList([]);
                 }
                 else {
                     window.alert(`Cannot delete shelter because it has the following animals: ${animalDelErrList}`);
+                    setAnimalDelErrList([]);
                 }
                 
             }
@@ -126,26 +137,45 @@ const Admin = () => {
         animals.forEach(animal => {
             if (animal.shelterId === userInfo.shelterId) {
                 hasAnimals = true;
-                // Add to list for alert
-                setAnimalDelErrList(animalDelErrList => [...animalDelErrList, animal.id]);
+                const tempList = animalDelErrList;
+                tempList.push(animal.id);
+                setAnimalDelErrList(tempList);
             }
         })
         return hasAnimals; 
     };
 
+    // Set userInfo and userType to data from row
+    const handleUpdate = async (uid, updatedUser) => {
+        
+        let userInfoUpdated = {...updatedUser};
+        setUserInfo({...userInfoUpdated});
+        delete userInfoUpdated.id;
+
+        if (userType === "Shelter") {
+            await updateDoc(doc(db, "shelters", userInfo.id), userInfoUpdated);
+        }
+        else if (userType === "Animal") {
+            await updateDoc(doc(db, "animals", userInfo.id), userInfoUpdated);
+        }
+        else if (userType === "Adopter") {
+            await updateDoc(doc(db, "users", userInfo.id), userInfoUpdated);
+        }
+    };
+
     return (
         <div className="container">
-            {/* <Shelters */}
-            <h1>Shelters</h1>
+            {/* <Shelters Table */}
+            <h1 style={{marginTop: "16px"}}>Shelters</h1>
             {!loading && (
-                <div> 
+                <div style={{textAlign: "left"}}> 
                      <table id="shelterTable" className="table table-hover">
                         <thead>
                             <tr>
-                            <th scope="col">User ID</th>
+                            <th scope="col" className="col-3">User ID</th>
                             <th scope="col">Name</th>
                             <th scope="col">Address</th>
-                            <th scope="col">More</th>
+                            <th scope="col" style={{textAlign: "center"}}>More</th>
                             </tr>
                         </thead>
                         <tbody>  
@@ -155,8 +185,7 @@ const Admin = () => {
                                         <td>{shelter.id}</td>
                                         <td>{shelter.name}</td>
                                         <td>{shelter.address}</td>
-                                        <td><FontAwesomeIcon icon={faCircleInfo} onClick={()=> {handleRowClick(shelter, "Shelter")}} 
-                                            data-bs-toggle="modal" data-bs-target="#userInfoModal"/></td>
+                                        <td style={{textAlign: "center"}}><FontAwesomeIcon icon={faCircleInfo} onClick={()=> {handleRowClick(shelter, "Shelter")}} /></td>
                                     </tr>
                                 );
                             })}
@@ -164,18 +193,18 @@ const Admin = () => {
                     </table>
                 </div>
             )}
-            {/* <Animals */}
-            <h1>Animals</h1>
+            {/* <Animals Table */}
+            <h1  style={{marginTop: "32px"}}>Animals</h1>
             {!loading && (
-                <div> 
+                <div style={{textAlign: "left"}}> 
                      <table className="table table-hover">
                         <thead>
                             <tr>
 
-                            <th scope="col">User ID</th>
+                            <th scope="col" className="col-3">User ID</th>
                             <th scope="col">Name</th>
                             <th scope="col">Shelter ID</th>
-                            <th scope="col">More</th>
+                            <th scope="col" style={{textAlign: "center"}}>More</th>
                             </tr>
                         </thead>
                         <tbody>  
@@ -185,8 +214,7 @@ const Admin = () => {
                                         <td>{animal.id}</td>
                                         <td>{animal.name}</td>
                                         <td>{animal.breed}</td>
-                                        <td><FontAwesomeIcon icon={faCircleInfo} onClick={()=> {handleRowClick(animal, "Animal")}} 
-                                            data-bs-toggle="modal" data-bs-target="#userInfoModal"/></td>
+                                        <td style={{textAlign: "center"}}><FontAwesomeIcon icon={faCircleInfo} onClick={()=> {handleRowClick(animal, "Animal")}} /></td>
                                     </tr>
                                 );
                             })}
@@ -194,17 +222,17 @@ const Admin = () => {
                     </table>
                 </div>
             )}
-            {/* <Adopters */}
-            <h1>Adopters</h1>
+            {/* <Adopters Table */}
+            <h1 style={{marginTop: "32px"}}>Adopters</h1>
             {!loading && (
-                <div> 
+                <div style={{textAlign: "left"}}> 
                      <table className="table table-hover">
                         <thead>
                             <tr>
-                            <th scope="col">User ID</th>
+                            <th scope="col" className="col-3">User ID</th>
                             <th scope="col">Fist Name</th>
                             <th scope="col">Last Name</th>
-                            <th scope="col">More</th>
+                            <th scope="col" style={{textAlign: "center"}}>More</th>
                             </tr>
                         </thead>
                         <tbody>  
@@ -214,8 +242,7 @@ const Admin = () => {
                                         <td>{adopter.id}</td>
                                         <td>{adopter.firstName}</td>
                                         <td>{adopter.lastName}</td>
-                                        <td><FontAwesomeIcon icon={faCircleInfo} onClick={()=> {handleRowClick(adopter, "Adopter")}} 
-                                            data-bs-toggle="modal" data-bs-target="#userInfoModal"/></td>
+                                        <td style={{textAlign: "center"}}><FontAwesomeIcon icon={faCircleInfo} onClick={()=> {handleRowClick(adopter, "Adopter")}} /></td>
                                     </tr>
                                 );      
                             })}
@@ -223,97 +250,14 @@ const Admin = () => {
                     </table>
                 </div>
             )}
-            {/* Popup Modal */}
-            <div className="modal fade" id="userInfoModal" tabIndex="-1" aria-labelledby="userInfoModalLabel" aria-hidden="true" key={docDeleted}>
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                        <h1 className="modal-title fs-5" id="exampleModalLabel">{userType} Data</h1>
-                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div className="modal-body" align="left">
-                            {/* Shelter Modal Body */}
-                            {userType === "Shelter" && (
-                                <div>
-                                    <div><b>UID:</b> {userInfo.id}</div>
-                                    <div><b>Name:</b> {userInfo.name}</div>
-                                    <div><b>Address:</b> {userInfo.address}</div>
-                                    <div><b>Phone:</b> {userInfo.phone}</div>
-                                    <div><b>Email:</b> {userInfo.email}</div>
-                                    <div><b>Description:</b> {userInfo.description}</div>
-                                    <div><b>Header Images</b></div> 
-                                    <div>
-                                        {userInfo.headerImages && userInfo.headerImages.map((image, i) => {
-                                            if (i === (userInfo.headerImages.length - 1)) {
-                                                return <img src={image} alt="Animal Images" key={i} style={{maxWidth: "100%"}}></img>
-                                            }
-                                            else {
-                                                return <img src={image} alt="Animal Images" key={i} style={{maxWidth: "100%", marginBottom:"16px"}}></img>
-                                            }                                                   
-                                        })}
-                                    </div>                                                
-                                </div>
-                            )}    
-                            {/* Animal Modal Body */}
-                            {userType === "Animal" && (
-                                <div> 
-                                    <div ><b>UID:</b> {userInfo.id}</div>
-                                    <div ><b>Name:</b> {userInfo.name}</div>
-                                    <div><b>Tylie:</b> {userInfo.type}</div>
-                                    <div><b>Breed:</b> {userInfo.breed}</div>
-                                    <div><b>Gender:</b> {userInfo.gender}</div>
-                                    <div><b>Age:</b> {userInfo.age}</div>
-                                    <div><b>Shelter ID:</b> {userInfo.sid ? userInfo.sid : "Error getting Shelter ID"}</div>
-                                    <div><b>Status:</b> {userInfo.status}</div>
-                                    <div><b>Date Created:</b> {userInfo.dateCreated}</div>
-                                    <div><b>Disposition:</b> {userInfo.disposition && userInfo.disposition.map((disp, i) => {
-                                        if (i === (userInfo.disposition.length - 1)) {
-                                            return (<p key={i} style={{display: "inline"}}>{disp}</p>)
-                                        }
-                                        else {
-                                            return (<p key={i} style={{display: "inline"}}>{disp}, </p>)
-                                        }
-                                    })}</div>
-                                    <div><b>Description:</b> {userInfo.name}</div> 
-                                    <div><b>Images</b></div>
-                                    {userInfo.pictureUri && !(typeof userInfo.pictureUri == "string") && userInfo.pictureUri.map((image, i) => {
-                                        if (i === (userInfo.pictureUri.length - 1)) {
-                                            return <img src={image} alt="Animal Images" key={i} style={{maxWidth: "100%"}}></img>
-                                        }
-                                        else {
-                                            return <img src={image} alt="Animal Images" key={i} style={{maxWidth: "100%", marginBottom:"16px"}}></img>
-                                        }                                                   
-                                    })}
-                                    {userInfo.pictureUri && typeof userInfo.pictureUri == "string" &&  (
-                                        <img src={userInfo.pictureUri} alt="Animal Images" style={{maxWidth: "100%"}}></img>
-                                    )}       
-                                </div>
-                            )} 
-                            {/* Adopter Modal Body */}
-                            {userType === "Adopter" && (
-                                <div> 
-                                    <div><b>UID:</b> {userInfo.id}</div>
-                                    <div><b>First Name:</b> {userInfo.firstName}</div>
-                                    <div><b>Last Name:</b> {userInfo.lastName}</div>
-                                    <div><b>Preferences:</b> {userInfo.preferences && userInfo.preferences.map((preference, i) => {
-                                            if (i === (userInfo.preferences.length - 1)) {
-                                                return (<p key={i} style={{display: "inline"}}>{preference}</p>)
-                                            }
-                                            else {
-                                                return (<p key={i} style={{display: "inline"}}>{preference}, </p>)
-                                            }
-                                        })}
-                                    </div>
-                                </div>
-                            )}   
-                        </div>
-                        <div className="modal-footer">
-                        <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={() => handleDelete(userInfo.id)}>Delete</button>
-                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+           <AdminInfoModal showModal={showModal} setShowModal={setShowModal} userInfo={userInfo} setUserInfo={setUserInfo} userType={userType} 
+                handleDelete={handleDelete} handleUpdate={handleUpdate} formRef={formRef} setUpdated={setUpdated} />
+
+        
+            
+            
+            
         </div>
     );
 };
