@@ -87,8 +87,6 @@ function ChatMessagesCard({ user }) {
 
   const sendMessage = async () => {
     if (!inputMessage) return;
-
-    console.log(user)
   
     const newMessage = {
       fromId: auth.currentUser.uid,

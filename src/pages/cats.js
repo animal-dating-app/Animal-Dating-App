@@ -69,7 +69,7 @@ const Cats = () => {
       <div className="container">
         <div className="row pb-4">
           {animals.map(animal => (
-            <div className="col-6 col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
+            <div className="col-12 col-lg-4 d-flex align-items-stretch my-2" key={animal.id}>
                 <AnimalGalleryCard animal={animal} onClickAnimal={() => navigate('/pet', {state: {pet: animal}})}/>
             </div>
           ))}

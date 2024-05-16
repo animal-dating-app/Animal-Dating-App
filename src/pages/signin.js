@@ -138,7 +138,7 @@ const SignIn = ({ user }) => {
             {showResetPassword === false && (
                 <div>
                     <h1> Login </h1>                       
-                    <div className="col mx-auto">                             
+                    <div className="col-sm-12 mx-auto">
                         <form ref={formRef}> 
                             {emailError === true && passwordError === false && (
                                 <div className="alert alert-danger" role="alert">
