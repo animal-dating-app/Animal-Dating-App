@@ -71,6 +71,7 @@ const Dashboard = () => {
         loadShelter().then(() => {
             loadAnimals()
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleSelectAnimal = (animalId) => {
