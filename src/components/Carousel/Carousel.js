@@ -60,16 +60,7 @@ const Carousel = ({ animals, onClickAnimal }) => {
           </div>
         ))}
       </Slider>
-<<<<<<< HEAD
-      <style jsx>{`
-        .container-carousel .card:hover {
-          transform: scale(1.05);
-          z-index: 10;
-          background-color: rgb(221, 237, 234);
-        }
-=======
       <style>{`
->>>>>>> 17ac27a24cf1f9b8fffc7d592aed1689711c8808
 
         .container-carousel .card {
           position: relative;
