@@ -76,10 +76,22 @@ const Settings = () => {
                     <div className="container mt-4">
                         <p><strong>First Name:</strong> {user.firstName}</p>
                         <p><strong>Last Name:</strong> {user.lastName}</p>
-                        <p><strong>Preferences</strong></p>
-                        {user.preferences && (user.preferences.map((preference, index) => (
-                            <p key={index}>{preference}</p>
-                        )))}
+                        { user.preferences && user.preferences.length > 0 && (
+                            <>
+                                <p><strong>Preferences</strong></p>
+                                    {user.preferences && (user.preferences.map((preference, index) => (
+                                        <p key={index}>{preference}</p>
+                                    )))}
+                            </>
+                        )}
+                        { user.familyDetails && user.familyDetails.length > 0 && (
+                            <>
+                                <p><strong>Family Details</strong></p>
+                                {user.familyDetails && (user.familyDetails.map((detail, index) => (
+                                    <p key={index}>{detail}</p>
+                                )))}
+                            </>
+                        )}
                     </div>
                 )}
                 {/* Shelter */}

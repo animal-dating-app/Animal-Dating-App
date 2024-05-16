@@ -39,6 +39,8 @@ const Navbar = ({ user }) => {
                 // Update user if found
                 if (shelterUser.length > 0) {
                     setShelter(true);
+                } else {
+                    setShelter(false);
                 }
             };
     
