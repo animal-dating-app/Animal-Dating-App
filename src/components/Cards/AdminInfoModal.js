@@ -137,7 +137,6 @@ const AdminInfoModal = ({showModal, setShowModal, userInfo, setUserInfo, userTyp
                                     )}
                                     {userType === "Animal" && ( 
                                         <AnimalForm useRef={formRef} handleAnimalChange={handleChange} animal={user} />
-                                        // <AdminAnimalForm currentUser={user} handleChange={handleChange} />
                                     )}
                                     {userType === "Adopter" && ( 
                                         <AdoptForm currentUser={user} handleChange={handleChange} isAdmin={true} />
