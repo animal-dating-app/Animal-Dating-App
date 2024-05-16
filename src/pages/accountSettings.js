@@ -91,6 +91,12 @@ const Settings = () => {
                             <p><strong>Contact Email:</strong> {user.email}</p>
                         )}
                         <p><strong>Phone:</strong> {user.phone}</p>
+                        {user.hasOwnProperty('description') && (
+                            <p><strong>Description:</strong> <br></br> {user.description}</p>
+                        )}
+                        {user.headerImages && user.headerImages.map((image, index) => (
+                            <><img src={image} alt="Animal Images" key={index} style={{maxWidth: "100%", marginBottom: "16px"}}></img></>                                                  
+                        ))}
                     </div>
                 )}
                 <button className="btn btn-primary btn-block" onClick={clickEditAccount} style={{marginBottom: "0.25rem", width: "150px"}}>

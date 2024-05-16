@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { auth, db } from "../firebaseConfig";
 import { collection, getDocs, where, query, doc, updateDoc, getDoc } from 'firebase/firestore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,6 +6,7 @@ import { faTimes, faCheck, faCommentDots } from '@fortawesome/free-solid-svg-ico
 import FullScreenLoader from '../components/FullScreenLoader';
 import { AnimalGalleryCard } from '../components/Cards';
 import { useNavigate } from 'react-router-dom';
+import { AdminContext } from "../adminContext";
 
 const PetMatcher = () => {
     // if user is not logged in, redirect to sign in page
@@ -18,12 +19,16 @@ const PetMatcher = () => {
     const [fadingOut, setFadingOut] = useState(false);
     const [endOfOptions, setEndOfOptions] = useState(false);
     const [dismissedPets, setDismissedPets] = useState([]);
+    const {adminPreviewID} = useContext(AdminContext);
 
     const navigate = useNavigate();
 
+    const currentUserId = (adminPreviewID && adminPreviewID.hasOwnProperty("adopter"))? adminPreviewID.adopter : auth.currentUser.uid;
+    console.log(currentUserId);
+
   useEffect(() => {
     const loadUser = async () => {
-      const q = query(collection(db, "users"), where("userId", "==", auth.currentUser.uid));
+      const q = query(collection(db, "users"), where("userId", "==", currentUserId));
       const adoptSnapshot = await getDocs(q);
       const adoptrUser = adoptSnapshot.docs.map ( doc => {
           return { id: doc.id, ...doc.data() };
@@ -38,7 +43,7 @@ const PetMatcher = () => {
     };
     
     loadUser();
-  }, [navigate]);
+  }, [navigate, currentUserId]);
 
   useEffect(() => {
     if (user.dismissedPets) {

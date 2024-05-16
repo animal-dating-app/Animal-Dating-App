@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
     Nav,
     NavLink,
@@ -13,6 +13,7 @@ import { and, collection, getDocs, onSnapshot, or, query, where} from "firebase/
 import { useNavigate } from 'react-router-dom';
 import { faInbox } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { AdminContext } from "../../adminContext";
 
 const Navbar = ({ user }) => {
     const [isActive, setIsActive] = useState(false); 
@@ -23,6 +24,8 @@ const Navbar = ({ user }) => {
     const navigate = useNavigate();
 
     const adminUID = "L89J59dWmKYqWupE2ngVY2NIhNq1";
+
+    const {adminPreviewID, setAdminPreviewID} = useContext(AdminContext);
 
     useEffect(() => {
         const loadUser = async () => {
@@ -132,9 +135,27 @@ const Navbar = ({ user }) => {
                         )}
                         {/* Admin */}
                         {user && isAdmin && (
-                            <NavLink to="/admin" onClick={() => setIsActive(false)}>
+                            <>
+                            {(adminPreviewID !== null) && (
+                                <>
+                                {/* Show Shelter or Match if in Priview mode  */}
+                                    {(adminPreviewID.hasOwnProperty('shelter')) && (
+                                        <NavLink to="/dashboard" onClick={() => setIsActive(false)}>
+                                            Dashboard
+                                        </NavLink>
+                                    )}
+                                    {(adminPreviewID.hasOwnProperty('adopter')) && (
+                                        <NavLink to="/match" onClick={() => setIsActive(false)}>
+                                            Match
+                                        </NavLink>
+                                    )}
+                                </>
+                            )}
+                             <NavLink to="/admin" onClick={() => setIsActive(false)}>
                                 Admin
                             </NavLink>
+                            </>
+
                         )}
 
                         {!user && (
