@@ -25,7 +25,7 @@ const Navbar = ({ user }) => {
 
     const adminUID = "L89J59dWmKYqWupE2ngVY2NIhNq1";
 
-    const {adminPreviewID, setAdminPreviewID} = useContext(AdminContext);
+    const {adminPreviewID} = useContext(AdminContext);
 
     useEffect(() => {
         const loadUser = async () => {
