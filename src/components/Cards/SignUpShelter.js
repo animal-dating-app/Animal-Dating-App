@@ -32,7 +32,7 @@ const SignUpShelter = ({ setEmailError, setPasswordError }) => {
     
             // Send email to user using emailjs.com
             emailjs
-            .sendForm('service_7wslv2f', 'template_92jc4dk', form.current, {
+            .sendForm('service_7wslv2f', 'template_awx6s7n', form.current, {
                 publicKey: 'G8CzJ-OhJH7qfmi_C',
             })
             .then(
