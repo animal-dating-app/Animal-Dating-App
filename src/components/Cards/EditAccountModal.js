@@ -8,7 +8,7 @@ import CredentialForm from './CredentialForm';
 
 const EditAccountModal = ({ showModal, setShowModal, user, setUser, isShelter, editCredentials, setEditCredentials }) => {
 
-    const [currentUser, setCurrentUser] = useState(user);
+    const [currentUser, setCurrentUser] = useState(JSON.parse(JSON.stringify(user)));
     const [reauthenticate, setReauthenticate] = useState(false);
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError] = useState(false);
@@ -20,11 +20,41 @@ const EditAccountModal = ({ showModal, setShowModal, user, setUser, isShelter, e
     const formRef = useRef(null);
 
     const handleChange = (e) => {
-        setCurrentUser({...currentUser, [e.target.name]: e.target.value });
+
+        // Handle Shelter Header Delete
+        if(e.target.name === "imgDelBtn") {
+            const value = e.target.value;
+            const index = currentUser.headerImages.indexOf(value);
+            let newImages = [...currentUser.headerImages];
+            newImages.splice(index, 1);
+            setCurrentUser({ ...currentUser, headerImages: newImages });  
+        }
+        else if (e.target.name === "preferences") {
+            const value = e.target.value;
+            const pressed = e.target.ariaPressed;
+
+            if (pressed === "true") {
+                let updatedUser = currentUser;
+                updatedUser.preferences.push(value);
+                setCurrentUser(updatedUser);
+            } 
+            else {
+                const index = currentUser.preferences.indexOf(value);
+                if (index > -1) {
+                    let updatedUser = currentUser;
+                    updatedUser.preferences.splice(index, 1); 
+                    setCurrentUser(updatedUser);
+                }
+            } 
+        }
+        else {
+            setCurrentUser({...currentUser, [e.target.name]: e.target.value });
+        }
     };
 
     useEffect(() => {
-        setCurrentUser(user);
+        const userCopy = JSON.parse(JSON.stringify(user))
+        setCurrentUser(userCopy);
         setEmail(auth.currentUser.email);
     }, [user]);
 
@@ -140,7 +170,9 @@ const EditAccountModal = ({ showModal, setShowModal, user, setUser, isShelter, e
         <>
             { showModal && <div style={overlayStyle}></div> }
             <div className={`modal ${showModal ? "show" : ""}`} style={{ display: showModal ? "block" : "none" }} tabIndex="-1">
-                <div className="modal-dialog modal-dialog-centered modal-xl">
+                <div className={(!isShelter) ? 
+                "modal-dialog modal-dialog-centered modal-l" 
+                :"modal-dialog modal-dialog-centered modal-xl" }>
                     <div className="modal-content">
                         <div className="modal-header">
                             {editingCredentials === false && ( 
@@ -192,10 +224,10 @@ const EditAccountModal = ({ showModal, setShowModal, user, setUser, isShelter, e
                                                 mismatch={passwordMismatch}/>
                                         )}
                                         {isShelter && editingCredentials === false && (
-                                            <ShelterFrom currentUser={currentUser} handleChange={handleChange} />
+                                            <ShelterFrom currentUser={currentUser} setCurrentUser={setCurrentUser} handleChange={handleChange} />
                                         )}
                                         {!isShelter && editingCredentials === false &&(
-                                            <AdoptFrom currentUser={currentUser} handleChange={handleChange} />
+                                            <AdoptFrom currentUser={currentUser} handleChange={handleChange} isAdmin={false}/>
                                         )}
                                     </form>
                                 </div>
@@ -206,7 +238,7 @@ const EditAccountModal = ({ showModal, setShowModal, user, setUser, isShelter, e
                                     )}
                                     {editingCredentials === false && ( 
                                         <button type="button" className="btn btn-primary" onClick={handleUpdateAccount}>Update</button>
-                                    )}                        
+                                    )}
                                 </div>
                             </div>
                         )};

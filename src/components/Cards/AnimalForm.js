@@ -2,16 +2,66 @@ import React, { useState } from "react";
 import Select from "react-select";
 import { AnimalGalleryCard } from ".";
 import ImageUploader from "./Imageupload";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
+import { storage as firebaseStorage } from '../../firebaseConfig';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '../../firebaseConfig';
+import { ref, deleteObject } from 'firebase/storage';
+import { Carousel } from 'react-responsive-carousel';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
-const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
+
+const AnimalForm = ({ formRef, handleAnimalChange, animal, shouldClearImages, setImageDeleted, setImageUploading }) => {
   const [imageURL, setImageURL] = useState([]);
 
   console.log(imageURL);  // delete warning
 
   const handleImageUpload = (url) => {
     setImageURL(url);
+    
     // This callback will update the 'pictureUri' property in the 'animal' state
     handleAnimalChange({ target: { name: "pictureUri", value: url } });
+
+    setImageUploading(true);
+  };
+
+  const handleImageDelete = async (indexToDelete) => {
+
+    const confirmDelete = window.confirm("Are you sure you want to delete this image? Once it is deleted, it will be gone.");
+
+    if (!confirmDelete) {
+      // ABORT!!!
+      return;
+    }
+
+    try {
+
+      const imageUrlToDelete = animal.pictureUri[indexToDelete];
+      const imageRef = ref(firebaseStorage, imageUrlToDelete);
+  
+      // Delete the image
+      await deleteObject(imageRef);
+  
+      // Filter out the image URL to delete from the animal's pictureUri array
+      const filteredImageUrls = animal.pictureUri.filter((_, index) => index !== indexToDelete);
+
+      const animalDocRef = doc(db, "animals", animal.id);
+
+      // Update the Firestore document to reflect the deletion
+      await updateDoc(animalDocRef, {
+        pictureUri: filteredImageUrls
+      });
+
+      handleAnimalChange({ target: { name: "pictureUri", value: filteredImageUrls } });
+
+      setImageDeleted(true);
+
+    } catch (error) {
+
+      console.error('Error deleting image:', error);
+    }
+
   };
 
   const animalTypes = [
@@ -95,6 +145,9 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
       "&:hover": {},
     }),
   };
+
+  // Convert pictureUri to an array if it's not already one
+  const animalUris = Array.isArray(animal.pictureUri) ? animal.pictureUri : [animal.pictureUri];
 
   return (
     <div className="row">
@@ -225,23 +278,79 @@ const AnimalForm = ({ formRef, handleAnimalChange, animal }) => {
               (status) => status.value === animal.status
             )}
           />
-
+        
         <ImageUploader
+            animalId={animal.id}
             onImageUpload={handleImageUpload}
+            shouldClear={{shouldClearImages}}
             name="pictureUri"
             value={animal.pictureUri}
             onChange={(e) => handleAnimalChange(e)}
-          />  
-        </form>
+        />
+        </form>  
       </div>
-      <div className="col-lg-6 mt-lg-0 mt-4">
-        <div>
-          <AnimalGalleryCard
-            animal={animal}
-            selectable={false}
-            callToAction=""
-          />
-        </div>
+        
+      <div className="col-lg-6">
+          
+          <AnimalGalleryCard animal={animal} selectable={false} callToAction="" />
+          
+          {animalUris && animalUris.length > 0 && (  
+            <div className="mt-3">
+              <h6>Image(s) in Database:</h6>
+
+            {animalUris.length > 1 ? (
+              <Carousel
+                  showArrows={true}
+                  centerMode={animalUris.length > 2}
+                  centerSlidePercentage={animalUris.length > 2 ? 33 : 100}
+                  dynamicHeight
+                  emulateTouch={true}
+                  infiniteLoop={true}
+                  swipeable={true}
+                  showThumbs={false}
+              >
+
+              {animalUris.map((url, index) => (
+                <div key={index} style={{ position: "relative" }}>
+                    <img src={url} alt={`Animal ${index}`} style={{ maxWidth: "400%", maxHeight: "400px" }} />
+                  <button
+                      type="button"
+                      onClick={() => handleImageDelete(index)}
+                      style={{
+                          position: "absolute",
+                          top: "0px",
+                          left: "16px",
+                          border: "none",
+                          background: "none",
+                          padding: "2px",
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faTrashCan} style={{ width: "24px", height: "24px", color: "rgb(249, 86, 86)" }} />
+                  </button>
+                </div>
+              ))}
+              </Carousel>
+              ) : (
+                <div style={{ position: "relative" }}>
+                  <img src={animalUris[0]} alt="Animal" style={{ maxWidth: "100%", maxHeight: "400px" }} />
+                  <button
+                    type="button"
+                    onClick={() => handleImageDelete(0)}
+                    style={{
+                        position: "absolute",
+                        top: "0px",
+                        left: "0px",
+                        border: "none",
+                        background: "none",
+                        padding: "2px",
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faTrashCan} style={{ width: "24px", height: "24px", color: "rgb(249, 86, 86)" }} />
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
       </div>
     </div>
   );
