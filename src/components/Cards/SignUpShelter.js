@@ -31,6 +31,9 @@ const SignUpShelter = ({ setEmailError, setPasswordError }) => {
         if  (form.current && form.current.checkValidity()) {
     
             // Send email to user using emailjs.com
+
+             // Configure serviceID and templateID to send Email
+
             emailjs
             .sendForm('service_7wslv2f', 'template_awx6s7n', form.current, {
                 publicKey: 'G8CzJ-OhJH7qfmi_C',
