@@ -59,7 +59,7 @@
       border-radius: 8px;
       margin-bottom: 10px;
       width: 100%;
-      height: auto;
+      height: 150px;
     }
     .call-to-action {
       text-align: center;
@@ -79,6 +79,7 @@
       text-align: center;
       margin-top: 20px;
     }
+    
   </style>
 </head>
 <body>
@@ -96,16 +97,16 @@
     </div>
     <div class="features">
       <div class="feature-item">
-        <img src="https://firebasestorage.googleapis.com/v0/b/animal-dating-app-12de9.appspot.com/o/images%2Fheader-krista-mangulsone.jpg?alt=media&amp;token=ce50a778-36ee-4659-883d-895ab28aa096" alt="Feature Image">
-        <p>Feature 1</p>
+        <img src="https://firebasestorage.googleapis.com/v0/b/animal-dating-app-12de9.appspot.com/o/EmailPic%2FScreen%20Shot%202024-05-16%20at%2020.02.51.png?alt=media&token=d0b07eb8-9738-426a-9aea-7fe56bbfb7ba" alt="Feature Image">
+        <p>Shelter Address</p>
       </div>
       <div class="feature-item">
-        <img src="https://firebasestorage.googleapis.com/v0/b/animal-dating-app-12de9.appspot.com/o/images%2Fheader-krista-mangulsone.jpg?alt=media&amp;token=ce50a778-36ee-4659-883d-895ab28aa096" alt="Feature Image">
-        <p>Feature 2</p>
+        <img src="https://firebasestorage.googleapis.com/v0/b/animal-dating-app-12de9.appspot.com/o/EmailPic%2FScreen%20Shot%202024-05-16%20at%2020.02.29.png?alt=media&token=bb2a1827-8bbe-4b0c-b7d2-7ee07c8b6e59" alt="Feature Image">
+        <p>Pet Information</p>
       </div>
       <div class="feature-item">
-        <img src="https://firebasestorage.googleapis.com/v0/b/animal-dating-app-12de9.appspot.com/o/images%2Fheader-krista-mangulsone.jpg?alt=media&amp;token=ce50a778-36ee-4659-883d-895ab28aa096" alt="Feature Image">
-        <p>Feature 3</p>
+        <img src="https://firebasestorage.googleapis.com/v0/b/animal-dating-app-12de9.appspot.com/o/EmailPic%2FScreen%20Shot%202024-06-01%20at%2022.35.27.png?alt=media&token=e58291ab-4996-4a64-b028-5bae035f0f8f" alt="Feature Image">
+        <p>Pet Match</p>
       </div>
     </div>
     <div class="call-to-action">
